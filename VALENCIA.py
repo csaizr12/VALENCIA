@@ -47,7 +47,7 @@ def main():
             print(option, args)
             results = run_gffread(outbase, args["genome_assembly"], path, kinds=[option])
             if results["returncode"] != 0:
-                print("Error in {}: {}".format(option, results.stderr.decode()))
+                print("Error in {}: {}".format(option, results["log_msg"]))
         
 
 
