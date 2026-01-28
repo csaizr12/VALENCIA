@@ -3,48 +3,54 @@ import argparse
 
 from pathlib import Path
 
+from src.gffread import run_gffread
+
 #function generate parse_arguments:
 def parse_arguments():
     desc = 'script to evaluated annotation with biological evidence'
-    # parser argument 
     parser = argparse.ArgumentParser(description=desc)
-    # generate arguments for transcriptome
-    help_transcriptome = '(Requiered) Annotation with transcriptome evidence'
-    # add argument for transcriptome
-    parser.add_argument('--transcriptome', '-t', type=str, help=help_transcriptome, required=True)
-    # generate arguments for protein evidence
+    help_transcriptome = '(Required) Annotation with transcriptome evidence'
+    parser.add_argument('--transcriptome_evidence','-t', 
+                        type=str, help=help_transcriptome, required=True)
     help_protein = '(Required) Annotation with protein evidence'
-    # add argument for protein evidence
-    parser.add_argument('--protein', '-p', type=str, help=help_protein, required=True)
-    # add argument for genome assembly fasta format
+    parser.add_argument('--protein_evidence', '-p',
+                         type=str, help=help_protein, required=True)
     help_genome = '(Required) Genome assembly in fasta format'
-    # add argument for genome assembly
-    parser.add_argument('--genome', '-g', type=str, help=help_genome, required=True)
-    # add argument for target annotation
+    parser.add_argument('--genome_assembly', '-g',
+                         type=str, help=help_genome, required=True)
     help_target = '(Required) Target annotation to be evaluated'
-    # add argument for target annotation
-    parser.add_argument('--target', '-x', type=str, help=help_target, required=True)
-     # generate arguments for outbase
+    parser.add_argument('--target_annotation', '-x',
+                         type=str, help=help_target, required=True)
     help_outbase = '(Required) Outbase'
-    # add argument for outbase
-    parser.add_argument('--outbase','-o', type=str, help=help_outbase, required=True)
-    # return parser arguments
+    parser.add_argument('--outbase','-o', 
+                        type=str, help=help_outbase, required=True)
     return parser.parse_args()
 
-# function to get arguments and return diccionary
+# function to get arguments and return dictionary
 def get_arguments():
-    # parse arguments
     parser = parse_arguments()
-    # return diccionary with arguments
-    return {'transcriptome_evidence': Path(parser.transcriptome),
-            'protein_evidence': Path(parser.protein), 'genome_assembly': Path(parser.genome), 'target_annotation': Path(parser.target), 'outbase': Path(parser.outbase)}
+    return {'transcripts_evidence': Path(parser.transcriptome_evidence), 
+            'proteins_evidence': Path(parser.protein_evidence), 
+            'genome_assembly': Path(parser.genome_assembly), 
+            'annotation_target': Path(parser.target_annotation), 
+            'outbase': Path(parser.outbase)}
 
 # function main
 def main():
-    # get arguments
     args = get_arguments()
-    # print arguments
-    print(args)
+    outbase = args["outbase"]
+    if not outbase.exists():
+        outbase.mkdir(parents=True, exist_ok=True)
+    #generate_sequences for evidence
+    for option, path in args.keys():
+        if "evidence" in option or "target" in option:
+            results = run_gffread(outbase, args["genome_assembly"], path, kind=[option])
+            if results.returncode != 0:
+                print("Error in {}: {}".format(option, results.stderr.decode()))
+        
+
+
+
 
 # run main function
 if __name__ == '__main__':
