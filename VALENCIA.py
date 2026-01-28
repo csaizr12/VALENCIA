@@ -44,6 +44,7 @@ def main():
     #generate_sequences for evidence
     for option, path in args.items():
         if "evidence" in option or "target" in option:
+            print(option, args)
             results = run_gffread(outbase, args["genome_assembly"], path, kinds=[option])
             if results.returncode != 0:
                 print("Error in {}: {}".format(option, results.stderr.decode()))
