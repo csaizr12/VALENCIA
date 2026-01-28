@@ -18,6 +18,7 @@ def run_gffread(outbase, genome_assembly, annotation, kinds=[]):
             
             outfile = outpath / "{}.fasta".format(kind)
             cmd_run = cmd.format(gffread_modes[kind], outfile, genome_assembly, annotation)
+            print(cmd_run)
             if outfile.is_file():
                 log_msg = "Gffread in {} mode already, done, skipping it".format(kind)
                 return {"outfile": outfile, "log_msg": log_msg, "returncode": 0,
