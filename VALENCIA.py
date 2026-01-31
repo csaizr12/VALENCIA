@@ -49,7 +49,7 @@ def main():
                 print("Error in {}: {}".format(option, results["log_msg"]))
 
     # generate sequences for target
-    results = run_gffread(outbase, args["genome_assembly"], args["annotation_target"], kinds=["annotation_target"])
+    results = run_gffread(outbase, args["genome_assembly"], args["annotation_target"], kinds=["annotation"])
         
 
 # run main function
