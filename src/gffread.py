@@ -16,7 +16,6 @@ def run_gffread(outbase, genome_assembly, annotation_target, path, kinds=[]):
         kinds = ["transcripts", "proteins"]
     if not outpath.exists():
             outpath.mkdir(parents=True)
-    last_result = None
     for kind in kinds:
             kind = str(kind).split("_")[0]
             outfile = outpath / "{}.fasta".format(kind)
@@ -24,7 +23,7 @@ def run_gffread(outbase, genome_assembly, annotation_target, path, kinds=[]):
             print(cmd_run)
             if outfile.is_file():
                 log_msg = "Gffread in {} mode already, done, skipping it".format(kind)
-                last_result = {"outfile": outfile, "log_msg": log_msg, "returncode": 0,
+                return {"outfile": outfile, "log_msg": log_msg, "returncode": 0,
                             "cmd": cmd_run}
             else:
                 results = run(cmd_run, shell=True, capture_output=True)
@@ -32,9 +31,8 @@ def run_gffread(outbase, genome_assembly, annotation_target, path, kinds=[]):
                     log_msg = "Gffread in {} mode successfully done".format(kind)
                 else:
                     log_msg = "Gffread in {} mode error: {}".format(kind, results.stderr.decode())
-                    last_result = {"outfile": outfile, "log_msg": log_msg, "returncode": results.returncode,
+                    return {"outfile": outfile, "log_msg": log_msg, "returncode": results.returncode,
                             "cmd": cmd_run}
-    return last_result
 
 
 
