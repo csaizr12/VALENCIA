@@ -1,7 +1,7 @@
 from subprocess import run
 
 
-def run_gffread(outbase, genome_assembly, annotation, kinds=[]):
+def run_gffread(outbase, genome_assembly, annotation_target, kinds=[]):
     results = {"transcripts": {}, "proteins": {}}
     gffread_modes = {"transcripts": "w", "proteins": "y"}
     cmd = "gffread -{} {} -g {} {}"
@@ -16,7 +16,7 @@ def run_gffread(outbase, genome_assembly, annotation, kinds=[]):
     for kind in kinds:
             kind = kind.split("_")[0]
             outfile = outpath / "{}.fasta".format(kind)
-            cmd_run = cmd.format(gffread_modes[kind], outfile, genome_assembly, annotation)
+            cmd_run = cmd.format(gffread_modes[kind], outfile, genome_assembly, annotation_target)
             print(cmd_run)
             if outfile.is_file():
                 log_msg = "Gffread in {} mode already, done, skipping it".format(kind)
