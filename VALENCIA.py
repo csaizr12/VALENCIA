@@ -44,7 +44,7 @@ def main():
     #generate_sequences for evidence
     for option, path in args.items():
         if "evidence" in option:
-            kinds = ["evidence"]
+            kinds = ["transcripts", "proteins"]
         elif option == "annotation_target":
             kinds = ["annotation_target"]
         results = run_gffread(outbase, args["genome_assembly"],
