@@ -3,7 +3,6 @@ from subprocess import run
 
 def run_gffread(outbase, genome_assembly, annotation, kinds=[]):
     results = {"transcripts": {}, "proteins": {}}
-    print(annotation)
     gffread_modes = {"transcripts": "w", "proteins": "y"}
     cmd = "gffread -{} {} -g {} {}"
 
