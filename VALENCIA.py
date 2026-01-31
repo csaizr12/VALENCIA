@@ -19,7 +19,7 @@ def parse_arguments():
     parser.add_argument('--genome_assembly', '-g',
                          type=str, help=help_genome, required=True)
     help_target = '(Required) Target annotation to be evaluated'
-    parser.add_argument('--target_annotation', '-x',
+    parser.add_argument('--annotation_target', '-x',
                          type=str, help=help_target, required=True)
     help_outbase = '(Required) Outbase'
     parser.add_argument('--outbase','-o', 
@@ -32,7 +32,7 @@ def get_arguments():
     return {'transcripts_evidence': Path(parser.transcriptome_evidence), 
             'proteins_evidence': Path(parser.protein_evidence), 
             'genome_assembly': Path(parser.genome_assembly), 
-            'annotation_target': Path(parser.target_annotation), 
+            'annotation_target': Path(parser.annotation_target), 
             'outbase': Path(parser.outbase)}
 
 # function main
@@ -45,7 +45,7 @@ def main():
     for option, path in args.items():
         if "evidence" in option or "target" in option:
             print(option, args)
-            results = run_gffread(outbase, args["genome_assembly"], args["target_annotation"], path, kinds=[option])
+            results = run_gffread(outbase, args["genome_assembly"], args["annotation_target"], path, kinds=[option])
             if results["returncode"] != 0:
                 print("Error in {}: {}".format(option, results["log_msg"]))
         
