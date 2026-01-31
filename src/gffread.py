@@ -6,8 +6,6 @@ def run_gffread(outbase, genome_assembly, annotation_target, path, kinds=[]):
     gffread_modes = {"transcripts": "w", "proteins": "y"}
     cmd = "gffread -{} {} -g {} {}"
 
-    
-
     if "annotation_target" not in kinds:
         outpath = outbase / "evidence_sequences"
     else:
