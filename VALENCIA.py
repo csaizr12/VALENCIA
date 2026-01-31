@@ -38,7 +38,6 @@ def get_arguments():
 # function main
 def main():
     args = get_arguments()
-    print(args)
     outbase = args["outbase"]
     if not outbase.exists():
         outbase.mkdir(parents=True, exist_ok=True)
@@ -47,12 +46,10 @@ def main():
         if "evidence" in option or "target" in option:
             print(option, args)
             results = run_gffread(outbase, args["genome_assembly"], path, kinds=[option])
+            print(results["log_msg"])
             if results["returncode"] != 0:
                 print("Error in {}: {}".format(option, results["log_msg"]))
         
-
-
-
 
 # run main function
 if __name__ == '__main__':
