@@ -47,12 +47,10 @@ def main():
             kinds = ["evidence"]
         elif option == "annotation_target":
             kinds = ["annotation_target"]
-        else:
-            continue
         results = run_gffread(outbase, args["genome_assembly"],
-                                   args["annotation_target"], path, kinds=kinds)
+                              args["annotation_target"], path, kinds=kinds)
         if results["returncode"] != 0:
-                print("Error in {}: {}".format(option, results["log_msg"]))        
+              print("Error in {}: {}".format(option, results["log_msg"]))        
 
 # run main function
 if __name__ == '__main__':
