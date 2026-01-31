@@ -15,6 +15,7 @@ def run_gffread(outbase, genome_assembly, annotation_target, kinds=[]):
             outpath.mkdir(parents=True)
     for kind in kinds:
             kind = kind.split("_")[0]
+            print(kind)
             outfile = outpath / "{}.fasta".format(kind)
             cmd_run = cmd.format(gffread_modes[kind], outfile, genome_assembly, annotation_target)
             print(cmd_run)
