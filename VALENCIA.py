@@ -38,6 +38,7 @@ def get_arguments():
 # function main
 def main():
     args = get_arguments()
+    print(args)
     outbase = args["outbase"]
     if not outbase.exists():
         outbase.mkdir(parents=True, exist_ok=True)
