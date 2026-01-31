@@ -43,12 +43,9 @@ def main():
         outbase.mkdir(parents=True, exist_ok=True)
     #generate_sequences for evidence
     for option, path in args.items():
-        if "evidence" in option:
-            kinds = ["transcripts", "proteins"]
-        elif option == "annotation_target":
-            kinds = ["annotation_target"]
+       if "evidence" in option or "target" in option:
         results = run_gffread(outbase, args["genome_assembly"],
-                              args["annotation_target"], path, kinds=kinds)
+                              args["annotation_target"], path, kinds=[option])
         if results["returncode"] != 0:
               print("Error in {}: {}".format(option, results["log_msg"]))        
 
