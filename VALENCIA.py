@@ -46,11 +46,7 @@ def main():
         if "evidence" in option:
             results = run_gffread(outbase, args["genome_assembly"], path, kinds=[option])
             if results["returncode"] != 0:
-                print("Error in {}: {}".format(option, results["log_msg"]))
-
-    # generate sequences for target
-    results = run_gffread(outbase, args["genome_assembly"], args["annotation_target"], kinds=["annotation"])
-        
+                print("Error in {}: {}".format(option, results["log_msg"]))        
 
 # run main function
 if __name__ == '__main__':
