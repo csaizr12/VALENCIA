@@ -28,7 +28,7 @@ def run_gffread(outbase, genome_assembly, annotation_path, kinds=[]):
                     log_msg = "Gffread in {} mode successfully done".format(kind)
                 else:
                     log_msg = "Gffread in {} mode error: {}".format(kind, results.stderr.decode())
-            return {"outfile": outfile, "log_msg": log_msg, "returncode": results.returncode,
+                return {"outfile": outfile, "log_msg": log_msg, "returncode": results.returncode,
                     "cmd": cmd_run}
 
 
