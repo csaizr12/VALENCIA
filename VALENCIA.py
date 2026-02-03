@@ -45,7 +45,7 @@ def main():
     for option, path in args.items():
        if "evidence" in option or "target" in option:
         results = run_gffread(outbase, args["genome_assembly"],
-                              args["annotation_target"], path, kinds=[option])
+                              args["annotation_target"], kinds=[option])
         if results["returncode"] != 0:
               print("Error in {}: {}".format(option, results["log_msg"]))        
 

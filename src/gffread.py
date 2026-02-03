@@ -1,7 +1,7 @@
 from subprocess import run
 
 
-def run_gffread(outbase, genome_assembly, annotation_target, path, kinds=[]):
+def run_gffread(outbase, genome_assembly, annotation_target, kinds=[]):
     results = {"transcripts": {}, "proteins": {}}
     gffread_modes = {"transcripts": "w", "proteins": "y"}
     cmd = "gffread -{} {} -g {} {}"
