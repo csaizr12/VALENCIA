@@ -39,15 +39,17 @@ def get_arguments():
 def main():
     args = get_arguments()
     outbase = args["outbase"]
+    results = {}
     if not outbase.exists():
         outbase.mkdir(parents=True, exist_ok=True)
     #generate_sequences for evidence
     for option, path in args.items():
        if "evidence" in option or "target" in option:
-        results = run_gffread(outbase, args["genome_assembly"],
-                              path, kinds=[option])
-        if results["returncode"] != 0:
-              print("Error in {}: {}".format(option, results["log_msg"]))        
+            run_gffread(outbase, args["genome_assembly"],
+                        path, results, kinds=[option])
+       for kind, result in results.items():
+           if result["returncode"] != 0:
+                print("Error in {}: {}".format(kind, results["log_msg"]))        
 
 # run main function
 if __name__ == '__main__':

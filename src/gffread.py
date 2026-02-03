@@ -1,8 +1,10 @@
 from subprocess import run
 
 
-def run_gffread(outbase, genome_assembly, annotation_path, kinds=[]):
-    gffread_modes = {"transcripts": "w", "proteins": "y"}
+def run_gffread(outbase, genome_assembly, annotation_path, results, kinds=[]):
+    results = {}
+    gffread_modes = {"transcripts": "w", "proteins": "y",
+                    "transcripts_target": "w", "proteins_target": "y"}
     cmd = "gffread -{} {} -g {} {}"
 
     if "annotation_target" not in kinds:
@@ -10,7 +12,7 @@ def run_gffread(outbase, genome_assembly, annotation_path, kinds=[]):
     else:
         outpath = outbase / "target_annotation_sequences"
     if "annotation_target" in kinds:
-        kinds = ["transcripts", "proteins"]
+        kinds = ["transcripts_target", "proteins_target"]
     else:
          kinds = [kind.split("_")[0] for kind in kinds]
     if not outpath.exists():
@@ -20,18 +22,17 @@ def run_gffread(outbase, genome_assembly, annotation_path, kinds=[]):
             cmd_run = cmd.format(gffread_modes[kind], outfile, genome_assembly, annotation_path)
             if outfile.is_file():
                 log_msg = "Gffread in {} mode already, done, skipping it".format(kind)
-                return {"outfile": outfile, "log_msg": log_msg, "returncode": 0,
-                            "cmd": cmd_run}
+                results[kind] = {"outfile": outfile, "log_msg": log_msg, "returncode": 0,
+                                 "cmd": cmd_run}
             else:
                 results = run(cmd_run, shell=True, capture_output=True)
                 if results.returncode == 0:
                     log_msg = "Gffread in {} mode successfully done".format(kind)
                 else:
                     log_msg = "Gffread in {} mode error: {}".format(kind, results.stderr.decode())
-                return {"outfile": outfile, "log_msg": log_msg, "returncode": results.returncode,
-                    "cmd": cmd_run}
-
-
+                results[kind]= {"outfile": outfile, "log_msg": log_msg, "returncode": results.returncode,
+                                "cmd": cmd_run}
+    return results
 
         
 
