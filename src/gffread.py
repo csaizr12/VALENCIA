@@ -12,7 +12,7 @@ def run_gffread(outbase, genome_assembly, annotation_path, kinds=[]):
     if "annotation_target" in kinds:
         kinds = ["transcripts", "proteins"]
     else:
-         kinds = [kind.split()[0] for kind in kinds]
+         kinds = [kind.split("_")[0] for kind in kinds]
     if not outpath.exists():
             outpath.mkdir(parents=True)
     for kind in kinds:
