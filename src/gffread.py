@@ -1,23 +1,23 @@
 from subprocess import run
 
 
-def run_gffread(outbase, genome_assembly, annotation_target, kinds=[]):
-    results = {"transcripts": {}, "proteins": {}}
+def run_gffread(outbase, genome_assembly, annotation_path, kinds=[]):
     gffread_modes = {"transcripts": "w", "proteins": "y"}
     cmd = "gffread -{} {} -g {} {}"
 
     if "annotation_target" not in kinds:
-        outpath = outbase / "evidence_sequences"
+        outpath = outbase / "evidence_annotation_sequences"
     else:
-        outpath = outbase / "target_sequences"
+        outpath = outbase / "target_annotation_sequences"
     if "annotation_target" in kinds:
         kinds = ["transcripts", "proteins"]
+    else:
+         kinds = [kind.split()[0] for kidnd in kinds]
     if not outpath.exists():
             outpath.mkdir(parents=True)
     for kind in kinds:
-            kind = str(kind).split("_")[0]
             outfile = outpath / "{}.fasta".format(kind)
-            cmd_run = cmd.format(gffread_modes[kind], outfile, genome_assembly, annotation_target)
+            cmd_run = cmd.format(gffread_modes[kind], outfile, genome_assembly, annotation_path)
             if outfile.is_file():
                 log_msg = "Gffread in {} mode already, done, skipping it".format(kind)
                 return {"outfile": outfile, "log_msg": log_msg, "returncode": 0,
@@ -28,8 +28,8 @@ def run_gffread(outbase, genome_assembly, annotation_target, kinds=[]):
                     log_msg = "Gffread in {} mode successfully done".format(kind)
                 else:
                     log_msg = "Gffread in {} mode error: {}".format(kind, results.stderr.decode())
-                return {"outfile": outfile, "log_msg": log_msg, "returncode": results.returncode,
-                        "cmd": cmd_run}
+            return {"outfile": outfile, "log_msg": log_msg, "returncode": results.returncode,
+                    "cmd": cmd_run}
 
 
 
