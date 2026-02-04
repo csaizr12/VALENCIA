@@ -19,6 +19,7 @@ def run_gffcompare(outbase, protein_evidence, transcripts_evidence,
     for kind in kinds:
         outfile = outpath/"{}.gffcompare".format(kind)
         cmd_run = cmd.format(anotation_target, evidence_file, outfile)
+        print(cmd_run)
         if outfile.is_file():
              log_msg = "Gffcompare already done, skipping it"
              results[kinds] = {"outfile": outfile, "log_msg": log_msg, "returncode": 0,
