@@ -3,7 +3,9 @@ import argparse
 
 from pathlib import Path
 
+from src.gffcompare import run_gffcompare
 from src.gffread import run_gffread
+
 
 #function generate parse_arguments:
 def parse_arguments():
@@ -49,7 +51,19 @@ def main():
                         path, results, kinds=[option])
        for kind, result in results.items():
            if result["returncode"] != 0:
-                print("Error in {}: {}".format(kind, results["log_msg"]))        
+                print("Error in {}: {}".format(kind, results["log_msg"]))
+    # for evidence annotation:
+    for option, path in args.items():
+        if "evidence" in option:
+            if "evidence" or "target" in option:
+        #run compare(evidence, target)
+              run_gffcompare(outbase, args["proteins_evidence"],
+                     args["transcripts_evidence"],
+                    args["annotation_target"], results, kinds=[option])
+        for kind, result in results.items():
+              if result["returncode"] != 0:
+                  print("Error in {}: {}".format(kind, results["log_msg"]))
+        
 
 # run main function
 if __name__ == '__main__':
