@@ -9,9 +9,9 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
             outpath.mkdir(parents=True, exist_ok=True)
 
     for kind in kinds:
-        if "protein_evidence" == kinds:
+        if kind == "proteins_evidence":
             evidence_file = protein_path
-        elif "transcripts_evidence" == kinds:
+        elif kind == "transcripts_evidence":
             evidence_file = transcripts_path
         else:
             continue
