@@ -1,6 +1,6 @@
 from subprocess import run
 
-def run_gffcompare(outbase, protein_evidence, transcripts_evidence, 
+def run_gffcompare(outbase, protein_path, transcripts_path, 
                    anotation_target, results, kinds=[]):
     cmd = "gffcompare -r {} -o {} {}"
 
@@ -10,9 +10,9 @@ def run_gffcompare(outbase, protein_evidence, transcripts_evidence,
 
     for kind in kinds:
         if "protein_evidence" == kinds:
-            evidence_file = protein_evidence
+            evidence_file = protein_path
         elif "transcripts_evidence" == kinds:
-            evidence_file = transcripts_evidence
+            evidence_file = transcripts_path
         else:
             continue
         outfile = outpath/"{}.gffcompare".format(kind)
