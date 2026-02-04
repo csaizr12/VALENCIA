@@ -2,7 +2,7 @@ from subprocess import run
 
 def run_gffcompare(outbase, protein_evidence, transcripts_evidence, 
                    anotation_target, results, kinds=[]):
-    cmd = "gffcompare -r {} {} -o {}"
+    cmd = "gffcompare -r {} -o {} {}"
 
     outpath = outbase / "gffcompare_results"
     if not outpath.exists():
@@ -11,12 +11,12 @@ def run_gffcompare(outbase, protein_evidence, transcripts_evidence,
     for kind in kinds:
         if "protein_evidence" == kinds:
             evidence_file = protein_evidence
-        elif "transcriptome_evidence" == kinds:
+        elif "transcripts_evidence" == kinds:
             evidence_file = transcripts_evidence
         else:
             continue
         outfile = outpath/"{}.gffcompare".format(kind)
-        cmd_run = cmd.format(anotation_target, evidence_file, outfile)
+        cmd_run = cmd.format(anotation_target, outfile, evidence_file)
         print(cmd_run)
         if outfile.is_file():
              log_msg = "Gffcompare already done, skipping it"
