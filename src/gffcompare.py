@@ -7,16 +7,13 @@ def run_gffcompare(outbase, protein_evidence, transcripts_evidence,
     outpath = outbase / "gffcompare_results"
     if not outpath.exists():
             outpath.mkdir(parents=True, exist_ok=True)
-    
+
     for kind in kinds:
-         if kind == "protein_evidence":
-              evidence_file = protein_evidence
-         elif kind == "transcript_evidence":
-              evidence_file = transcripts_evidence
-         else:
-              continue
-    
-    for kind in kinds:
+        if "protein_evidence" in kinds:
+            evidence_file = protein_evidence
+        elif "transcriptome_evidence" in kinds:
+            evidence_file = transcripts_evidence
+        
         outfile = outpath/"{}.gffcompare".format(kind)
         cmd_run = cmd.format(anotation_target, evidence_file, outfile)
         print(cmd_run)
