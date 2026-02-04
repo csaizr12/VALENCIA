@@ -13,7 +13,8 @@ def run_gffcompare(outbase, protein_evidence, transcripts_evidence,
             evidence_file = protein_evidence
         elif "transcriptome_evidence" in kinds:
             evidence_file = transcripts_evidence
-        
+        else:
+            continue
         outfile = outpath/"{}.gffcompare".format(kind)
         cmd_run = cmd.format(anotation_target, evidence_file, outfile)
         print(cmd_run)
