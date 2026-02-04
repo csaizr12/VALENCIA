@@ -54,7 +54,7 @@ def main():
                 print("Error in {}: {}".format(kind, results["log_msg"]))
     # for evidence annotation:
     for option, path in args.items():
-        if "evidence" or "target" in option:
+        if "evidence" in option:
         #run compare(evidence, target)
              run_gffcompare(outbase, args["proteins_evidence"],
                              args["transcripts_evidence"],
