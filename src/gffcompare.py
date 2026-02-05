@@ -1,5 +1,4 @@
 from subprocess import run
-from pathlib import Path
 
 def run_gffcompare(outbase, protein_path, transcripts_path, 
                    anotation_path, results, kinds=[]):
@@ -17,7 +16,7 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
         else:
             continue
         outfile = (outpath/"{}.gffcompare".format(kind)).resolve()
-        cmd_run = cmd.format(Path(anotation_path).resolve(), outfile, Path(evidence_file).resolve())
+        cmd_run = cmd.format(anotation_path, outfile, evidence_file)
         print(cmd_run)
         if outfile.is_file():
              log_msg = "Gffcompare already done, skipping it"
