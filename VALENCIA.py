@@ -52,18 +52,18 @@ def main():
        if "evidence" in option or "target" in option:
             run_gffread(outbase, args["genome_assembly"],
                         path, results, kinds=[option])
-       for kind, result in results.items():
-           if result["returncode"] != 0:
-                print("Error in {}: {}".format(kind, result["log_msg"]))
+    for kind, result in results.items():
+        if result["returncode"] != 0:
+            print("Error in {}: {}".format(kind, result["log_msg"]))
     # for evidence annotation:
     for option, path in args.items():
         if "evidence" in option:
         #run compare(evidence, target)
              run_gffcompare(outbase,args["proteins_evidence"], args["transcripts_evidence"], 
                             args["annotation_target"], results, kinds=[option])
-        for kind, result in results.items():
-              if result["returncode"] != 0:
-                  print("Error in {}: {}".format(kind, result["log_msg"]))
+    for kind, result in results.items():
+        if result["returncode"] != 0:
+            print("Error in {}: {}".format(kind, result["log_msg"]))
         
 
 # run main function
