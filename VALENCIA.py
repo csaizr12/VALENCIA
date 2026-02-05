@@ -39,6 +39,9 @@ def get_arguments():
 
 # function main
 def main():
+    import os
+    print(">>> Working directory:", os.getcwd())
+
     args = get_arguments()
     outbase = args["outbase"]
     results = {}
@@ -51,7 +54,7 @@ def main():
                         path, results, kinds=[option])
        for kind, result in results.items():
            if result["returncode"] != 0:
-                print("Error in {}: {}".format(kind, result["log_msg"]))
+                print("Error in {}: {}".format(kind, results["log_msg"]))
     # for evidence annotation:
     for option, path in args.items():
         if "evidence" in option:
@@ -60,7 +63,7 @@ def main():
                             args["annotation_target"], results, kinds=[option])
         for kind, result in results.items():
               if result["returncode"] != 0:
-                  print("Error in {}: {}".format(kind, result["log_msg"]))
+                  print("Error in {}: {}".format(kind, results["log_msg"]))
         
 
 # run main function
