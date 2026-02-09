@@ -20,7 +20,8 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
         print(cmd_run)
         if outfile.is_file():
              log_msg = "Gffcompare already done, skipping it"
-             results[kind] = {"outfile": outfile, "log_msg": log_msg, "returncode": 0,
+             results[kind] = {"outfile": outfile, "log_msg": log_msg,
+                               "returncode": 0,
                                  "cmd": cmd_run}
         else:
             cmd_results = run(cmd_run, shell=True, capture_output=True)
