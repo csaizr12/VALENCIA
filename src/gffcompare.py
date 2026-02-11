@@ -10,13 +10,13 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
 
     for kind in kinds:
         if kind == "proteins_evidence":
-            evidence_file = protein_path
+            evidence_path = protein_path
         elif kind == "transcripts_evidence":
-            evidence_file = transcripts_path
+            evidence_path = transcripts_path
         else:
             continue
         outfile = (outpath/"{}".format(kind)).resolve()
-        cmd_run = cmd.format(anotation_path, outfile, evidence_file)
+        cmd_run = cmd.format(evidence_path, outfile, anotation_path)
         print(cmd_run)
         if outfile.is_file():
              log_msg = "Gffcompare already done, skipping it"
