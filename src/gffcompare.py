@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from subprocess import run
 
@@ -10,7 +11,6 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
     outpath = outbase / "gffcompare_results"
     if not outpath.exists():
             outpath.mkdir(parents=True, exist_ok=True)
-    os.chdir(outpath)
 
     for kind in kinds:
         if kind == "proteins_evidence":
@@ -20,6 +20,8 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
         else:
             continue
         outfile = outpath/"{}".format(kind)
+        out_prefix = "{}.{}.{}"
+        suffixes = ["tmap", "refmap"]
         cmd_run = cmd.format(evidence_path, outfile, anotation_path)
         print(cmd_run)
         if outfile.is_file():
@@ -33,12 +35,17 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
                 results[kind]= {"outfile": outfile, "log_msg": log_msg,
                                 "returncode": cmd_results.returncode,
                                 "cmd": cmd_run}
+                for suffix in suffixes:
+                     ref_fpath = evidence_path.parents() / out_prefix.format(kind, anotation_path.name(), suffix)
+                     new_fpath = outbase/ "{}.{}.{}".format(kind, anotation_path.name(), suffix)
+                     shutil.move(ref_fpath, new_fpath)
+
             else:
                 log_msg = "Gffcompare error: {}".format(cmd_results.stderr.decode())
                 results[kind]= {"outfile": outfile, "log_msg": log_msg, 
                                 "returncode": cmd_results.returncode,
                                 "cmd": cmd_run}
-    os.chdir(current_dir)
+
     return results    
 
     
