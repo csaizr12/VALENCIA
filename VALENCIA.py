@@ -1,6 +1,7 @@
 # import 
 import argparse
 import os
+import sys
 
 from pathlib import Path
 
@@ -41,6 +42,7 @@ def get_arguments():
 # function main
 def main():
     print(">>> Working directory:", os.getcwd())
+    print("Command: {}".format(" ".join(sys.argv)))
 
     args = get_arguments()
     outbase = args["outbase"]
