@@ -5,7 +5,7 @@ from subprocess import run
 
 def run_gffcompare(outbase, protein_path, transcripts_path, 
                    anotation_path, results, kinds=[]):
-    current_dir = os.getcwd()
+
     cmd = "gffcompare -r {} -o {} {}"
 
     outpath = outbase / "gffcompare_results"
@@ -37,7 +37,7 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
                                 "cmd": cmd_run}
                 for suffix in suffixes:
                      ref_fpath = evidence_path.parent / out_prefix.format(kind, anotation_path.name, suffix)
-                     new_fpath = outbase/ "{}.{}.{}".format(kind, anotation_path.name, suffix)
+                     new_fpath = outpath/ "{}.{}.{}".format(kind, anotation_path.name, suffix)
                      shutil.move(ref_fpath, new_fpath)
 
             else:
