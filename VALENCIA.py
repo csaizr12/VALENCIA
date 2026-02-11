@@ -1,5 +1,6 @@
 # import 
 import argparse
+import os
 
 from pathlib import Path
 
@@ -39,7 +40,6 @@ def get_arguments():
 
 # function main
 def main():
-    import os
     print(">>> Working directory:", os.getcwd())
 
     args = get_arguments()
