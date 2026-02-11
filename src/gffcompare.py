@@ -1,12 +1,16 @@
+import os
+
 from subprocess import run
 
 def run_gffcompare(outbase, protein_path, transcripts_path, 
                    anotation_path, results, kinds=[]):
+    current_dir = os.getcwd()
     cmd = "gffcompare -r {} -o {} {}"
 
     outpath = outbase / "gffcompare_results"
     if not outpath.exists():
             outpath.mkdir(parents=True, exist_ok=True)
+    os.chdir(outpath)
 
     for kind in kinds:
         if kind == "proteins_evidence":
@@ -34,6 +38,7 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
                 results[kind]= {"outfile": outfile, "log_msg": log_msg, 
                                 "returncode": cmd_results.returncode,
                                 "cmd": cmd_run}
+    os.chdir(current_dir)
     return results    
 
     
