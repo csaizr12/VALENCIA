@@ -36,8 +36,8 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
                                 "returncode": cmd_results.returncode,
                                 "cmd": cmd_run}
                 for suffix in suffixes:
-                     ref_fpath = evidence_path.parents() / out_prefix.format(kind, anotation_path.name(), suffix)
-                     new_fpath = outbase/ "{}.{}.{}".format(kind, anotation_path.name(), suffix)
+                     ref_fpath = evidence_path.parents / out_prefix.format(kind, anotation_path.name, suffix)
+                     new_fpath = outbase/ "{}.{}.{}".format(kind, anotation_path.name, suffix)
                      shutil.move(ref_fpath, new_fpath)
 
             else:
