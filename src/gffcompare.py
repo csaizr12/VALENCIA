@@ -19,7 +19,7 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
             evidence_path = transcripts_path
         else:
             continue
-        outfile = (outpath/"{}".format(kind)).resolve()
+        outfile = outpath/"{}".format(kind)
         cmd_run = cmd.format(evidence_path, outfile, anotation_path)
         print(cmd_run)
         if outfile.is_file():
