@@ -23,7 +23,6 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
         out_prefix = "{}.{}.{}"
         suffixes = ["tmap", "refmap"]
         cmd_run = cmd.format(evidence_path, outfile, anotation_path)
-        print(cmd_run)
         if outfile.is_file():
              log_msg = "Gffcompare already done, skipping it"
              results[kind] = {"outfile": outfile, "log_msg": log_msg,
