@@ -14,7 +14,11 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
             class_code = fields[2]
             id_list = fields[3]
 
-            gen_id, isoform_id = id_list.split("|")
+            parts = id_list.split("|")
+            if len(parts) < 2:
+                 continue
+            gen_id = parts[0]
+            isoform_id = parts[1]
 
             if gen_id in gene_isoform_dict:
                     gene_isoform_dict[gen_id][isoform_id]['class_code'] = class_code
