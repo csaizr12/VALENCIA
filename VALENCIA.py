@@ -73,7 +73,7 @@ def main():
             print("Error in {}: {}".format(kind, result["log_msg"]))
     # dictionary with gene and isoforms from target annotation
     gene_dict = get_gene_isoform_dict_from_target_annotation(args["annotation_target"])
-    results_dir = 'gffcompare_results'
+    results_dir = os.path.join(outbase, "gffcompare_results")
 
     for filname in os.listdir(results_dir):
         if filname.endswith(".refmap"): 
