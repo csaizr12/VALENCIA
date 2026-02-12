@@ -12,7 +12,7 @@ def get_gene_isoform_dict_from_target_annotation(target_annotation):
             if len(fields) < 9:
                 continue
             attributes = fields[8]
-            id_match = re.search(r'gene_id=([^;]+)', attributes)
+            id_match = re.search(r'ID=([^;]+)', attributes)
             parent_match = re.search(r'Parent=([^;]+)', attributes)
 
             if id_match and not parent_match:
@@ -29,7 +29,7 @@ def get_gene_isoform_dict_from_target_annotation(target_annotation):
                 continue
             attributes = fields[8]
             # obtein the gene_id and isoform_id from the attributes
-            id_match = re.search(r'gene_id=([^;]+)', attributes) 
+            id_match = re.search(r'ID=([^;]+)', attributes) 
             parent_match = re.search(r'Parent=([^;]+)', attributes)
             if not id_match or not parent_match:
                 continue
