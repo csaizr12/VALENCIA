@@ -18,7 +18,7 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
 
             gen_id = gen_id.strip()
             isoforms = [i.strip() for i in isoform_list.split(",") ]
-            if gen_id in gene_isoform_dict:
+            if gen_id not in gene_isoform_dict:
                     continue
             for isoform_id in isoforms:
                     gene_isoform_dict[gen_id][isoform_id]['class_code'] = class_code
