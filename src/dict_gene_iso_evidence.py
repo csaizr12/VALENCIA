@@ -20,7 +20,6 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
             gen_id = parts[0].strip()
             isoform_list = parts[1].strip()
 
-            gen_id = gen_id.strip()
             isoforms = [i.strip() for i in isoform_list.split(",") ]
             if gen_id not in gene_isoform_dict:
                     continue
