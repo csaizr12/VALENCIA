@@ -74,8 +74,6 @@ def main():
     print('>>> Dictionary with genes and isoforms from target annotation:')
     print(genes)
 
-        
-
 # run main function
 if __name__ == '__main__':
     main()
