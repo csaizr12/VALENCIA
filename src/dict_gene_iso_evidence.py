@@ -27,9 +27,8 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
                     continue
             for isoform_id in isoforms:
                     if isoform_id in gene_isoform_dict[gen_id]:
-                     gene_isoform_dict[gen_id][isoform_id]['class_code'] = class_code
-                     gene_isoform_dict[gen_id][isoform_id]['evidence_type'] = evidence_type
-         
+                     gene_isoform_dict[gen_id][isoform_id].update({
+                          'class_code': class_code,'evidence_type': evidence_type})
     return gene_isoform_dict
 
 
