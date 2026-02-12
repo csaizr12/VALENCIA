@@ -8,6 +8,8 @@ from pathlib import Path
 from src.gffcompare import run_gffcompare
 from src.gffread import run_gffread
 from src.dict_gene_iso import get_gene_isoform_dict_from_target_annotation
+from src.dict_gene_iso_evidence import add_refmap_info
+
 
 
 
@@ -41,7 +43,7 @@ def get_arguments():
             'annotation_target': Path(parser.annotation_target).absolute(), 
             'outbase': Path(parser.outbase).absolute()}
 
-# function main
+# main function
 def main():
     print(">>> Working directory:", os.getcwd())
     print("Command: {}".format(" ".join(sys.argv)))
@@ -70,10 +72,14 @@ def main():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
     # dictionary with gene and isoforms from target annotation
-    genes = get_gene_isoform_dict_from_target_annotation(args["annotation_target"])
-    print('>>> Dictionary with genes and isoforms from target annotation:')
-    print(genes)
+    gene_dict = get_gene_isoform_dict_from_target_annotation(args["annotation_target"])
+    results_dir = 'gffcompare_results'
 
+    for filname in os.listdir(results_dir):
+        if filname.endswith(".refmap"): 
+            info = os.path.join(results_dir, filname)
+            gene_dict = add_refmap_info(gene_dict, info)
+    print(gene_dict)
 # run main function
 if __name__ == '__main__':
     main()
