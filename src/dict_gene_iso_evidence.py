@@ -8,7 +8,7 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
         for line in f:
             if line.startswith("ref_gene"):
                 continue
-            fields = line.strip().split('\t')
+            fields = line.strip().split()
             class_code = fields[2]
             id_list = fields[3]
 
