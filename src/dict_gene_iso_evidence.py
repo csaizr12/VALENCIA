@@ -1,7 +1,9 @@
+import os
 def add_refmap_info(gene_isoform_dict, refmap_path):
-    if 'trasncripts' in refmap_path:
+    fname = os.path.basename(refmap_path).lower()
+    if 'trasncripts' in fname:
         evidence_type = 'transcripts'
-    elif 'proteins' in refmap_path:
+    elif 'proteins' in fname:
         evidence_type = 'proteins'
     else:
         evidence_type = 'unknown'
