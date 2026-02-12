@@ -7,6 +7,7 @@ from pathlib import Path
 
 from src.gffcompare import run_gffcompare
 from src.gffread import run_gffread
+from src.dict_gene_iso import build_gene_isoform_dict_from_target_annotation
 
 
 #function generate parse_arguments:
@@ -67,6 +68,11 @@ def main():
     for kind, result in results.items():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
+    # dictionary with gene and isoforms from target annotation
+    genes = build_gene_isoform_dict_from_target_annotation(args["annotation_target"])
+    print('>>> Dictionary with genes and isoforms from target annotation:')
+    print(genes)
+    
         
 
 # run main function
