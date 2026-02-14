@@ -14,7 +14,7 @@ def get_gene_isoform_dict_from_target_annotation(target_annotation):
             # obtein the id and parent match from the attributes
             id_match = re.search(r'ID=([^;]+)', attributes)
             parent_match = re.search(r'Parent=([^;]+)', attributes)
-
+            # identify biological role
             if id_match:
                 gene_id = id_match.group(1)
                 # if there is no parent, the ID belongs to a gene
