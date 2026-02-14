@@ -8,7 +8,7 @@ from pathlib import Path
 from src.gffcompare import run_gffcompare
 from src.gffread import run_gffread
 from src.dict_gene_iso import get_gene_isoform_dict_from_target_annotation
-from src.dict_gene_iso_evidence import add_refmap_info
+from src.dict_gene_iso_evidence_classcode import add_refmap_info
 
 
 
@@ -71,15 +71,16 @@ def main():
     for kind, result in results.items():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
-    # dictionary with gene and isoforms from target annotation
+    # dictionary with gene and isoforms from target annotation 
     gene_dict = get_gene_isoform_dict_from_target_annotation(args["annotation_target"])
+    # search refmap files obteined to gffcompare
     results_dir = os.path.join(outbase, "gffcompare_results")
-
     for filname in os.listdir(results_dir):
         if filname.endswith(".refmap"): 
             info = os.path.join(results_dir, filname)
+            # dictionary with gene, isoforms, type evidence and class code
             gene_dict = add_refmap_info(gene_dict, info)
     print(gene_dict)
-# run main function
+# run main function 
 if __name__ == '__main__':
-    main()
+    main() 
