@@ -18,9 +18,7 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
                 continue
             fields = line.strip().split('\t')
             class_code = fields[2]
-
-            if '|' not in fields[3]:
-                continue
+            
             gene_id, isoform_list = fields[3].split('|', 1)
 
             target_gene = gene_isoform_dict.get(gene_id.strip())

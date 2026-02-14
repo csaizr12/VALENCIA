@@ -73,12 +73,9 @@ def main():
     # dictionary with gene and isoforms from target annotation 
     gene_dict = get_gene_isoform_dict_from_target_annotation(args["annotation_target"])
     # search refmap files obteined to gffcompare
-    results_dir = os.path.join(outbase, "gffcompare_results")
-    for filname in os.listdir(results_dir):
-        if filname.endswith(".refmap"): 
-            info = os.path.join(results_dir, filname)
-            # dictionary with gene, isoforms, type evidence and class code
-            gene_dict = add_refmap_info(gene_dict, info)
+    results_dir = Path(outbase) / 'gffcompare_results'
+    for refmap_file in results_dir.glob('*.refmap'):
+        gene_dict = add_refmap_info(gene_dict, str(refmap_file))
     print(gene_dict)
 # run main function 
 if __name__ == '__main__':
