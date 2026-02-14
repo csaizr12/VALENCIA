@@ -11,7 +11,7 @@ def get_gene_isoform_dict_from_target_annotation(target_annotation):
                 continue
             fields = line.strip().split('\t')
             attributes = fields[8]
-            # obtein the gene_id and isoform_id from the attributes
+            # obtein the id and parent match from the attributes
             id_match = re.search(r'ID=([^;]+)', attributes)
             parent_match = re.search(r'Parent=([^;]+)', attributes)
 
@@ -21,11 +21,11 @@ def get_gene_isoform_dict_from_target_annotation(target_annotation):
                 if not parent_match:
                     if gene_id not in gene_isoform_dict:
                         gene_isoform_dict[gene_id] = {}
-                # if there is a parent, the ID belongs to a isoform            
+                # if there is a parent, the ID belongs to a isoform and the Parent belongs to a gen        
                 elif parent_match:
-                     
                      isoform_id = id_match.group(1)
                      gene_id = parent_match.group(1)
+                     # only add the isoform if the parent gen existe
                      if gene_id in gene_isoform_dict:
                          if isoform_id not in gene_isoform_dict[gene_id]:
                            gene_isoform_dict[gene_id][isoform_id] = {}
