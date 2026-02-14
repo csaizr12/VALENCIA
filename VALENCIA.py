@@ -47,7 +47,6 @@ def get_arguments():
 def main():
     print(">>> Working directory:", os.getcwd())
     print("Command: {}".format(" ".join(sys.argv)))
-
     args = get_arguments()
     outbase = args["outbase"]
     results = {}
