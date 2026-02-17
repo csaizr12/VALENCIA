@@ -18,17 +18,14 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
                 continue
             fields = line.strip().split('\t')
             class_code = fields[2]
-            gene_id, isoform_list = fields[3].split('|', 1)
+            gene_id, ido_id = fields[3].split('|', 1)
             # look up the gene_id in the gene_isoform_dict; if not found, get None.
             target_gene = gene_isoform_dict.get(gene_id.strip(), None)
             # if the gene is no present in the dictionary, skip and conitnue
-            if target_gene is None:
-                continue
+            if target_gene is None: continue
             if target_gene:
-                for isoform in isoform_list.split(','):
-                    iso_id = isoform.strip()
-                    if iso_id in target_gene:
-                        target_gene[iso_id].update({evidence_type: class_code})
+                    if ido_id in target_gene:
+                        target_gene[ido_id].update({evidence_type: class_code})
 
     return gene_isoform_dict
 
