@@ -1,9 +1,9 @@
 import os
 
-# parse a reference map file to update a gene-isoform dictionary
-# with evidence types a class codes 
+# define a function that updates a gene-isform dictionary
+# using a reference map file
 def add_refmap_info(gene_isoform_dict, refmap_path):
-    # identify evidence type
+    # get only the filename part from the full reference map path
     fname = os.path.basename(refmap_path)
     if 'transcripts_evidence' in fname:
         evidence_type = 'transcripts'
@@ -18,11 +18,12 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
                 continue
             fields = line.strip().split('\t')
             class_code = fields[2]
-            
             gene_id, isoform_list = fields[3].split('|', 1)
-
-            target_gene = gene_isoform_dict.get(gene_id.strip())
-            
+            # look up the gene_id in the gene_isoform_dict; if not found, get None.
+            target_gene = gene_isoform_dict.get(gene_id.strip(), None)
+            # if the gene is no present in the dictionary, skip and conitnue
+            if target_gene is None:
+                continue
             if target_gene:
                 for isoform in isoform_list.split(','):
                     iso_id = isoform.strip()
