@@ -67,7 +67,7 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
                         if id_field.startswith("MSTRG"):
                             target_gene[iso_id].setdefault(evidence_type, {})
                             target_gene[iso_id][evidence_type].update({"class_code": class_code, "match_sequence": id_field})
-                        if id_field.startswith("PAC"):
+                        elif id_field.startswith("PAC"):
                             target_gene[iso_id].setdefault(evidence_type, {})
                             target_gene[iso_id][evidence_type].update({"class_code": class_code, "target_id": id_field})
     return gene_isoform_dict
