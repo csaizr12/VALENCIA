@@ -66,6 +66,6 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
                 if target_gene:
                     if iso_id in target_gene:
                         target_gene[iso_id].update({evidence_type: class_code})
-    print(gene_isoform_dict["AT1G01260.Araport11.447"])
+    print(gene_isoform_dict)
 
     return gene_isoform_dict
