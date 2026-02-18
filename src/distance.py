@@ -17,15 +17,14 @@ def edit_distance(gene_isoform_dict, transcript_target_fasta, transcript_evidenc
             #  3. Detectar si es transcript o protein 
             evidence_type = list(info.keys())[0]
             if evidence_type == "transcripts":
-                id = iso_id.split(".Araport11")[0]
-                if id not in records_transcript_target or id not in records_transcript_evidence:
+                if iso_id not in records_transcript_target or iso_id not in records_transcript_evidence:
                     print('not target:', iso_id)
                     continue
                  #  4. Cargar secuencias target/evidence 
                 seq_target = str(records_transcript_target[iso_id].seq)
                 seq_evidence = str(records_transcript_evidence[iso_id].seq)
             elif evidence_type == "protein":
-                 if id not in records_protein_target or id not in records_protein_evidence:
+                 if iso_id not in records_protein_target or iso_id not in records_protein_evidence:
                     print('not evidence:', iso_id)
                     continue
                 # 4. Cargar secuencias target/evidence
@@ -35,9 +34,9 @@ def edit_distance(gene_isoform_dict, transcript_target_fasta, transcript_evidenc
                 continue
             #  5. Calcular distancia 
             edit_distance = distance(seq_target, seq_evidence)
-            print(edit_distance)
             # 6. Guardarla en gene_dic
             gene_isoform_dict[gene_id][iso_id]["edit_distance"] = edit_distance
+    print(gene_isoform_dict)
 
     return gene_isoform_dict
 
