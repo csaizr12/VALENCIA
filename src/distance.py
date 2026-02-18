@@ -34,7 +34,7 @@ def edit_distance(gene_isoform_dict, transcript_target_fasta, transcript_evidenc
             #  5. Calcular distancia 
             edit_distance = distance(seq_target, seq_evidence)
             # 6. Guardarla en gene_dic
-            gene_isoform_dict[gene_id][iso_id]["edit_distance"] = edit_distance
+            gene_isoform_dict[gene_id][iso_id].update(["edit_distance"]) = edit_distance
 
     return gene_isoform_dict
 
