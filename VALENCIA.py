@@ -73,16 +73,19 @@ def main():
     # dictionary with gene and isoforms from target annotation 
     with open(args["annotation_target"], "r") as target_annotation:
         gene_dict = get_gene_isoform_dict_from_target_annotation(target_annotation)
-    # search refmap files obteined to gffcompare
+    # search refmap files obteined to gffcompare and edit_distance
     results_dir = Path(outbase) / 'gffcompare_results'
+    transcript_target = Path(outbase) / "target_annotation_sequences/transcripts.fasta"
+    transcript_evidence = Path(outbase) / "evidence_annotation_sequences/transcripts.fasta"
+    protein_target = Path(outbase) / "target_annotation_sequences/proteins.fasta"
+    protein_evidence = Path(outbase) /  "evidence_annotation_sequences/proteins.fasta"
+
     for refmap_file in results_dir.glob('*.refmap'):
         # add info to gene_dict
         gene_dict = add_refmap_info(gene_dict, str(refmap_file))
         # add results gffread
-        gene_dict = edit_distance(gene_dict, "target_annotation_sequences/transcripts.fasta",
-                                  "evidence_annotation_sequences/transcripts.fasta",
-                                    "target_annotation_sequences/proteins.fasta",
-                                  "evidence_annotation_sequences/proteins.fasta")
+        gene_dict = edit_distance(gene_dict, transcript_target, transcript_evidence,
+                                  protein_target, protein_evidence)
         print(gene_dict)
 # run main function 
 if __name__ == '__main__':
