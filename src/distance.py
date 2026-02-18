@@ -12,8 +12,11 @@ def edit_distance(gene_isoform_dict, transcript_target_fasta, transcript_evidenc
     #  2. Recorrer gene_dict 
     for gene_id, isoforms in gene_isoform_dict.items():
         for iso_id, info in isoforms.items():
+            if not info:
+                continue
             #  3. Detectar si es transcript o protein 
             evidence_type = list(info.keys())[0]
+
             if evidence_type == "transcripts":
                 if iso_id not in records_transcript_target or iso_id not in records_transcript_evidence:
                     continue
