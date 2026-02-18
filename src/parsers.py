@@ -54,7 +54,7 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
                 continue
             fields = line.strip().split('\t')
             class_code = CLASS_CODE_TRANSLATION[fields[2]]
-            id_field = fields[1].strip()
+
             for gene in fields[3].split(","):
                 gene_id, iso_id = gene.split('|')
             # look up the gene_id in the gene_isoform_dict; if not found, get None.
@@ -64,10 +64,6 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
                     continue
                 if target_gene:
                     if iso_id in target_gene:
-                        if id_field.startswith("MSTRG"):
-                            target_gene[iso_id].setdefault(evidence_type, {})
-                            target_gene[iso_id][evidence_type].update({"class_code": class_code, "match_sequence": id_field})
-                        elif id_field.startswith("PAC"):
-                            target_gene[iso_id].setdefault(evidence_type, {})
-                            target_gene[iso_id][evidence_type].update({"class_code": class_code, "target_id": id_field})
+                        target_gene[iso_id].update({evidence_type: {"class_code":class_code, "match_sequence": fields[1]}})
+
     return gene_isoform_dict
