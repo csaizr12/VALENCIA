@@ -71,7 +71,8 @@ def main():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
     # dictionary with gene and isoforms from target annotation 
-    gene_dict = get_gene_isoform_dict_from_target_annotation(args["annotation_target"])
+    with open(args["target_annotation"], "r") as target_annotation:
+        gene_dict = get_gene_isoform_dict_from_target_annotation(target_annotation)
     # search refmap files obteined to gffcompare
     results_dir = Path(outbase) / 'gffcompare_results'
     for refmap_file in results_dir.glob('*.refmap'):
