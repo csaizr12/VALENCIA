@@ -75,10 +75,10 @@ def main():
         gene_dict = get_gene_isoform_dict_from_target_annotation(target_annotation)
     # search refmap files obteined to gffcompare and edit_distance
     results_dir = Path(outbase) / 'gffcompare_results'
-    transcript_target = Path(outbase) / "target_annotation_sequences/transcripts.fasta"
-    transcript_evidence = Path(outbase) / "evidence_annotation_sequences/transcripts.fasta"
-    protein_target = Path(outbase) / "target_annotation_sequences/proteins.fasta"
-    protein_evidence = Path(outbase) /  "evidence_annotation_sequences/proteins.fasta"
+    transcript_target = Path(outbase) / "target_annotation_sequences/transcripts_target.fasta"
+    transcript_evidence = Path(outbase) / "evidence_annotation_sequences/transcripts_evidence.fasta"
+    protein_target = Path(outbase) / "target_annotation_sequences/proteins_target.fasta"
+    protein_evidence = Path(outbase) /  "evidence_annotation_sequences/proteins_evidence.fasta"
 
     for refmap_file in results_dir.glob('*.refmap'):
         # add info to gene_dict
