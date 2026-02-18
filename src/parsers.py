@@ -1,6 +1,11 @@
 import os
 import re
 
+
+CLASS_CODE_TRANSLATION = {"=": "complete", "c": "SubsequencesTarget", "k":"SubsequencesReferences",
+                          "m":"TotalIntronsRetention", "n":"PartialIntronRetention", "j":"PotentialIsoform",
+                          "o": "PartialExonOverlap", "e":"RetainedIntronSingleExon"}
+
 # parse a genomic annotation file to create a  
 # dictionary structure of genes and their corresponding isoforms
 def get_gene_isoform_dict_from_target_annotation(target_annotation):
@@ -49,7 +54,8 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
             if line.startswith("ref_gene"):
                 continue
             fields = line.strip().split('\t')
-            class_code = fields[2]
+            class_code = CLASS_CODE_TRANSLATION[fields[2]]
+
             for gene in fields[3].split(","):
                 gene_id, iso_id = gene.split('|')
             # look up the gene_id in the gene_isoform_dict; if not found, get None.
