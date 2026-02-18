@@ -26,16 +26,16 @@ def edit_distance(gene_isoform_dict, transcript_target_fasta, transcript_evidenc
                 if evidence_id not in records_transcript_evidence:
                     continue
                  #  4. Cargar secuencias target/evidence 
-                seq_target = str(records_transcript_target[iso_id].seq)
-                seq_evidence = str(records_transcript_evidence[iso_id].seq)
+                seq_target = str(records_transcript_target[target_id].seq)
+                seq_evidence = str(records_transcript_evidence[evidence_id].seq)
             elif evidence_type == "protein":
                 if target_id not in records_protein_target:
                          continue
                 if evidence_id not in records_protein_evidence:
                          continue
                 # 4. Cargar secuencias target/evidence
-                seq_target = str(records_protein_target[iso_id].seq)
-                seq_evidence = str(records_protein_evidence[iso_id].seq)
+                seq_target = str(records_protein_target[target_id].seq)
+                seq_evidence = str(records_protein_evidence[evidence_id].seq)
             else:
                 continue
             #  5. Calcular distancia 
