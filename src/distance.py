@@ -1,3 +1,38 @@
 from Bio import SeqIO
 from Levenshtein import distance
-print(distance('AAAA', 'AAAT'))
+
+def edit_distance(gene_isoform_dict, transcript_target_fasta, transcript_evidence_fasta,
+             protein_target_fasta, protein_evidence_fasta):
+    #  1. Indexar los FASTA
+    records_transcript_target = SeqIO.index(transcript_target_fasta, "fasta")
+    records_transcript_evidence = SeqIO.index(transcript_evidence_fasta, "fasta")
+    records_protein_target = SeqIO.index(protein_target_fasta, "fasta")
+    records_protein_evidence = SeqIO.index(protein_evidence_fasta, "fasta")
+
+    #  2. Recorrer gene_dict 
+    for gene_id, isoforms in gene_isoform_dict.items():
+        for iso_id, info in isoforms.items():
+            #  3. Detectar si es transcript o protein 
+            evidence_type = list(info.keys())[0]
+            if evidence_type == "transcripts":
+                if iso_id not in transcript_target_fasta or iso_id not in transcript_evidence_fasta:
+                    continue
+                 #  4. Cargar secuencias target/evidence 
+                    seq_target = str(records_transcript_target[iso_id].seq)
+                    seq_evidence = str(records_transcript_evidence[iso_id].seq)
+            elif evidence_type == "protein":
+                 if iso_id not in protein_target_fasta or iso_id not in protein_evidence_fasta:
+                    continue
+                # 4. Cargar secuencias target/evidence
+                    seq_target = str(records_protein_target[iso_id].seq)
+                    seq_evidence = str(records_protein_evidence[iso_id].seq)
+            else:
+                continue
+            #  5. Calcular distancia 
+            edit_distance = distance(seq_target, seq_evidence)
+            # 6. Guardarla en gene_dic
+            gene_isoform_dict[gene_id][iso_id]["edit_distance"] = edit_distance
+
+    return gene_isoform_dict
+
+    

@@ -8,7 +8,7 @@ from pathlib import Path
 from src.gffcompare import run_gffcompare
 from src.gffread import run_gffread
 from src.parsers import get_gene_isoform_dict_from_target_annotation, add_refmap_info
-
+from src.distance import edit_distance
 
 
 
@@ -78,6 +78,12 @@ def main():
     for refmap_file in results_dir.glob('*.refmap'):
         # add info to gene_dict
         gene_dict = add_refmap_info(gene_dict, str(refmap_file))
+        # add results gffread
+        gene_dict = edit_distance(gene_dict, "target_annotation_sequence/transcripts.fasta",
+                                  "evidence_annotation_sequences/transcripts.fasta",
+                                    "target_annotation_sequences/proteins.fasta",
+                                  "evidence_annotation_sequences/proteins.fasta")
+        print(gene_dict)
 # run main function 
 if __name__ == '__main__':
     main() 
