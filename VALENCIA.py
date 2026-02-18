@@ -79,7 +79,7 @@ def main():
         # add info to gene_dict
         gene_dict = add_refmap_info(gene_dict, str(refmap_file))
         # add results gffread
-        gene_dict = edit_distance(gene_dict, "target_annotation_sequence/transcripts.fasta",
+        gene_dict = edit_distance(gene_dict, "target_annotation_sequences/transcripts.fasta",
                                   "evidence_annotation_sequences/transcripts.fasta",
                                     "target_annotation_sequences/proteins.fasta",
                                   "evidence_annotation_sequences/proteins.fasta")
