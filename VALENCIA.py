@@ -86,6 +86,8 @@ def main():
         # add results gffread
         gene_dict = edit_distance(gene_dict, transcript_target, transcript_evidence,
                                   protein_target, protein_evidence)
+        print(gene_dict["AT1G01010.1.Araport11.447"])
+
 
 # run main function 
 if __name__ == '__main__':
