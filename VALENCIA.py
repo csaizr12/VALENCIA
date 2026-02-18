@@ -7,8 +7,8 @@ from pathlib import Path
 
 from src.gffcompare import run_gffcompare
 from src.gffread import run_gffread
-from src.dict_gene_iso import get_gene_isoform_dict_from_target_annotation
-from src.dict_gene_iso_evidence_classcode import add_refmap_info
+from src.parsers import get_gene_isoform_dict_from_target_annotation, add_refmap_info
+
 
 
 
