@@ -57,9 +57,11 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
             # look up the gene_id in the gene_isoform_dict; if not found, get None.
                 target_gene = gene_isoform_dict.get(gene_id.strip(), None)
             # if the gene is no present in the dictionary, skip and conitnue
-                if target_gene is None: continue
+                if target_gene is None: 
+                    continue
                 if target_gene:
                     if iso_id in target_gene:
                         target_gene[iso_id].update({evidence_type: class_code})
+    print(gene_isoform_dict["AT1G01260"])
 
     return gene_isoform_dict
