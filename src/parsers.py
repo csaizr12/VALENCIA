@@ -65,7 +65,7 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
                     continue
                 if target_gene:
                     if iso_id in target_gene:
-                        target_gene[iso_id].update({evidence_type: class_code})
+                        target_gene[iso_id].update({evidence_type: {"class_code":class_code, "match_sequence": fields[2]}})
     print(gene_isoform_dict)
 
     return gene_isoform_dict
