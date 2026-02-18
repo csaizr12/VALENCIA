@@ -51,8 +51,6 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
             fields = line.strip().split('\t')
             class_code = fields[2]
             for gene in fields[3].split(","):
-                if len(fields[3].split(",")) > 1:
-                    print(fields[3].split(","))
                 gene_id, iso_id = gene.split('|')
             # look up the gene_id in the gene_isoform_dict; if not found, get None.
                 target_gene = gene_isoform_dict.get(gene_id.strip(), None)

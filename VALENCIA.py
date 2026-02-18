@@ -77,7 +77,6 @@ def main():
     for refmap_file in results_dir.glob('*.refmap'):
         # add info to gene_dict
         gene_dict = add_refmap_info(gene_dict, str(refmap_file))
-    print(gene_dict)
 # run main function 
 if __name__ == '__main__':
     main() 
