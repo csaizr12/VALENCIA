@@ -73,8 +73,8 @@ def main():
     # dictionary with gene and isoforms from target annotation 
     with open(args["annotation_target"], "r") as target_annotation:
         gene_dict = get_gene_isoform_dict_from_target_annotation(target_annotation)
-    with open(refmap_file, "r") as refmap_file:
-        gene_dict = add_refmap_info(refmap_file)
+    with open(refmap, "r") as refmap:
+        gene_dict = add_refmap_info(refmap)
     # search refmap files obteined to gffcompare and edit_distance
     results_dir = Path(outbase) / 'gffcompare_results'
     transcript_target = Path(outbase) / "target_annotation_sequences/transcripts_target.fasta"
