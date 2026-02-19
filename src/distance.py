@@ -2,7 +2,7 @@ from Bio import SeqIO
 from Levenshtein import distance
 
 def edit_distance(gene_isoform_dict, transcript_target_fasta, transcript_evidence_fasta,
-             protein_target_fasta, protein_evidence_fasta):
+                  protein_target_fasta, protein_evidence_fasta):
     # index fasta files
     records_transcript_target = SeqIO.index(transcript_target_fasta, "fasta")
     records_transcript_evidence = SeqIO.index(transcript_evidence_fasta, "fasta")

@@ -48,21 +48,23 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
     else:
         evidence_type = 'unknown'
     # process the file
-    for line in refmap_path:
-        if line.startswith("ref_gene"):
-            continue
-        fields = line.strip().split('\t')
-        class_code = CLASS_CODE_TRANSLATION[fields[2]]
-
-        for gene in fields[3].split(","):
-            gene_id, iso_id = gene.split('|')
-          # look up the gene_id in the gene_isoform_dict; if not found, get None.
-            target_gene = gene_isoform_dict.get(gene_id.strip(), None)
-            # if the gene is no present in the dictionary, skip and conitnue
-            if target_gene is None: 
+    with open(refmap_path, "r") as f:
+        for line in f:
+            if line.startswith("ref_gene"):
                 continue
-            if target_gene:
-                if iso_id in target_gene:
-                    target_gene[iso_id].update({evidence_type: {"class_code":class_code, "match_sequence": fields[1]}})
+            fields = line.strip().split('\t')
+            class_code = CLASS_CODE_TRANSLATION[fields[2]]
+
+            for gene in fields[3].split(","):
+                gene_id, iso_id = gene.split('|')
+            # look up the gene_id in the gene_isoform_dict; if not found, get None.
+                target_gene = gene_isoform_dict.get(gene_id.strip(), None)
+            # if the gene is no present in the dictionary, skip and conitnue
+                if target_gene is None: 
+                    continue
+                if target_gene:
+                    if iso_id in target_gene:
+                        target_gene[iso_id].update({evidence_type: {"class_code":class_code, "match_sequence": fields[1]}})
+    print(gene_isoform_dict)
 
     return gene_isoform_dict
