@@ -9,6 +9,7 @@ from src.gffcompare import run_gffcompare
 from src.gffread import run_gffread
 from src.parsers import get_gene_isoform_dict_from_target_annotation, add_refmap_info
 from src.distance import edit_distance
+from src.add_features_to_gff import add_features_to_gff
 
 
 
@@ -86,6 +87,10 @@ def main():
         # add results gffread
         gene_dict = edit_distance(gene_dict, results["transcripts_target"]["outfile"], results["transcripts"]["outfile"],
                                   results["proteins_target"]["outfile"], results['proteins']["outfile"])
+    # add features to gff
+    input_gff = args["annotation_target"]
+    add_features_to_gff(outbase, args["annotation_target"], gene_dict)
+
 # run main function 
 if __name__ == '__main__':
     main() 
