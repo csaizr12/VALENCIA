@@ -12,7 +12,7 @@ def edit_distance(parsed_evidence_gene_isoform_dict, transcript_target_fasta, tr
     # run gene_isoform_dict  
     for target_gene_id, evidence_found in parsed_evidence_gene_isoform_dict.items():
         for target_isoform_id, features in evidence_found.items():
-            if not evidence_found:
+            if not features:
                 continue
             # obtein evidence type and mach_id
             print(target_gene_id, features)
