@@ -3,7 +3,7 @@ import re
 
 def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
  with open(gff_file, "r") as f:
-    with open(outbase / "annotation_with_evidence.gff", "w") as gff_out:
+    with open(outbase / " Athaliana_447_Araport11.gene_exons.gff3", "w") as gff_out:
         for line in f:
             if line.startswith("#"):
                 gff_out.write(line)
