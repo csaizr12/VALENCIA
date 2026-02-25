@@ -52,8 +52,7 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
                 results["compare_"+kind]= {"outfile": outfile, "log_msg": log_msg, 
                                 "returncode": cmd_results.returncode,
                                 "cmd": cmd_run}
-
-    return results    
+ 
 
     
 
