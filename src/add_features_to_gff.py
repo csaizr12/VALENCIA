@@ -3,7 +3,7 @@ import re
 
 def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
  with open(gff_file, "r") as gff_input:
-    with open(outbase / "Athaliana_447_Araport11.gene_exons.gff3", "w") as gff_output:
+    with open(outbase / "Athaliana_447_Araport11.gene_exons_edit_distance.gff3", "w") as gff_output:
         for line in gff_input:
             if line.startswith("#"):
                 gff_output.write(line)
@@ -35,8 +35,6 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                          gff_output.write(line)
         
     # save the new gff file in outbase with a name similar to the original but with added features
-    outfile = outbase / "annotation_with_evidence.gff"
-    print(f"New GFF file with added features saved at: {outfile}")
 # abrimos el archivo arabidopsis Araport 11
     # abrimos el arhivo arabiopsis Araport 11 para editar 
         # lo dejamos como esta pero si estamos en la columna de RNAm 
