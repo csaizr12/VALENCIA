@@ -15,6 +15,7 @@ def edit_distance(parsed_evidence_gene_isoform_dict, transcript_target_fasta, tr
             if not evidence_found:
                 continue
             # obtein evidence type and mach_id
+            print(target_gene_id, features)
             evidence_type = list(features.keys())[0]
             matching_evidence_id = features[evidence_type]['match_sequence']
             # if target_isoform_id and match_in in records, charge sequences
@@ -28,10 +29,7 @@ def edit_distance(parsed_evidence_gene_isoform_dict, transcript_target_fasta, tr
             # obtain edit distance with target and evidence
             edit_distance = distance(seq_target, seq_evidence)
             # save it in a gene_isoform_dict
-            try:
-                parsed_evidence_gene_isoform_dict[target_gene_id][target_isoform_id][evidence_type]["edit_distance"] = edit_distance
-            except:
-                print(parsed_evidence_gene_isoform_dict[target_gene_id])
+            parsed_evidence_gene_isoform_dict[target_gene_id][target_isoform_id][evidence_type]["edit_distance"] = edit_distance
 
     
     print(parsed_evidence_gene_isoform_dict)
