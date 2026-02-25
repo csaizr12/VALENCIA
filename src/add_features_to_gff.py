@@ -8,7 +8,7 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
         for line in gff_input:
             # if the line is a comment, write it as is and add comment about CMD
             n += 1
-            if n == 1:
+            if n == 0:
                 gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
             if line.startswith("#"):
                 gff_output.write(line)
