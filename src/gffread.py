@@ -53,7 +53,7 @@ def run_gffread(outbase, genome_assembly, annotation_path,
                 results[kind]= {"outfile": outfile, "log_msg": log_msg,
                                 "returncode": cmd_results.returncode,
                                 "cmd": cmd_run}
-    return results
+    print(results)
 
         
 
