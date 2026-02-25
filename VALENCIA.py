@@ -84,7 +84,7 @@ def main():
         # add info to gene_dict
         gene_dict = add_refmap_info(gene_dict, str(refmap_file))
         # add results gffread
-        gene_dict = edit_distance(gene_dict, transcript_target, results["transcripts"]["outfile"],
+        gene_dict = edit_distance(gene_dict, transcript_target, results["transcript"]["outfile"],
                                   protein_target, protein_evidence)
 # run main function 
 if __name__ == '__main__':
