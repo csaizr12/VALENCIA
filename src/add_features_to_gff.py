@@ -4,10 +4,11 @@ import re
 def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
  with open(gff_file, "r") as gff_input:
     with open(outbase / "Athaliana_447_Araport11.gene_exons_edit_distance.gff3", "w") as gff_output:
+        # write a comment about the command used to run the script
+        gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
         for line in gff_input:
-            # if the line is a comment comment about CMD and write it as is
+            # if the line is a comment, write it as is
             if line.startswith("#"):
-                gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
                 if not line.startswith("##CMD"):
                     gff_output.write(line)
                     continue
@@ -27,18 +28,17 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                     gene_id = parent_match.group(1)
                     # look up the gene_id in the gene_isoform_dict; if not found, get None.
                     target_gene = gene_isoform_dict.get(gene_id.strip(), None)
-                    # if target_gene and isoform_id are present in the dictionary, we add the features to the attributes column
-                    if  target_gene and isoform_id in target_gene:
-                        features = target_gene[isoform_id]
-                        evidence_info = []
+                    # get the features for the isoform
+                    features = target_gene[isoform_id]
+                    evidence_info = []
                         # for each evidence type, we add the transcript evidence, class code and edit distance to the attributes
-                        for evidence_type, evidence_features in features.items():
+                    for evidence_type, evidence_features in features.items():
                             evidence_match = evidence_features.get("match_sequence", "NA")
                             class_code = evidence_features.get("class_code", "NA")
                             edit_distance = evidence_features.get("edit_distance", "NA")
                             evidence_info.append(f"{evidence_type}_match_sequence={evidence_match};{evidence_type}_class_code={class_code};{evidence_type}_edit_distance={edit_distance}")
-                        new_attributes = attributes + ";" + ";".join(evidence_info)
-                        fields[8] = new_attributes
-                        gff_output.write("\t".join(fields) + "\n")
-                    else:
-                         gff_output.write(line)
+                    new_attributes = attributes + ";" + ";".join(evidence_info)
+                    fields[8] = new_attributes
+                    gff_output.write("\t".join(fields) + "\n")
+                else:
+                     gff_output.write(line)
