@@ -61,6 +61,7 @@ def main():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
     # for evidence annotation:
+    print(results)
     for option, path in args.items():
         if "evidence" in option:
         #run compare(evidence, target)
