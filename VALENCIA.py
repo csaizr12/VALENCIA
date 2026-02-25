@@ -76,9 +76,7 @@ def main():
         
     # search refmap files obteined to gffcompare and edit_distance
     results_dir = Path(outbase) / 'gffcompare_results'
-    transcript_target = Path(outbase) / "target_annotation_sequences/transcripts_target.fasta"
-    protein_target = Path(outbase) / "target_annotation_sequences/proteins_target.fasta"
-    
+    print(results)
     for refmap_file in results_dir.glob('*.refmap'):
         # add info to gene_dict
         gene_dict = add_refmap_info(gene_dict, str(refmap_file))
