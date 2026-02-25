@@ -7,11 +7,12 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
         for line in gff_input:
             # if the line is a comment, write it as is and add comment about CMD
             if line.startswith("#"):
-                    if line.startswith("##gff-version"):
-                        gff_output.write("##CMD: " + " ".join(sys.argv) + "\n") 
-                    else:
-                        gff_output.write(line)
-                        continue
+                if line.startswith("##gff-version"):
+                    gff_output.write(line)
+                    gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
+                else:
+                    gff_output.write(line)
+                continue
             fields = line.strip().split('\t')
             attributes = fields[8]
             type = fields[2]
