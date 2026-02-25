@@ -7,9 +7,8 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
         for line in gff_input:
             # if the line is a comment comment about CMD and write it as is
             if line.startswith("#"):
+                gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
                 if not line.startswith("##CMD"):
-                    gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
-                else:
                     gff_output.write(line)
                     continue
             fields = line.strip().split('\t')
