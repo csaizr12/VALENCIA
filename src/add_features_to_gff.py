@@ -2,16 +2,18 @@
 import re
 
 def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
- with open(gff_file, "r") as f:
-    with open(outbase / " Athaliana_447_Araport11.gene_exons.gff3", "w") as gff_out:
-        for line in f:
+ with open(gff_file, "r") as gff_input:
+    with open(outbase / "Athaliana_447_Araport11.gene_exons.gff3", "w") as gff_output:
+        for line in gff_input:
             if line.startswith("#"):
-                gff_out.write(line)
+                gff_output.write(line)
+                continue
             fields = line.strip().split('\t')
             attributes = fields[8]
             type = fields[2]
             if type != "mRNA":
-                gff_out.write(line)
+                gff_output.write(line)
+                continue
             else:
                 id_match = re.search(r'ID=([^;]+)', attributes)
                 parent_match = re.search(r'Parent=([^;]+)', attributes)
@@ -28,9 +30,9 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                             evidence_info.append(f"{evidence_type}_class_code={class_code};{evidence_type}_edit_distance={edit_distance}")
                         new_attributes = attributes + ";" + ";".join(evidence_info)
                         fields[8] = new_attributes
-                        gff_out.write("\t".join(fields) + "\n")
+                        gff_output.write("\t".join(fields) + "\n")
                     else:
-                         gff_out.write(line)
+                         gff_output.write(line)
         
     # save the new gff file in outbase with a name similar to the original but with added features
     outfile = outbase / "annotation_with_evidence.gff"
