@@ -4,15 +4,14 @@ import re
 def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
  with open(gff_file, "r") as gff_input:
     with open(outbase / "Athaliana_447_Araport11.gene_exons_edit_distance.gff3", "w") as gff_output:
-        n = 0
         for line in gff_input:
-            # if the line is a comment, write it as is and add comment about CMD
-            n += 1
-            if n == 0:
-                gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
+            # if the line is a comment comment about CMD and writi it as is
             if line.startswith("#"):
-                gff_output.write(line)
-                continue
+                if not line.startswith("##CMD"):
+                    gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
+                else:
+                    gff_output.write(line)
+                    continue
             fields = line.strip().split('\t')
             attributes = fields[8]
             type = fields[2]
