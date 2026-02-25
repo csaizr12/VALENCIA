@@ -77,15 +77,14 @@ def main():
     # search refmap files obteined to gffcompare and edit_distance
     results_dir = Path(outbase) / 'gffcompare_results'
     transcript_target = Path(outbase) / "target_annotation_sequences/transcripts_target.fasta"
-    transcript_evidence = Path(outbase) / "evidence_annotation_sequences/transcripts.fasta"
     protein_target = Path(outbase) / "target_annotation_sequences/proteins_target.fasta"
     protein_evidence = Path(outbase) /  "evidence_annotation_sequences/proteins.fasta"
-
+    print(results)
     for refmap_file in results_dir.glob('*.refmap'):
         # add info to gene_dict
         gene_dict = add_refmap_info(gene_dict, str(refmap_file))
         # add results gffread
-        gene_dict = edit_distance(gene_dict, transcript_target, transcript_evidence,
+        gene_dict = edit_distance(gene_dict, transcript_target, results["transcripts"]["outfile"],
                                   protein_target, protein_evidence)
 # run main function 
 if __name__ == '__main__':

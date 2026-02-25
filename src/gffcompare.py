@@ -49,7 +49,7 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
             # on failure, capture and log the specific error details
             else:
                 log_msg = "Gffcompare error: {}".format(cmd_results.stderr.decode())
-                results[kind]= {"outfile": outfile, "log_msg": log_msg, 
+                results["compare_"+kind]= {"outfile": outfile, "log_msg": log_msg, 
                                 "returncode": cmd_results.returncode,
                                 "cmd": cmd_run}
 
