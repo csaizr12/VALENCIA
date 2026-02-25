@@ -2,18 +2,16 @@
 import re
 
 def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
- with open(gff_file, "r") as gff_in:
+ with open(gff_file, "r") as f:
     with open(outbase / "annotation_with_evidence.gff", "w") as gff_out:
-        for line in gff_in:
+        for line in f:
             if line.startswith("#"):
                 gff_out.write(line)
-                continue
             fields = line.strip().split('\t')
             attributes = fields[8]
             type = fields[2]
             if type != "mRNA":
                 gff_out.write(line)
-                continue
             else:
                 id_match = re.search(r'ID=([^;]+)', attributes)
                 parent_match = re.search(r'Parent=([^;]+)', attributes)
