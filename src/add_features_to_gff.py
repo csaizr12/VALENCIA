@@ -9,9 +9,8 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
             if line.startswith("#"):
                 if not line.startswith("##CMD"):
                     gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
-                else:
-                    gff_output.write(line)
-                    continue
+                gff_output.write(line)
+                continue
             fields = line.strip().split('\t')
             attributes = fields[8]
             type = fields[2]
