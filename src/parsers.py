@@ -45,8 +45,6 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
         evidence_type = 'transcripts'
     elif 'proteins_evidence' in fname:
         evidence_type = 'proteins'
-    else:
-        evidence_type = 'unknown'
     # process the file
     with open(refmap_path, "r") as f:
         for line in f:
@@ -54,7 +52,6 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
                 continue
             fields = line.strip().split('\t')
             class_code = CLASS_CODE_TRANSLATION[fields[2]]
-
             for gene in fields[3].split(","):
                 gene_id, iso_id = gene.split('|')
             # look up the gene_id in the gene_isoform_dict; if not found, get None.
