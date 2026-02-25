@@ -4,7 +4,6 @@ from subprocess import run
 # organizing outputs, skipping existing files, and returning the status
 def run_gffread(outbase, genome_assembly, annotation_path, 
                 results, kinds=[]):
-    results = {}
     # define gffread_modes as:
     gffread_modes = {"transcripts": "w", "proteins": "y",
                     "transcripts_target": "w", 
@@ -53,7 +52,6 @@ def run_gffread(outbase, genome_assembly, annotation_path,
                 results[kind]= {"outfile": outfile, "log_msg": log_msg,
                                 "returncode": cmd_results.returncode,
                                 "cmd": cmd_run}
-    print(results)
 
         
 
