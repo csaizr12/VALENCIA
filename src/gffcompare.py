@@ -29,7 +29,7 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
         # if output already exists, skip execution
         if outfile.is_file():
              log_msg = "Gffcompare already done, skipping it"
-             results[kind] = {"outfile": outfile, "log_msg": log_msg,
+             results["compare_"+kind] = {"outfile": outfile, "log_msg": log_msg,
                                "returncode": 0, "cmd": cmd_run}
         # otherwise, run the command via a systeam shell
         else:
@@ -38,7 +38,7 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
             if cmd_results.returncode == 0:
                 # log the completion
                 log_msg = "Gffcompare successfully done"
-                results[kind]= {"outfile": outfile, "log_msg": log_msg,
+                results["compare_"+kind]= {"outfile": outfile, "log_msg": log_msg,
                                 "returncode": cmd_results.returncode,
                                 "cmd": cmd_run}
                 # file relocation
