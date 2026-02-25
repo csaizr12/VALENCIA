@@ -88,8 +88,8 @@ def main():
         gene_dict = edit_distance(gene_dict, results["transcripts_target"]["outfile"], results["transcripts"]["outfile"],
                                   results["proteins_target"]["outfile"], results['proteins']["outfile"])
     # add features to gff
-    input_gff = args["annotation_target"]
     add_features_to_gff(outbase, args["annotation_target"], gene_dict)
+    
 
 # run main function 
 if __name__ == '__main__':
