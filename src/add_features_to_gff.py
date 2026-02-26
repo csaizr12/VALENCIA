@@ -30,7 +30,7 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                     # get the features for the isoform
                     features = target_gene[isoform_id]
                     evidence_info = []
-                        # for each evidence type, we add the transcript evidence, class code and edit distance to the attributes
+                    # for each evidence type, we add the transcript evidence, class code and edit distance to the attributes
                     for evidence_type, evidence_features in features.items():
                             evidence_match = evidence_features.get("match_sequence", "NA")
                             class_code = evidence_features.get("class_code", "NA")
