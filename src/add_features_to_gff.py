@@ -19,7 +19,6 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
             # if the line is not an mRNA, write it as is
             if type != "mRNA":
                 gff_output.write(line)
-                continue
             # if the line is an mRNA, we look for the gene and isoform in the gene_isoform_dict
             else:
                 id_match = re.search(r'ID=([^;]+)', attributes)
@@ -41,4 +40,6 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                     new_attributes = attributes + ";" + ";".join(evidence_info)
                     fields[8] = new_attributes
                     gff_output.write("\t".join(fields) + "\n")
+                else:
+                    gff_output.write(line)
 
