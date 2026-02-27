@@ -1,6 +1,7 @@
 from Bio import SeqIO
 from Levenshtein import distance
 
+# function to calculate edit distance between target and evidence sequence, and add it to the gene_isoform_dict
 def edit_distance(parsed_evidence_gene_isoform_dict, transcript_target_fasta, transcript_evidence_fasta,
                   protein_target_fasta, protein_evidence_fasta):
     # index fasta files

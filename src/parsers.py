@@ -1,7 +1,6 @@
 import os
 import re
 
-
 CLASS_CODE_TRANSLATION = {"=": "complete", "c": "SubsequencesTarget", "k":"SubsequencesReferences",
                           "m":"TotalIntronsRetention", "n":"PartialIntronRetention", "j":"PotentialIsoform",
                           "o": "PartialExonOverlap", "e":"RetainedIntronSingleExon"}
@@ -37,7 +36,7 @@ def get_gene_isoform_dict_from_target_annotation(target_annotation):
     return gene_isoform_dict
 
 # define a function that updates a gene-isform dictionary
-# using a reference map file
+# using a reference map file, and adds the class code and match sequence information (evidence) to the corresponding isoforms 
 def add_refmap_info(gene_isoform_dict, refmap_path):
     # get only the filename part from the full reference map path
     fname = os.path.basename(refmap_path)

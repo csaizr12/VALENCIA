@@ -1,4 +1,4 @@
-# import 
+# import libraries 
 import argparse
 import os
 import sys
