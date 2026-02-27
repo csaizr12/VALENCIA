@@ -41,6 +41,7 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                     new_attributes = attributes + ";" + ";".join(evidence_info)
                     fields[8] = new_attributes
                     gff_output.write("\t".join(fields) + "\n")
-                elif id_match and not parent_match:
-                        fields[8] = attributes + ";evidence_info=NA"
-                        gff_output.write("\t".join(fields) + "\n")
+                else:
+                    fields[8] = attributes + ";evidence_info=NA"
+                    gff_output.write("\t".join(fields) + "\n")
+                    
