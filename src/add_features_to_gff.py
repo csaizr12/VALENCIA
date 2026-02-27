@@ -42,6 +42,7 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                     fields[8] = new_attributes
                     gff_output.write("\t".join(fields) + "\n")
                 else:
+                    print('Warning: mRNA line without ID or Parent attribute, writing it as is')
                     fields[8] = attributes + ";evidence_info=NA"
                     gff_output.write("\t".join(fields) + "\n")
-                    
+
