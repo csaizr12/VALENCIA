@@ -33,10 +33,14 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                 # for each evidence type, we add the transcript evidence and the protein evidence, class code and edit distance to the attributes
                 for evidence_type in  ["transcripts", "proteins"]:
                         evidence_features = features.get(evidence_type, {})
-
-                        class_code = evidence_features.get("class_code", "NA")
-                        edit_distance = evidence_features.get("edit_distance", "NA")
-                        valor_type = evidence_features.get("evidence_type", "NA")
+                        if evidence_features:
+                            class_code = evidence_features.get("class_code", "NA")
+                            edit_distance = evidence_features.get("edit_distance", "NA")
+                            valor_type = evidence_features.get("evidence_type", "NA")
+                        else:
+                            class_code = "NA"
+                            edit_distance = "NA"
+                            valor_type = "NA"
 
                         evidence_info.append("{}_evidence_type={}".format(evidence_type, valor_type))
                         evidence_info.append("{}_class_code={}".format(evidence_type, class_code))
