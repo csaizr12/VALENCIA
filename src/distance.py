@@ -20,7 +20,7 @@ def edit_distance(parsed_evidence_gene_isoform_dict, transcript_target_fasta, tr
             for evidence_type in evidence_types:
                 matching_evidence_id = features[evidence_type]['match_sequence']
                  # if target_isoform_id and match_in in records, charge sequences
-                if evidence_type == "transcripts":
+                if evidence_type == "transcripts_evidence":
                     seq_target = str(records_transcript_target[target_isoform_id].seq)
                     seq_evidence = str(records_transcript_evidence[matching_evidence_id].seq)
                 elif evidence_type == "proteins":
