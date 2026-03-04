@@ -23,30 +23,29 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
             else:
                 id_match = re.search(r'ID=([^;]+)', attributes)
                 parent_match = re.search(r'Parent=([^;]+)', attributes)
-                if id_match and parent_match:
-                    isoform_id = id_match.group(1)
-                    gene_id = parent_match.group(1)
+                isoform_id = id_match.group(1)
+                gene_id = parent_match.group(1)
                     # look up the gene_id in the gene_isoform_dict; if not found, get None.
-                    target_gene = gene_isoform_dict.get(gene_id.strip(), None)
+                target_gene = gene_isoform_dict.get(gene_id.strip(), None)
                     # get the features for the isoform
-                    features = target_gene[isoform_id]
-                    evidence_info = []
+                features = target_gene[isoform_id]
+                evidence_info = []
                     # for each evidence type, we add the transcript evidence, class code and edit distance to the attributes
-                    for evidence_type, evidence_features in features.items():
-                        if isinstance(evidence_features, dict):
-                            evidence_match = evidence_features.get("match_sequence", "NA")
-                            class_code = evidence_features.get("class_code", "NA")
-                            edit_distance = evidence_features.get("edit_distance", "NA")
-                            evidence_info.append(f"{evidence_type}_match_sequence={evidence_match};{evidence_type}_class_code={class_code};{evidence_type}_edit_distance={edit_distance}")
+                for evidence_type, evidence_features in features.items():
+                    if isinstance(evidence_features, dict):
+                        evidence_match = evidence_features.get("match_sequence", "NA")
+                        class_code = evidence_features.get("class_code", "NA")
+                        edit_distance = evidence_features.get("edit_distance", "NA")
+                        evidence_info.append(f"{evidence_type}_match_sequence={evidence_match};{evidence_type}_class_code={class_code};{evidence_type}_edit_distance={edit_distance}")
                    # if we have evidence info, we add it to the attributes; if not, we add evidence_info=NA
-                    if evidence_info:
-                        new_attributes = attributes + ";" + ";".join(evidence_info)
-                    else:
-                        new_attributes = attributes + ";evidence_info=NA"
-                    # replace the attributes field with the new attributes
-                    fields[8] = new_attributes
-                    gff_output.write("\t".join(fields) + "\n")
-               
+                if evidence_info:
+                    new_attributes = attributes + ";" + ";".join(evidence_info)
                 else:
-                    gff_output.write(line)
+                    new_attributes = attributes + ";evidence_info=NA"
+                    # replace the attributes field with the new attributes
+                fields[8] = new_attributes
+                gff_output.write("\t".join(fields) + "\n")
+               
+        else:
+            gff_output.write(line)
 
