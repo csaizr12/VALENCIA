@@ -87,7 +87,6 @@ def main():
         # add results gffread
         gene_dict = edit_distance(gene_dict, results["transcripts_target"]["outfile"], results["transcripts"]["outfile"],
                                   results["proteins_target"]["outfile"], results['proteins']["outfile"])
-    print(gene_dict)
     # add features to gff
     add_features_to_gff(outbase, args["annotation_target"], gene_dict)
     
