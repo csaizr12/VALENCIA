@@ -30,16 +30,12 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                 # get the features for the isoform
                 features = target_gene[isoform_id]
                 evidence_info = []
-                # for each evidence type, we add the transcript evidence and the protein evidence, class code and edit distance to the attributes
+                # for each evidence type, we add the evidence, class code and edit distance to the attributes or add NA if no evidence info is available
                 for evidence_type, evidence_features in features.items():
-                    if evidence_type == "transcripts_evidence":
-                        evidence_info.append("transcript_evidence={}".format(evidence_features["evidence"]))
-                        evidence_info.append("transcript_class_code={}".format(evidence_features["class_code"]))
-                        evidence_info.append("transcript_edit_distance={}".format(evidence_features["edit_distance"]))
-                    elif evidence_type == "proteins_evidence":
-                        evidence_info.append("protein_evidence={}".format(evidence_features["evidence"]))
-                        evidence_info.append("protein_class_code={}".format(evidence_features["class_code"]))
-                        evidence_info.append("protein_edit_distance={}".format(evidence_features["edit_distance"]))
+                    if evidence_features:
+                        evidence_info.append("{}={}".format(evidence_type, evidence_features["evidence"]))
+                        evidence_info.append("{}_class_code={}".format(evidence_type, evidence_features["class_code"]))
+                        evidence_info.append("{}_edit_distance={}".format(evidence_type, evidence_features["edit_distance"])) 
                 # if we have evidence info, we add it to the attributes; if not, we add evidence_info=NA
                 if evidence_info:
                     new_attributes = attributes + ";" + ";".join(evidence_info)
