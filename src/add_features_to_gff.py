@@ -37,6 +37,7 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                         if evidence_features:
                             class_code = evidence_features.get("class_code", "NA")
                             edit_distance = evidence_features.get("edit_distance", "NA")
+                            valor_type = evidence_type
                         else:
                             class_code = "NA"
                             edit_distance = "NA"
