@@ -90,7 +90,7 @@ def main():
     # add features to gff
     add_features_to_gff(outbase, args["annotation_target"], gene_dict)
     
-
+    print(gene_dict)
 # run main function 
 if __name__ == '__main__':
     main() 
