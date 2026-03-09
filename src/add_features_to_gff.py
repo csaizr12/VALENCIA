@@ -37,13 +37,13 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                         if evidence_features:
                             class_code = evidence_features.get("class_code", "NA")
                             edit_distance = evidence_features.get("edit_distance", "NA")
-                            valor_type = evidence_type
+                            match_sequence = evidence_features.get("match_sequence", "NA")
                         else:
                             class_code = "NA"
                             edit_distance = "NA"
-                            valor_type = "NA"
+                            match_sequence = "NA"
 
-                        evidence_info.append("{}_evidence_type={}".format(evidence_type, valor_type))
+                        evidence_info.append("{}_evidence_type={}".format(evidence_type, match_sequence))
                         evidence_info.append("{}_class_code={}".format(evidence_type, class_code))
                         evidence_info.append("{}_edit_distance={}".format(evidence_type, edit_distance))
 
