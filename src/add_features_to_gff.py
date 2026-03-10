@@ -9,7 +9,6 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
         # write a comment about the command used to run the script
         gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
         for line in gff_input:
-            # if the line is a comment, write it as is
             if line.startswith("#"):
                     gff_output.write(line)
                     continue
