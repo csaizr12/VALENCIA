@@ -3,12 +3,14 @@ from Levenshtein import distance
 
 # function to calculate edit distance between target and evidence sequence, and add it to the gene_isoform_dict
 def edit_distance(parsed_evidence_gene_isoform_dict, transcript_target_fasta, transcript_evidence_fasta,
-                  protein_target_fasta, protein_evidence_fasta):
+                  protein_target_fasta, protein_evidence_fasta, CDS_target_fasta, CDS_evidence_fasta):
     # index fasta files
     records_transcript_target = SeqIO.index(transcript_target_fasta, "fasta")
     records_transcript_evidence = SeqIO.index(transcript_evidence_fasta, "fasta")
     records_protein_target = SeqIO.index(protein_target_fasta, "fasta")
     records_protein_evidence = SeqIO.index(protein_evidence_fasta, "fasta")
+    records_CDS_target = SeqIO.index(CDS_target_fasta, "fasta")
+    records_CDS_evidence = SeqIO.index(CDS_evidence_fasta, "fasta")
 
     # run gene_isoform_dict  
     for target_gene_id, evidence_found in parsed_evidence_gene_isoform_dict.items():
@@ -26,6 +28,9 @@ def edit_distance(parsed_evidence_gene_isoform_dict, transcript_target_fasta, tr
                 elif evidence_type == "proteins":
                     seq_target = str(records_protein_target[target_isoform_id].seq)
                     seq_evidence = str(records_protein_evidence[matching_evidence_id].seq)
+                elif evidence_type == "CDS":
+                    seq_target = str(records_CDS_target[target_isoform_id].seq)
+                    seq_evidence = str(records_CDS_evidence[matching_evidence_id].seq)
                 # obtain edit distance with target and evidence
                 edit_distance = distance(seq_target, seq_evidence)
                 # save it in a gene_isoform_dict

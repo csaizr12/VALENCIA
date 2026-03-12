@@ -33,8 +33,8 @@ def parse_arguments():
     help_outbase = '(Required) Outbase'
     parser.add_argument('--outbase','-o', 
                         type=str, help=help_outbase, required=True)
-    help_transcript_mode = "(Optional) change transcript mode to CDS only, False by default"
-    parser.add_argument("--CDS", "-c", help=help_transcript_mode, action="store_true")
+
+    
     return parser.parse_args()
 
 # function to get arguments and return dictionary
@@ -44,8 +44,7 @@ def get_arguments():
             'proteins_evidence': Path(parser.protein_evidence).absolute(), 
             'genome_assembly': Path(parser.genome_assembly).absolute(), 
             'annotation_target': Path(parser.annotation_target).absolute(), 
-            'outbase': Path(parser.outbase).absolute(),
-            "cds": parser.CDS}
+            'outbase': Path(parser.outbase).absolute()}
 
 # main function
 def main():
@@ -60,7 +59,7 @@ def main():
     for option, path in args.items():
        if "evidence" in option or "target" in option:
             run_gffread(outbase, args["genome_assembly"],
-                        path, results, kinds=[option],cds_mode=args["cds"])
+                        path, results, kinds=[option])
     for kind, result in results.items():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))

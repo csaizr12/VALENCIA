@@ -5,8 +5,8 @@ from subprocess import run
 
 # this function runs gffcompare using protein or transcript evidence, 
 # manages the output files and returns the result for each evidence
-def run_gffcompare(outbase, protein_path, transcripts_path, 
-                   anotation_path, results, kinds=[]):
+def run_gffcompare(outbase, protein_path, transcripts_path,
+                   CDS_path, annotation_path, results, kinds=[]):
     # define the command template and create a dedicated 'gffcompare_results' directory
     cmd = "gffcompare -r {} -o {} {}"
     outpath = outbase / "gffcompare_results"
@@ -19,13 +19,13 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
             evidence_path = protein_path
         elif kind == "transcripts_evidence":
             evidence_path = transcripts_path
-        else:
-            continue
+        elif kind == "CDS_evidence":
+            evidence_path = CDS_path
         # construct output file names and a list of expected suffixes
         outfile = outpath/"{}".format(kind)
         out_prefix = "{}.{}.{}"
         suffixes = ["tmap", "refmap"]
-        cmd_run = cmd.format(evidence_path, outfile, anotation_path)
+        cmd_run = cmd.format(evidence_path, outfile, annotation_path)
         # if output already exists, skip execution
         if outfile.is_file():
              log_msg = "Gffcompare already done, skipping it"
