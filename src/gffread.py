@@ -3,14 +3,11 @@ from subprocess import run
 # the function runs gffread to create FASTA files from a genome annotation,
 # organizing outputs, skipping existing files, and returning the status
 def run_gffread(outbase, genome_assembly, annotation_path, 
-                results, kinds=[], cds_mode=False):
+                results, kinds=[]):
     # define gffread_modes as:
-    gffread_modes = {"transcripts": "w", "proteins": "y",
+    gffread_modes = {"transcripts": "w", "proteins": "y","CDS": "x",
                     "transcripts_target": "w", 
-                    "proteins_target": "y"}
-    if cds_mode:
-         gffread_modes["transcripts"] = "x"
-         gffread_modes["transcripts_target"] = "x"
+                    "proteins_target": "y", "CDS_target": "x"}
     # define base command template:
     cmd = "gffread -{} {} -g {} {}"
 
@@ -20,7 +17,7 @@ def run_gffread(outbase, genome_assembly, annotation_path,
     else:
         outpath = outbase / "target_annotation_sequences"
     if "annotation_target" in kinds:
-        kinds = ["transcripts_target", "proteins_target"]
+        kinds = ["transcripts_target", "proteins_target", "CDS_target"]
     else:
          kinds = [kind.split("_")[0] for kind in kinds]
 
@@ -32,8 +29,6 @@ def run_gffread(outbase, genome_assembly, annotation_path,
     for kind in kinds:
             # build output file path
             outfile = outpath / "{}.fasta".format(kind)
-            if "transcript" in kind and cds_mode:
-                 outfile = outpath / "{}.CDS.fasta".format(kind)
             # build the command
             cmd_run = cmd.format(gffread_modes[kind], 
                                  outfile, genome_assembly,
