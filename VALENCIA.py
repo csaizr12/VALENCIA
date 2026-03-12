@@ -57,7 +57,9 @@ def main():
     for option, path in args.items():
        if "evidence" in option or "target" in option:
             if option == "transcriptome_evidence":
-                kinds_to_run = ["transcripts_evidence", "CDS_evidence"]
+                kinds_to_run = ["transcripts", "CDS"]
+            elif option == "protein_evidence":
+                kinds_to_run = ["proteins"]
             elif option == "annotation_target":
                 kinds_to_run = ["transcripts_target", "proteins_target", "CDS_target"]
             else:
