@@ -40,11 +40,11 @@ def get_gene_isoform_dict_from_target_annotation(target_annotation):
 def add_refmap_info(gene_isoform_dict, refmap_path):
     # get only the filename part from the full reference map path
     fname = os.path.basename(refmap_path)
-    if 'transcripts' in fname:
+    if 'transcripts_evidence' in fname:
         evidence_type = 'transcripts'
-    elif 'proteins' in fname:
+    elif 'proteins_evidence' in fname:
         evidence_type = 'proteins'
-    elif 'CDS' in fname:
+    elif 'CDS_evidence' in fname:
         evidence_type = 'CDS'
     # process the file
     with open(refmap_path, "r") as f:

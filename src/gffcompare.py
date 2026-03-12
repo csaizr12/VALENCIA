@@ -15,11 +15,11 @@ def run_gffcompare(outbase, protein_path, transcripts_path, CDS_path,
     # processing evidence
     for kind in kinds:
         # select the correct evidence file path 
-        if kind == "proteins":
+        if kind == "proteins_evidence":
             evidence_path = protein_path
-        elif kind == "transcripts":
+        elif kind == "transcripts_evidence":
             evidence_path = transcripts_path
-        elif kind == "CDS":
+        elif kind == "CDS_evidence":
             evidence_path = CDS_path
         else:
             continue            

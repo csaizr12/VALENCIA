@@ -71,9 +71,9 @@ def main():
     for option, path in args.items():
         if "evidence" in option:
             if option == 'transcriptome_evidence':
-                 categories = ["transcripts", "CDS"]
+                 categories = ["transcripts_evidence", "CDS_evidence"]
             else:
-                 categories = ["proteins"]
+                 categories = ["proteins_evidence"]
             for category in categories:                
         #run compare(evidence, target)
                  run_gffcompare(outbase,args["proteins_evidence"],
@@ -94,7 +94,8 @@ def main():
         gene_dict = add_refmap_info(gene_dict, str(refmap_file))
         # add results gffread
         gene_dict = edit_distance(gene_dict, results["transcripts_target"]["outfile"], results["transcripts"]["outfile"],
-                                  results["proteins_target"]["outfile"], results['proteins']["outfile"], results["CDS_target"]["outfile"],results["CDS"]["outfile"])
+                                  results["proteins_target"]["outfile"], results['proteins']["outfile"], results["CDS_target"]["outfile"],
+                                  results["CDS"]["outfile"])
     # add features to gff
     add_features_to_gff(outbase, args["annotation_target"], gene_dict) 
     
