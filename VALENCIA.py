@@ -18,9 +18,6 @@ from src.add_features_to_gff import add_features_to_gff
 def parse_arguments():
     desc = 'script to evaluated annotation with biological evidence'
     parser = argparse.ArgumentParser(description=desc)
-    help_CDS = '(Required) Annotation with CDS evidence'
-    parser.add_argument('--CDS_evidence', '-c',
-                         type=str, help=help_CDS, required=True)
     help_transcriptome = '(Required) Annotation with transcriptome evidence'
     parser.add_argument('--transcriptome_evidence','-t', 
                         type=str, help=help_transcriptome, required=True)
@@ -41,8 +38,7 @@ def parse_arguments():
 # function to get arguments and return dictionary
 def get_arguments():
     parser = parse_arguments()
-    return {'transcripts_evidence': Path(parser.transcriptome_evidence).absolute(), 
-            'CDS_evidence': Path(parser.CDS_evidence).absolute(),
+    return {'transcriptome_evidence': Path(parser.transcriptome_evidence).absolute(), 
             'proteins_evidence': Path(parser.protein_evidence).absolute(), 
             'genome_assembly': Path(parser.genome_assembly).absolute(), 
             'annotation_target': Path(parser.annotation_target).absolute(), 
@@ -60,19 +56,29 @@ def main():
     #generate_sequences for evidence
     for option, path in args.items():
        if "evidence" in option or "target" in option:
+            if option == "transcriptome_evidence":
+                kinds_to_run = ["transcripts", "CDS"]
+            elif option == "annotation_target":
+                kinds_to_run = ["transcripts_target", "proteins_target", "CDS_target"]
+            else:
+                kinds_to_run = [option]
             run_gffread(outbase, args["genome_assembly"],
-                        path, results, kinds=[option])
+                        path, results, kinds=kinds_to_run)
     for kind, result in results.items():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
     # for evidence annotation:
     for option, path in args.items():
         if "evidence" in option:
+            if option == 'transcriptome_evidence':
+                 categories = ["transcripts", "CDS"]
+            else:
+                 categories = ["proteins"]
+            for category in categories:                
         #run compare(evidence, target)
-             run_gffcompare(outbase,args["proteins_evidence"],
-                             args["transcripts_evidence"], args["CDS_evidence"],
-                            args["annotation_target"], 
-                            results, kinds=[option])
+                 run_gffcompare(outbase,args["proteins_evidence"],
+                             args["transcriptome_evidence"], args["transcriptome_evidence"],
+                            args["annotation_target"], results, kinds=[category])
     for kind, result in results.items():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
