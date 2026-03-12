@@ -56,6 +56,7 @@ def main():
     #generate_sequences for evidence
     for option, path in args.items():
        if "evidence" in option or "target" in option:
+            # determine categories to run based on the option
             if option == "transcriptome_evidence":
                 kinds_to_run = ["transcripts", "CDS"]
             elif option == "proteins_evidence":
@@ -69,9 +70,10 @@ def main():
     for kind, result in results.items():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
-    # for evidence annotation:
+    # run gffcompare for evidence vs target annotation and manage outputs 
     for option, path in args.items():
         if "evidence" in option:
+            # determine categories to run based on the option
             if option == 'transcriptome_evidence':
                  categories = ["transcripts_evidence", "CDS_evidence"]
             else:
