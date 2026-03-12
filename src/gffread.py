@@ -18,8 +18,6 @@ def run_gffread(outbase, genome_assembly, annotation_path,
         outpath = outbase / "target_annotation_sequences"
     if "annotation_target" in kinds:
         kinds = ["transcripts_target", "proteins_target", "CDS_target"]
-    else:
-         kinds = [kind.split("_")[0] for kind in kinds]
 
     # ensure output directory exists
     if not outpath.exists():
