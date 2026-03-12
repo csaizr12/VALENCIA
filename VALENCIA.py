@@ -42,7 +42,7 @@ def parse_arguments():
 def get_arguments():
     parser = parse_arguments()
     return {'transcripts_evidence': Path(parser.transcriptome_evidence).absolute(), 
-            'CDS_evidence': Path(parser.CDS_evidenceS).absolute(),
+            'CDS_evidence': Path(parser.CDS_evidence).absolute(),
             'proteins_evidence': Path(parser.protein_evidence).absolute(), 
             'genome_assembly': Path(parser.genome_assembly).absolute(), 
             'annotation_target': Path(parser.annotation_target).absolute(), 
