@@ -3,11 +3,11 @@ from subprocess import run
 # the function runs gffread to create FASTA files from a genome annotation,
 # organizing outputs, skipping existing files, and returning the status
 def run_gffread(outbase, genome_assembly, annotation_path, 
-                results, kinds=[], ):
+                results, kinds=[], cds_mode=False):
     # define gffread_modes as:
-    gffread_modes = {"transcripts": "w", "proteins": "y", "CDS": "x", 
+    gffread_modes = {"transcripts": "w", "proteins": "y",
                     "transcripts_target": "w", 
-                    "proteins_target": "y", "CDS_target": "x"}
+                    "proteins_target": "y"}
     if cds_mode:
          gffread_modes["transcripts"] = "x"
          gffread_modes["transcripts_target"] = "x"
