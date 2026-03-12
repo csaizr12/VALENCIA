@@ -40,7 +40,7 @@ def parse_arguments():
 # function to get arguments and return dictionary
 def get_arguments():
     parser = parse_arguments()
-    return {'transcript_evidence': Path(parser.transcript_evidence).absolute(), 
+    return {'transcript_evidence': Path(parser.transcriptome_evidence).absolute(), 
             'proteins_evidence': Path(parser.protein_evidence).absolute(), 
             'genome_assembly': Path(parser.genome_assembly).absolute(), 
             'annotation_target': Path(parser.annotation_target).absolute(), 
