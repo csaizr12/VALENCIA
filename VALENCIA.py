@@ -68,7 +68,7 @@ def main():
         if "evidence" in option:
         #run compare(evidence, target)
              run_gffcompare(outbase,args["proteins_evidence"],
-                             args["transcripts_evidence"], 
+                             args["transcriptome_evidence"], 
                             args["annotation_target"], results, kinds=[option])
     for kind, result in results.items():
         if result["returncode"] != 0:

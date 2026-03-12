@@ -5,7 +5,7 @@ from subprocess import run
 
 # this function runs gffcompare using protein or transcript evidence, 
 # manages the output files and returns the result for each evidence
-def run_gffcompare(outbase, protein_path, transcripts_path,
+def run_gffcompare(outbase, protein_path, transcriptome_path,
                    CDS_path, annotation_path, results, kinds=[]):
     # define the command template and create a dedicated 'gffcompare_results' directory
     cmd = "gffcompare -r {} -o {} {}"
@@ -17,8 +17,8 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
         # select the correct evidence file path 
         if kind == "proteins_evidence":
             evidence_path = protein_path
-        elif kind == "transcripts_evidence":
-            evidence_path = transcripts_path
+        elif kind == "transcriptome_evidence":
+            evidence_path = transcriptome_path
         elif kind == "CDS_evidence":
             evidence_path = CDS_path
         # construct output file names and a list of expected suffixes
@@ -43,8 +43,8 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
                                 "cmd": cmd_run}
                 # file relocation
                 for suffix in suffixes:
-                     ref_fpath = evidence_path.parent / out_prefix.format(kind, anotation_path.name, suffix)
-                     new_fpath = outpath/ "{}.{}.{}".format(kind, anotation_path.name, suffix)
+                     ref_fpath = evidence_path.parent / out_prefix.format(kind, annotation_path.name, suffix)
+                     new_fpath = outpath/ "{}.{}.{}".format(kind, annotation_path.name, suffix)
                      shutil.move(ref_fpath, new_fpath)
             # on failure, capture and log the specific error details
             else:
