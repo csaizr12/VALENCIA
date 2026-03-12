@@ -7,12 +7,12 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
  with open(gff_file, "r") as gff_input:
     with open(outbase / "Athaliana_447_Araport11.gene_exons_with_evidence_features.gff3", "w") as gff_output:
         # write a comment about the command used to run the script
+        gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
         for line in gff_input:
             # if the line is a comment, write it as is
             if line.startswith("#"):
                     gff_output.write(line)
                     continue
-            gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
             fields = line.strip().split('\t')
             attributes = fields[8]
             type = fields[2]
