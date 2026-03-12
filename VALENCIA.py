@@ -84,7 +84,7 @@ def main():
         # add info to gene_dict
         gene_dict = add_refmap_info(gene_dict, str(refmap_file))
         # add results gffread
-        gene_dict = edit_distance(gene_dict, results["transcripts_target"]["outfile"], results["transcripts"]["outfile"],
+        gene_dict = edit_distance(gene_dict, results["transcripts_target"]["outfile"], results["transcripts"]["outfile"], results["CDS_target"]["outfile"],
                                   results["proteins_target"]["outfile"], results['proteins']["outfile"])
     # add features to gff
     add_features_to_gff(outbase, args["annotation_target"], gene_dict)
