@@ -5,8 +5,8 @@ from subprocess import run
 def run_gffread(outbase, genome_assembly, annotation_path, 
                 results, kinds=[], ):
     # define gffread_modes as:
-    gffread_modes = {"transcripts": "w", "proteins": "y", "CDS": "x", 
-                    "transcripts_target": "w", 
+    gffread_modes = {"transcript": "w", "proteins": "y", "CDS": "x", 
+                    "transcript_target": "w", 
                     "proteins_target": "y", "CDS_target": "x"}
    
     # define base command template:
@@ -18,7 +18,7 @@ def run_gffread(outbase, genome_assembly, annotation_path,
     else:
         outpath = outbase / "target_annotation_sequences"
     if "annotation_target" in kinds:
-        kinds = ["transcripts_target", "proteins_target", "CDS_target"]
+        kinds = ["transcript_target", "proteins_target", "CDS_target"]
     else:
          kinds = [kind.split("_")[0] for kind in kinds]
 
