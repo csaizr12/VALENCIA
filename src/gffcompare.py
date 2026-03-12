@@ -5,7 +5,7 @@ from subprocess import run
 
 # this function runs gffcompare using protein or transcript evidence, 
 # manages the output files and returns the result for each evidence
-def run_gffcompare(outbase, protein_path, transcriptome_path,
+def run_gffcompare(outbase, protein_path, transcript_path,
                    CDS_path, annotation_path, results, kinds=[]):
     # define the command template and create a dedicated 'gffcompare_results' directory
     cmd = "gffcompare -r {} -o {} {}"
@@ -17,8 +17,8 @@ def run_gffcompare(outbase, protein_path, transcriptome_path,
         # select the correct evidence file path 
         if kind == "proteins_evidence":
             evidence_path = protein_path
-        elif kind == "transcriptome_evidence":
-            evidence_path = transcriptome_path
+        elif kind == "transcript_evidence":
+            evidence_path = transcript_path
         elif kind == "CDS_evidence":
             evidence_path = CDS_path
         # construct output file names and a list of expected suffixes
