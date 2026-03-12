@@ -44,8 +44,6 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
         evidence_type = 'transcripts'
     elif 'proteins_evidence' in fname:
         evidence_type = 'proteins'
-    elif 'CDS_evidence' in fname:
-        evidence_type = 'CDS'
     # process the file
     with open(refmap_path, "r") as f:
         for line in f:

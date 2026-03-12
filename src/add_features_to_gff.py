@@ -9,6 +9,7 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
         # write a comment about the command used to run the script
         gff_output.write("##CMD:  {}\n".format(" ".join(sys.argv)))
         for line in gff_input:
+            # if the line is a comment, write it as is
             if line.startswith("#"):
                     gff_output.write(line)
                     continue
@@ -30,7 +31,7 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                 features = target_gene[isoform_id]
                 evidence_info = []
                 # for each evidence type, we get the class code and edit distance, and add it to the evidence_info list
-                for evidence_type in  ["transcripts", "proteins", "CDS"]:
+                for evidence_type in  ["transcripts", "proteins"]:
                         # get the features for the evidence type; if not found, get None
                         evidence_features = features.get(evidence_type)
                         if evidence_features:
