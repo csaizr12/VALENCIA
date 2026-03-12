@@ -58,9 +58,9 @@ def main():
        if "evidence" in option or "target" in option:
             # determine categories to run based on the option
             if option == "transcriptome_evidence":
-                kinds_to_run = ["transcripts", "CDS"]
+                kinds_to_run = ["transcripts_evidence", "CDS_evidence"]
             elif option == "proteins_evidence":
-                kinds_to_run = ["proteins"]
+                kinds_to_run = ["proteins_evidence"]
             elif option == "annotation_target":
                 kinds_to_run = ["transcripts_target", "proteins_target", "CDS_target"]
             else:
