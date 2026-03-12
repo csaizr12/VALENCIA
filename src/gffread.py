@@ -30,8 +30,6 @@ def run_gffread(outbase, genome_assembly, annotation_path,
     for kind in kinds:
             # build output file path
             outfile = outpath / "{}.fasta".format(kind)
-            if "transcript" in kind and cds_mode:
-                 outfile = outpath / "{}.CDS.fasta".format(kind)
             # build the command
             cmd_run = cmd.format(gffread_modes[kind], 
                                  outfile, genome_assembly,
