@@ -1,70 +1,69 @@
 import pandas as pd
 import re
+import os
 
-def extraer_valor(atributo_str, clave):
-    """Busca una clave exacta y devuelve su valor."""
-    match = re.search(fr'{clave}=([^;]+)', atributo_str)
-    return match.group(1) if match else "N/A"
+# Rutas
+input_file = 'test_valencia_araport11/Athaliana_447_Araport11.gene_exons_with_evidence_features.gff3'
+output_file = 'mRNAs_perfectos_con_exones.xlsx'
 
-def convertir_gff():
-    input_file = 'Athaliana_447_Araport11.gene_exons_with_evidence_features.gff3' 
-    output_file = 'revision_anotacion.xlsx'
-    
-    registros = []
+def extraer(attr, clave):
+    m = re.search(fr'{clave}=([^;]+)', attr)
+    return m.group(1) if m else None
 
-    print(f"Leyendo {input_file}...")
+print(f"Analizando archivo: {input_file}...")
 
-    with open(input_file, 'r') as f:
-        for linea in f:
-            # Saltamos encabezados
-            if linea.startswith('#') or not linea.strip():
-                continue
+mRNAs = []
+conteo_exones = {}
+
+with open(input_file, 'r') as f:
+    for line in f:
+        if line.startswith('#') or not line.strip():
+            continue
             
-            campos = linea.strip().split('\t')
-            if len(campos) < 9:
-                continue
+        cols = line.split('\t')
+        if len(cols) < 9:
+            continue
+        
+        tipo = cols[2]
+        attrs = cols[8]
+        
+        if tipo == 'mRNA':
+            id_mrna = extraer(attrs, 'ID')
+            dist = extraer(attrs, 'transcripts_edit_distance')
             
-            tipo_feature = campos[2]
-            
-            # Filtramos solo lo que te interesa
-            if tipo_feature in ['mRNA', 'exon']:
-                atributos = campos[8]
-                
-                # Extraemos los datos clave
-                edit_dist = extraer_valor(atributos, 'transcripts_edit_distance')
-                class_code = extraer_valor(atributos, 'transcripts_class_code')
-                id_name = extraer_valor(atributos, 'ID')
-                parent = extraer_valor(atributos, 'Parent')
-
-                registros.append({
-                    'Cromosoma': campos[0],
-                    'Tipo': tipo_feature,
-                    'Inicio': int(campos[3]),
-                    'Fin': int(campos[4]),
-                    'ID': id_name,
-                    'Parent': parent,
-                    'Class_Code': class_code,
-                    'Edit_Distance': edit_dist
+            # Solo guardamos los de distancia 0
+            if dist == '0':
+                mRNAs.append({
+                    'Cromosoma': cols[0],
+                    'ID_mRNA': id_mrna,
+                    'Class_Code': extraer(attrs, 'transcripts_class_code'),
+                    'Edit_Distance': 0,
+                    'Inicio': cols[3],
+                    'Fin': cols[4]
                 })
+        
+        elif tipo == 'exon':
+            parent = extraer(attrs, 'Parent')
+            if parent:
+                # Contamos cuántos exones tiene cada Parent ID
+                conteo_exones[parent] = conteo_exones.get(parent, 0) + 1
 
-    # Creamos el DataFrame
-    df = pd.DataFrame(registros)
+# Unimos la información: mRNA + su conteo de exones
+for mrna in mRNAs:
+    id_actual = mrna['ID_mRNA']
+    mrna['Num_Exones'] = conteo_exones.get(id_actual, 0)
 
-    # Convertimos Edit_Distance a número (los N/A serán NaN)
-    df['Edit_Distance'] = pd.to_numeric(df['Edit_Distance'], errors='coerce')
+# Crear DataFrame y guardar
+df = pd.DataFrame(mRNAs)
 
-    # Guardar a Excel
+if not df.empty:
     df.to_excel(output_file, index=False)
-    
-    # --- Pequeño reporte por terminal ---
-    print("\n" + "="*40)
-    print("¡CONVERSIÓN COMPLETADA!")
-    print(f"Total de registros: {len(df)}")
-    print(f"mRNAs: {len(df[df['Tipo'] == 'mRNA'])}")
-    print(f"Exones: {len(df[df['Tipo'] == 'exon'])}")
-    print(f"Registros con Edit Distance = 0: {len(df[df['Edit_Distance'] == 0])}")
-    print("="*40)
+    print(f"\n✅ Proceso completado.")
+    print(f"Se han encontrado {len(df)} mRNAs con distancia 0.")
     print(f"Archivo generado: {output_file}")
-
-if __name__ == "__main__":
-    convertir_gff()
+    
+    # Resumen rápido en terminal
+    print("\n--- Resumen por Class Code ---")
+    print(df.groupby('Class_Code')['Num_Exones'].agg(['count', 'sum']).rename(columns={'count': 'Num_mRNAs', 'sum': 'Total_Exones'}))
+else:
+    print("⚠️ No se encontró ningún mRNA con distancia de editado 0.")
