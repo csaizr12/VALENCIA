@@ -79,7 +79,7 @@ def main():
             for category in categories:                
         #run compare(evidence, target)
                  run_gffcompare(outbase,args["proteins_evidence"],
-                             args["transcriptome_evidence"], args["transcriptome_evidence"],
+                             args["transcripts_evidence"], args["CDS_evidence"],
                             args["annotation_target"], results, kinds=[category])
     for kind, result in results.items():
         if result["returncode"] != 0:

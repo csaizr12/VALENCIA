@@ -5,8 +5,8 @@ from subprocess import run
 def run_gffread(outbase, genome_assembly, annotation_path, 
                 results, kinds=[]):
     # define gffread_modes as:
-    gffread_modes = {"transcripts_evidence": "w", "proteins_evidence": "y","CDS_evidence": "x",
-                    "transcripts_target": "w", 
+    gffread_modes = {"transcripts_evidence": "w", "proteins_evidence": "y"
+                     ,"CDS_evidence": "x","transcripts_target": "w", 
                     "proteins_target": "y", "CDS_target": "x"}
     # define base command template:
     cmd = "gffread -{} {} -g {} {}"

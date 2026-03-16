@@ -15,7 +15,7 @@ def get_gene_isoform_dict_from_target_annotation(target_annotation):
                 continue
         fields = line.strip().split('\t')
         attributes = fields[8]
-        # obtein the id and parent match from the attributes
+        # obtein the id and parent match from the attributes field using regular expressions
         id_match = re.search(r'ID=([^;]+)', attributes)
         parent_match = re.search(r'Parent=([^;]+)', attributes)
         # identify biological role
@@ -29,7 +29,7 @@ def get_gene_isoform_dict_from_target_annotation(target_annotation):
             elif parent_match:
                 isoform_id = id_match.group(1)
                 gene_id = parent_match.group(1)
-                # only add the isoform if the parent gen existe
+                # only add the isoform if the parent gen exist
                 if gene_id in gene_isoform_dict:
                     if isoform_id not in gene_isoform_dict[gene_id]:
                         gene_isoform_dict[gene_id][isoform_id] = {}
@@ -52,12 +52,13 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
             if line.startswith("ref_gene"):
                 continue
             fields = line.strip().split('\t')
+            # get the class code from the 3rd column and translate it to a more descriptive term using the CLASS_CODE_TRANSLATION dictionary
             class_code = CLASS_CODE_TRANSLATION[fields[2]]
             for gene in fields[3].split(","):
                 gene_id, iso_id = gene.split('|')
-            # look up the gene_id in the gene_isoform_dict; if not found, get None.
+                # look up the gene_id in the gene_isoform_dict; if not found, get None.
                 target_gene = gene_isoform_dict.get(gene_id.strip(), None)
-            # if the gene is no present in the dictionary, skip and conitnue
+                # if the gene is not found in the gene_isoform_dict, we skip it; otherwise, we look for the isoform and update its evidence information
                 if target_gene is None: 
                     continue
                 if target_gene:
