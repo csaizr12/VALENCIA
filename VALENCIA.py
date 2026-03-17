@@ -78,6 +78,9 @@ def main():
                  categories = ["proteins_evidence"]
             for category in categories:                
         #run compare(evidence, target)
+                 print(outbase,args["proteins_evidence"],
+                             args["transcripts_evidence"], results["CDS_evidence"]["outfile"],
+                            args["annotation_target"], results, kinds=[category])
                  run_gffcompare(outbase,args["proteins_evidence"],
                              args["transcripts_evidence"], results["CDS_evidence"]["outfile"],
                             args["annotation_target"], results, kinds=[category])
