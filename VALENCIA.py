@@ -62,7 +62,7 @@ def main():
             elif option == "proteins_evidence":
                 kinds_to_run = ["proteins_evidence"]
             elif option == "annotation_target":
-                kinds_to_run = ["transcripts_target", "proteins_target", "CDS_target"]
+                kinds_to_run = ["annotation_target"]
             run_gffread(outbase, args["genome_assembly"],
                         path, results, kinds=kinds_to_run)
     for kind, result in results.items():
