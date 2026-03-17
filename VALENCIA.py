@@ -80,7 +80,7 @@ def main():
         #run compare(evidence, target)
                  print(outbase,args["proteins_evidence"],
                              args["transcripts_evidence"], results["CDS_evidence"]["outfile"],
-                            args["annotation_target"], results, kinds=[category])
+                            args["annotation_target"], results)
                  run_gffcompare(outbase,args["proteins_evidence"],
                              args["transcripts_evidence"], results["CDS_evidence"]["outfile"],
                             args["annotation_target"], results, kinds=[category])
