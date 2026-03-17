@@ -72,14 +72,14 @@ def main():
     for option, path in args.items():
         if "evidence" in option:
             # determine categories to run based on the option
-            if option == 'transcriptome_evidence':
+            if option == 'transcripts_evidence':
                  categories = ["transcripts_evidence", "CDS_evidence"]
             else:
                  categories = ["proteins_evidence"]
             for category in categories:                
         #run compare(evidence, target)
                  run_gffcompare(outbase,args["proteins_evidence"],
-                             args["transcripts_evidence"], args["CDS_evidence"],
+                             args["transcripts_evidence"], results["CDS_evidence"]["outfile"],
                             args["annotation_target"], results, kinds=[category])
     for kind, result in results.items():
         if result["returncode"] != 0:
