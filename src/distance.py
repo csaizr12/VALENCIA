@@ -35,7 +35,8 @@ def edit_distance(parsed_evidence_gene_isoform_dict, transcript_target_fasta, tr
                 # obtain edit distance with target and evidence
                 edit_distance = distance(seq_target, seq_evidence)
                 # save it in a gene_isoform_dict
-                parsed_evidence_gene_isoform_dict[target_gene_id][target_isoform_id][evidence_type]["edit_distance"] = edit_distance
+                parsed_evidence_gene_isoform_dict[target_gene_id][target_isoform_id]
+                [evidence_type]["edit_distance"] = edit_distance
 
     return parsed_evidence_gene_isoform_dict
 

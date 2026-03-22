@@ -33,7 +33,8 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                 # get the features for the isoform
                 features = target_gene[isoform_id]
                 evidence_info = []
-                # for each evidence type, we get the class code and edit distance, and add it to the evidence_info list
+                # for each evidence type, we get the class code and edit distance,
+                #  and add it to the evidence_info list
                 for evidence_type in  ["transcripts", "proteins", "CDS"]:
                         # get the features for the evidence type; if not found, get None
                         evidence_features = features.get(evidence_type)
@@ -41,7 +42,8 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                             match_sequence = evidence_features.get("match_sequence", "NA")
                             class_code = evidence_features.get("class_code", "NA")
                             edit_distance = evidence_features.get("edit_distance", "NA")
-                        # if we don't have evidence features, we set the match_sequence, class_code, and edit_distance to NA
+                        # if we don't have evidence features,
+                        #  we set the match_sequence, class_code, and edit_distance to NA
                         else:
                             match_sequence = "NA"
                             class_code = "NA"
@@ -49,7 +51,8 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                         evidence_info.append("{}_evidence_ID={}".format(evidence_type, match_sequence))
                         evidence_info.append("{}_class_code={}".format(evidence_type, class_code))
                         evidence_info.append("{}_edit_distance={}".format(evidence_type, edit_distance))
-                # if we have evidence info, we join it with the existing attributes; otherwise, we just add evidence_info=NA
+                # if we have evidence info, we join it with the existing attributes; otherwise, 
+                # we just add evidence_info=NA
                 if evidence_info:
                     new_attributes = attributes + ";" + ";".join(evidence_info)
                 else:
