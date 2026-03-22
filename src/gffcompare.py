@@ -8,7 +8,7 @@ from subprocess import run
 def run_gffcompare(outbase, protein_path, transcripts_path, 
                    anotation_path, results, kinds=[]):
     # define the command template and create a dedicated 'gffcompare_results' directory
-    cmd = "gffcompare -r {} -M -D -o {} {}"
+    cmd = "gffcompare -r {} -o {} {}"
     outpath = outbase / "gffcompare_results"
     if not outpath.exists():
             outpath.mkdir(parents=True, exist_ok=True)
