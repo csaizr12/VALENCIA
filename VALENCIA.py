@@ -58,9 +58,9 @@ def main():
        if "evidence" in option or "target" in option:
             # determine categories to run based on the option
             if option == "transcripts_evidence":
-                kinds_to_run = ["transcripts_evidence", "CDS_evidence"]
+                kinds_to_run = ["transcripts_evidence"]
             elif option == "proteins_evidence":
-                kinds_to_run = ["proteins_evidence"]
+                kinds_to_run = ["proteins_evidence", "CDS_evidence"]
             elif option == "annotation_target":
                 kinds_to_run = ["annotation_target"]
             run_gffread(outbase, args["genome_assembly"],
@@ -73,9 +73,9 @@ def main():
         if "evidence" in option:
             # determine categories to run based on the option
             if option == 'transcripts_evidence':
-                 categories = ["transcripts_evidence", "CDS_evidence"]
+                 categories = ["transcripts_evidence"]
             else:
-                 categories = ["proteins_evidence"]
+                 categories = ["proteins_evidence","CDS_evidence"]
             for category in categories:                
         #run compare(evidence, target)
                  run_gffcompare(outbase,args["proteins_evidence"], 
