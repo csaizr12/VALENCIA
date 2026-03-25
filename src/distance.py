@@ -41,7 +41,7 @@ def edit_distance(parsed_evidence_gene_isoform_dict, transcript_target_fasta, tr
                 #Adapted aed calc from ingenannot
                 sensitivity = shared_bases /(shared_bases + (len_evidence - shared_bases))
                 specificity = shared_bases / (shared_bases + (len_target - shared_bases))
-                print(sensitivity, specificity, len_target, len_evidence, edit_distance)
+                print(sensitivity, specificity, len_target, len_evidence, edit_distance, shared_bases)
                 lev_edit_distance = 1 - ((sensitivity + specificity) /2)
                 # save it in a gene_isoform_dict
                 parsed_evidence_gene_isoform_dict[target_gene_id][target_isoform_id][evidence_type]["edit_distance"] = lev_edit_distance
