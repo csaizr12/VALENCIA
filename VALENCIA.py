@@ -81,7 +81,7 @@ def main():
                  run_gffcompare(outbase,args["proteins_evidence"], 
                                 args["transcripts_evidence"],
                                 args["annotation_target"], 
-                                results, kinds=[category])
+                                results, kinds=[category]) 
     for kind, result in results.items():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
