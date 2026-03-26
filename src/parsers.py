@@ -38,9 +38,9 @@ def get_gene_isoform_dict_from_target_annotation(target_annotation):
 # define a function that updates a gene-isform dictionary
 # using a reference map file, and adds the class code 
 # and match sequence information (evidence) to the corresponding isoforms 
-def add_refmap_info(gene_isoform_dict, refmap_path):
+def add_tmap_info(gene_isoform_dict, tmap_path):
     # get only the filename part from the full reference map path
-    fname = os.path.basename(refmap_path)
+    fname = os.path.basename(tmap_path)
     if 'transcripts_evidence' in fname:
         evidence_type = 'transcripts'
     elif 'proteins_evidence' in fname:
@@ -48,7 +48,7 @@ def add_refmap_info(gene_isoform_dict, refmap_path):
     elif 'CDS_evidence' in fname:
         evidence_type = 'CDS'
     # process the file
-    with open(refmap_path, "r") as f:
+    with open(tmap_path, "r") as f:
         for line in f:
             if line.startswith("ref_gene"):
                 continue

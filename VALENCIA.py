@@ -7,7 +7,7 @@ from pathlib import Path
 
 from src.gffcompare import run_gffcompare
 from src.gffread import run_gffread
-from src.parsers import get_gene_isoform_dict_from_target_annotation, add_refmap_info
+from src.parsers import add_tmap_info, get_gene_isoform_dict_from_target_annotation, add_tmap_info
 from src.distance import edit_distance
 from src.add_features_to_gff import add_features_to_gff
 
@@ -89,12 +89,12 @@ def main():
     with open(args["annotation_target"], "r") as target_annotation:
         gene_dict = get_gene_isoform_dict_from_target_annotation(target_annotation)
         
-    # search refmap files obteined to gffcompare and edit_distance
+    # search tmap files obteined to gffcompare and edit_distance
     results_dir = Path(outbase) / 'gffcompare_results'
 
-    for refmap_file in results_dir.glob('*.refmap'):
+    for tmap_file in results_dir.glob('*.tmap'):
         # add info to gene_dict
-        gene_dict = add_refmap_info(gene_dict, str(refmap_file))
+        gene_dict = add_tmap_info(gene_dict, str(tmap_file))
         # add results gffread
         gene_dict = edit_distance(gene_dict, results["transcripts_target"]["outfile"],
                                   results["transcripts_evidence"]["outfile"],
