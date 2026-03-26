@@ -3,7 +3,7 @@ import re
 
 CLASS_CODE_TRANSLATION = {"=": "complete", "c": "SubsequencesTarget", "k":"SubsequencesReferences",
                           "m":"TotalIntronsRetention", "n":"PartialIntronRetention", "j":"PotentialIsoform",
-                          "o": "PartialExonOverlap", "e":"RetainedIntronSingleExon"}
+                          "o": "PartialExonOverlap", "e":"RetainedIntronSingleExon", "x": "ExonOverlap", "s":"Antisense", "p":"PotentialNovel", "u":"Intergenic", "i":"Intronic"}
 
 # parse a genomic annotation file to create a  
 # dictionary structure of genes and their corresponding isoforms
