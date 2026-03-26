@@ -3,7 +3,7 @@ import re
 
 CLASS_CODE_TRANSLATION = {"=": "complete", "c": "SubsequencesTarget", "k":"SubsequencesReferences",
                           "m":"TotalIntronsRetention", "n":"PartialIntronRetention", "j":"PotentialIsoform",
-                          "o": "PartialExonOverlap", "e":"RetainedIntronSingleExon", "x": "ExonOverlap", "s":"Antisense", "p":"PotentialNovel", "u":"Intergenic", "i":"Intronic"}
+                          "o": "PartialExonOverlap", "e":"RetainedIntronSingleExon"}
 
 # parse a genomic annotation file to create a  
 # dictionary structure of genes and their corresponding isoforms
@@ -53,6 +53,10 @@ def add_tmap_info(gene_isoform_dict, tmap_path):
             if line.startswith("ref_gene_id"):
                 continue
             fields = line.strip().split('\t')
+            raw_class_code = fields[2]
+            # if the class code is not in the translation dictionary, skip the line
+            if raw_class_code not in CLASS_CODE_TRANSLATION:
+                continue
             # get the class code from the 3rd column
             # and translate it to a more descriptive term using the CLASS_CODE_TRANSLATION dictionary
             class_code = CLASS_CODE_TRANSLATION[fields[2]]
@@ -63,7 +67,9 @@ def add_tmap_info(gene_isoform_dict, tmap_path):
             # if the gene is found, look up the isoform_id in the gene's isoforms; if not found, get None.
             if target_gene:
                  if iso_id in target_gene:
-                    # if the isoform is found, update the isoform's evidence information with the class code and match sequence
-                    target_gene[iso_id].update({evidence_type: {"class_code":class_code, "match_sequence": fields[1]}})
+                    # if the isoform is found, update the isoform's evidence information 
+                    # with the class code and match sequence
+                    target_gene[iso_id].update({evidence_type: {"class_code":class_code, "match_sequence":
+                                                                 fields[1]}})
 
     return gene_isoform_dict
