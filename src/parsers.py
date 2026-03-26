@@ -50,22 +50,20 @@ def add_tmap_info(gene_isoform_dict, tmap_path):
     # process the file
     with open(tmap_path, "r") as f:
         for line in f:
-            if line.startswith("ref_gene"):
+            if line.startswith("ref_gene_id"):
                 continue
             fields = line.strip().split('\t')
             # get the class code from the 3rd column
             # and translate it to a more descriptive term using the CLASS_CODE_TRANSLATION dictionary
             class_code = CLASS_CODE_TRANSLATION[fields[2]]
-            for gene in fields[3].split(","):
-                gene_id, iso_id = gene.split('|')
-                # look up the gene_id in the gene_isoform_dict; if not found, get None.
-                target_gene = gene_isoform_dict.get(gene_id.strip(), None)
-                # if the gene is not found in the gene_isoform_dict, we skip it; otherwise,
-                # we look for the isoform and update its evidence information
-                if target_gene is None: 
-                    continue
-                if target_gene:
-                    if iso_id in target_gene:
-                        target_gene[iso_id].update({evidence_type: {"class_code":class_code, "match_sequence": fields[1]}})
+            gene_id = fields[3].strip()
+            iso_id = fields[4].strip()
+            # look up the gene_id in the gene_isoform_dict; if not found, get None.
+            target_gene = gene_isoform_dict.get(gene_id, None)
+            # if the gene is found, look up the isoform_id in the gene's isoforms; if not found, get None.
+            if target_gene:
+                 if iso_id in target_gene:
+                    # if the isoform is found, update the isoform's evidence information with the class code and match sequence
+                    target_gene[iso_id].update({evidence_type: {"class_code":class_code, "match_sequence": fields[1]}})
 
     return gene_isoform_dict
