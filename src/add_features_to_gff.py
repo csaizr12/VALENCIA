@@ -45,7 +45,7 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                         else:
                             match_sequence = "NA"
                             class_code = "NA"
-                            edit_distance = "NA"
+                            edit_distance = "1"
                         evidence_info.append("{}_evidence_ID={}".format(evidence_type, match_sequence))
                         evidence_info.append("{}_class_code={}".format(evidence_type, class_code))
                         evidence_info.append("{}_edit_distance={}".format(evidence_type, edit_distance))
