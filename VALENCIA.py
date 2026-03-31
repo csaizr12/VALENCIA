@@ -10,6 +10,8 @@ from src.gffread import run_gffread
 from src.parsers import add_tmap_info, get_gene_isoform_dict_from_target_annotation, add_tmap_info
 from src.distance import edit_distance
 from src.add_features_to_gff import add_features_to_gff
+from src.VALENCIA_plotter import generate_quality_panel
+
 
 
 
@@ -104,7 +106,10 @@ def main():
                                   results["CDS_evidence"]["outfile"])
     # add features to gff
     add_features_to_gff(outbase, args["annotation_target"], gene_dict) 
-    
+    # generate quality panel
+    if os.path.exists(outbase / "Athaliana_447_Araport11.gene_exons_with_evidence_features.gff3"):
+        generate_quality_panel(outbase / "Athaliana_447_Araport11.gene_exons_with_evidence_features.gff3", 
+        output_png=outbase / "VALENCIA_Quality_Report.png")
 # run main function 
 if __name__ == '__main__':
     main() 
