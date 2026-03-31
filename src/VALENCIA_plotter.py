@@ -103,15 +103,7 @@ def generate_quality_panel(gff_path, output_png):
         ax_corr.legend(loc='upper left', fontsize=12)
         ax_corr.grid(True, linestyle=':', alpha=0.4)
 
-        # --- NOTA EXPLICATIVA ---
-        note_text = (
-            "Note: The 'Potential Frameshift Zone' (red area in B) identifies transcripts where the nucleotide \n"
-            "sequence (CDS) closely matches the reference, but the resulting protein sequence does not. \n"
-            "This discrepancy typically indicates a phase shift error introduced during the structural annotation."
-        )
-        fig.text(0.5, 0.03, note_text, ha="center", fontsize=12, style='italic', 
-                 bbox=dict(boxstyle="round", fc="yellow", alpha=0.08))
-
+      
         # TÍTULO GLOBAL
         fig.suptitle(f'VALENCIA Annotation Quality Analysis (n={len(df)})', fontsize=26, fontweight='bold', y=0.98)
         
