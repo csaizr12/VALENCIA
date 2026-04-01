@@ -107,9 +107,9 @@ def main():
     # add features to gff
     add_features_to_gff(outbase, args["annotation_target"], gene_dict) 
     # generate quality panel
-    if (outbase / "Athaliana_447_Araport11.gene_exons_with_evidence_features.gff3").exists():
-        generate_quality_panel(outbase / "Athaliana_447_Araport11.gene_exons_with_evidence_features.gff3",
-        output_png = outbase / "VALENCIA_Quality_Report.png")       
+    file_with_features = add_features_to_gff(outbase, args["annotation_target"], gene_dict)
+    if file_with_features.exists():
+        generate_quality_panel(file_with_features, output_png = outbase / "VALENCIA_quality_panel.png")   
 # run main function 
 if __name__ == '__main__':
     main()

@@ -70,4 +70,5 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                 fields[8] = new_attributes
                 gff_output.write("\t".join(fields) + "\n")
            
+    return output_path
 
