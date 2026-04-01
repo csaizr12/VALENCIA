@@ -1,11 +1,18 @@
+from dataclasses import fields
+from pathlib import Path
 import sys
 import re
 
 # this function adds features to the original gff file based on the gene-isoform dictionary only for mRNA lines
 # , and writes the output in a new gff file
 def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
+
+ input_name = Path(gff_file).stem
+ output_name = f'{input_name}_with_evidence_features.gff3'
+ output_path = outbase / output_name
+
  with open(gff_file, "r") as gff_input:
-    with open(outbase / "Athaliana_447_Araport11.gene_exons_with_evidence_features.gff3", "w") as gff_output:
+    with open(outbase / output_path,  "w") as gff_output:
         # write a comment about the command used to run the script
         cmd_line = ("##CMD:  {}\n".format(" ".join(sys.argv)))
         cmd_written = False
@@ -22,8 +29,11 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
             type = fields[2]
             print(type)
             # if the line is not an mRNA, write it as is
-            if type != "mRNA":
-                gff_output.write(line)
+            transcript_types = ["mRNA", "transcript"]
+
+            if fields[2] not in transcript_types:
+                   gff_output.write(line)
+
             # if the line is an mRNA, we look for the gene and isoform in the gene_isoform_dict
             else:
                 id_match = re.search(r'ID=([^;]+)', attributes)
