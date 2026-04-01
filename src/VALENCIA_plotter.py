@@ -34,7 +34,7 @@ def generate_quality_panel(gff_path, output_png):
                     if tx and pr and cds:
                         t_v, p_v, c_v = float(tx.group(1)), float(pr.group(1)), float(cds.group(1))
                         data.append({
-                            'lev_edit_distanc_tx': t_v, 'lev_edit_distanc_pr': p_v, 'lev_edit_distanc_cds': c_v, 
+                            'lev_edit_distance_tx': t_v, 'lev_edit_distance_pr': p_v, 'lev_edit_distance_cds': c_v, 
                             'Delta': abs(p_v - c_v)
                         })
         
@@ -58,7 +58,7 @@ def generate_quality_panel(gff_path, output_png):
         ax_hist_y = fig.add_subplot(inner_gs[1:, -1], sharey=ax_main)
 
         # Scatter principal
-        sc = ax_main.scatter(df['AED_tx'], df['AED_pr'], c=df['Delta'], 
+        sc = ax_main.scatter(df['lev_edit_distance_tx'], df['lev_edit_distance_pr'], c=df['Delta'], 
                             s=4, cmap="YlOrRd", vmin=0, vmax=1, 
                             edgecolors='none', alpha=0.7, rasterized=True)
 
@@ -84,8 +84,8 @@ def generate_quality_panel(gff_path, output_png):
         cbar.set_label('Δ lev_edit_distance (Discrepancy CDS vs Protein)', fontweight='bold', fontsize=11)
 
         # Leyenda Plot A
-        leg_elements = [Patch(facecolor='#45a049', label=' lev_edit_distanc transcripts'),
-                        Patch(facecolor='#e91e63', label='lev_edit_distanc proteins')]
+        leg_elements = [Patch(facecolor='#45a049', label=' lev_edit_distance transcripts'),
+                        Patch(facecolor='#e91e63', label='lev_edit_distance proteins')]
         ax_hist_y.legend(handles=leg_elements, loc='upper left', bbox_to_anchor=(1.1, 1.0), frameon=True, fontsize=11)
 
         # --- 2. PLOT B: INTERNAL CONSISTENCY (CORRELATION) ---
