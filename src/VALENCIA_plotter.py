@@ -42,42 +42,41 @@ def generate_quality_panel(gff_path, output_png):
         # Layout: 3 columnas
         gs = fig.add_gridspec(1, 3, width_ratios=[1.2, 1, 1], wspace=0.35)
 
-       # --- 1. PLOT A: AJUSTE DE TAMAÑO MILIMÉTRICO ---
-        # hspace=0 y wspace=0 para que peguen perfectamente
-        inner_gs = gs[0].subgridspec(4, 4, hspace=0.0, wspace=0.0)
+     # --- 1. PLOT A: ALINEACIÓN MILIMÉTRICA ---
+        # Dividimos en 5 filas: 
+        # Fila 0: Histograma Verde
+        # Filas 1-3: Gráfico Principal y Histograma Rosa (alineados)
+        # Fila 4: Espacio para la Colorbar
+        inner_gs = gs[0].subgridspec(5, 4, hspace=0.0, wspace=0.0)
         
-        # El gráfico principal ocupa de la fila 1 a la 4 y columnas 0 a 3
-        ax_main = fig.add_subplot(inner_gs[1:, :-1])
+        # El gráfico principal ocupa filas 1 a 4 (excluyendo la última)
+        ax_main = fig.add_subplot(inner_gs[1:4, :-1])
         
-        # El histograma X (verde) ocupa la fila 0 y columnas 0 a 3
+        # Histograma X (verde) arriba
         ax_hist_x = fig.add_subplot(inner_gs[0, :-1], sharex=ax_main)
         
-        # El histograma Y (rosa) ocupa de la fila 1 a la 4 (IGUAL QUE AX_MAIN) y la columna 3
-        ax_hist_y = fig.add_subplot(inner_gs[1:, -1], sharey=ax_main)
+        # Histograma Y (rosa) ALINEADO con ax_main (mismas filas 1 a 4)
+        ax_hist_y = fig.add_subplot(inner_gs[1:4, -1], sharey=ax_main)
 
-        # Dibujado de datos
+        # Dibujado
         sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], 
                             s=4, cmap="YlOrRd", vmin=0, vmax=1, alpha=0.7, rasterized=True)
 
         ax_hist_x.hist(df['tx'], bins=80, color='#45a049', edgecolor='black', linewidth=0.1)
         ax_hist_y.hist(df['pr'], bins=80, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
         
-        # Eliminamos etiquetas internas para que no se solapen al estar pegados
+        # Formateo de ticks
         ax_hist_x.tick_params(labelbottom=False, bottom=False)
         ax_hist_y.tick_params(labelleft=False, left=False)
         
-        # Añadimos un poco de rejilla suave para que no se vea vacío
-        ax_main.grid(True, linestyle=':', alpha=0.3)
-        
-        # Etiquetas y Umbrales
+        # Umbrales
         ax_main.axvline(0.1, color='red', linestyle='--', alpha=0.5)
         ax_main.axhline(0.1, color='red', linestyle='--', alpha=0.5)
         ax_main.set_xlabel('lev_edit_distance transcripts', fontweight='bold')
         ax_main.set_ylabel('lev_edit_distance proteins', fontweight='bold')
 
-        # Colorbar ajustada
-        divider = make_axes_locatable(ax_main)
-        cax = divider.append_axes("bottom", size="3.5%", pad=0.8)
+        # UBICACIÓN DE LA COLORBAR: En la última fila libre (fila 4)
+        cax = fig.add_subplot(inner_gs[4, :-1])
         fig.colorbar(sc, cax=cax, orientation='horizontal').set_label('Δ lev_edit_distance (Discrepancy)')
         # --- 2. PLOT B: CORRELACIÓN ---
         ax_corr = fig.add_subplot(gs[1])
