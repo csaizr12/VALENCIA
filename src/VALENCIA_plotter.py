@@ -36,42 +36,47 @@ def generate_quality_panel(gff_path, output_png):
         gs = fig.add_gridspec(1, 3, width_ratios=[1.2, 1, 1], wspace=0.4)
 
        
-        # --- 1. PLOT A: AJUSTE DE TEXTO SOBRE COLORBAR ---
-        # Mantenemos los ratios, pero damos un hspace de 0.2 para separar la colorbar del texto
-        inner_gs = gs[0].subgridspec(6, 4, 
-                                     height_ratios=[1.2, 1, 1, 1, 1, 0.2], 
-                                     hspace=0.15, # Un poco más de espacio vertical
+      # --- 1. PLOT A: SEPARACIÓN LIMPIA (ESPACIADO MAESTRO) ---
+        # Dividimos en 7 filas para tener un control total:
+        # Fila 0: Hist X | Filas 1-4: Principal | Fila 5: AIRE para el label | Fila 6: Colorbar
+        inner_gs = gs[0].subgridspec(7, 4, 
+                                     height_ratios=[1.2, 1, 1, 1, 1, 0.6, 0.2], 
+                                     hspace=0.0, 
                                      wspace=0.05)
         
+        # El gráfico principal y el rosa ocupan las mismas filas (1 a 5)
         ax_main = fig.add_subplot(inner_gs[1:5, :-1])
         ax_hist_x = fig.add_subplot(inner_gs[0, :-1], sharex=ax_main)
         ax_hist_y = fig.add_subplot(inner_gs[1:5, -1], sharey=ax_main)
 
-        # Scatter con paleta Magma
+        # Scatter con degradado MAGMA (Alto contraste pedido)
         sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], 
                             s=5, cmap="magma", vmin=0, vmax=1, alpha=0.7, rasterized=True)
 
-        # Histogramas
+        # Marginales con sus etiquetas recuperadas
         ax_hist_x.hist(df['tx'], bins=80, color='#45a049', edgecolor='black', linewidth=0.1)
         ax_hist_y.hist(df['pr'], bins=80, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
         
-        # --- AJUSTE DE LEYENDAS Y TEXTOS ---
-        # Eliminamos ticks que no necesitamos
+        ax_hist_x.set_ylabel('Nb. transcripts', fontsize=10)
+        ax_hist_y.set_xlabel('Nb. transcripts', fontsize=10)
         ax_hist_x.tick_params(labelbottom=False, bottom=False)
         ax_hist_y.tick_params(labelleft=False, left=False)
         
-        # EL TRUCO: Ponemos el label del eje X y usamos labelpad para separarlo del gráfico 
-        # pero que quede por ENCIMA de la colorbar
-        ax_main.set_xlabel('lev_edit_distance transcripts', fontweight='bold', fontsize=12, labelpad=10)
+        # --- EL AJUSTE CLAVE ---
+        # labelpad=25 empuja el texto hacia el hueco que hemos creado en la fila 5
+        ax_main.set_xlabel('lev_edit_distance transcripts', fontweight='bold', fontsize=12, labelpad=25)
         ax_main.set_ylabel('lev_edit_distance proteins', fontweight='bold', fontsize=12)
 
-        # Ubicación de la Colorbar (Fila 5)
-        cax_a = fig.add_subplot(inner_gs[5, :-1])
-        
-        # Dibujamos la colorbar con un pad pequeño para que no pise el label anterior
+        # Ubicamos la colorbar en la última fila (Fila 6)
+        cax_a = fig.add_subplot(inner_gs[6, :-1])
         cbar = fig.colorbar(sc, cax=cax_a, orientation='horizontal', aspect=50)
         cbar.set_label('Δ lev_edit_distance (Discrepancy)', fontweight='bold', fontsize=10)
         cbar.ax.tick_params(labelsize=8)
+
+        # Leyenda lateral
+        ax_hist_y.legend(handles=[Patch(facecolor='#45a049', label='AED transcripts'),
+                                 Patch(facecolor='#e91e63', label='AED proteins')],
+                         loc='upper left', bbox_to_anchor=(1.05, 1.0), frameon=True)
 
         # Leyenda lateral (AED transcripts/proteins)
         ax_hist_y.legend(handles=[Patch(facecolor='#45a049', label='AED transcripts'),
