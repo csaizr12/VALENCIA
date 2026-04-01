@@ -9,7 +9,7 @@ from matplotlib.patches import Patch
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 def generate_quality_panel(gff_path, output_png):
-    print(f"📊 Generating Improved Quality Report from: {gff_path}")
+    print(f"Generating Improved Quality Report from: {gff_path}")
     data = []
     
     try:
@@ -42,30 +42,43 @@ def generate_quality_panel(gff_path, output_png):
         # Layout: 3 columnas
         gs = fig.add_gridspec(1, 3, width_ratios=[1.2, 1, 1], wspace=0.35)
 
-        # --- 1. PLOT A: AJUSTE DE TAMAÑO ---
-        # Usamos hspace y wspace muy bajos para que los histogramas "peguen" con el centro
-        inner_gs = gs[0].subgridspec(4, 4, hspace=0.05, wspace=0.05)
+       # --- 1. PLOT A: AJUSTE DE TAMAÑO MILIMÉTRICO ---
+        # hspace=0 y wspace=0 para que peguen perfectamente
+        inner_gs = gs[0].subgridspec(4, 4, hspace=0.0, wspace=0.0)
+        
+        # El gráfico principal ocupa de la fila 1 a la 4 y columnas 0 a 3
         ax_main = fig.add_subplot(inner_gs[1:, :-1])
+        
+        # El histograma X (verde) ocupa la fila 0 y columnas 0 a 3
         ax_hist_x = fig.add_subplot(inner_gs[0, :-1], sharex=ax_main)
+        
+        # El histograma Y (rosa) ocupa de la fila 1 a la 4 (IGUAL QUE AX_MAIN) y la columna 3
         ax_hist_y = fig.add_subplot(inner_gs[1:, -1], sharey=ax_main)
 
+        # Dibujado de datos
         sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], 
                             s=4, cmap="YlOrRd", vmin=0, vmax=1, alpha=0.7, rasterized=True)
 
         ax_hist_x.hist(df['tx'], bins=80, color='#45a049', edgecolor='black', linewidth=0.1)
-        # El histograma lateral ahora ocupa exactamente el mismo espacio vertical que ax_main
         ax_hist_y.hist(df['pr'], bins=80, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
         
-        ax_hist_x.tick_params(labelbottom=False); ax_hist_y.tick_params(labelleft=False)
+        # Eliminamos etiquetas internas para que no se solapen al estar pegados
+        ax_hist_x.tick_params(labelbottom=False, bottom=False)
+        ax_hist_y.tick_params(labelleft=False, left=False)
+        
+        # Añadimos un poco de rejilla suave para que no se vea vacío
+        ax_main.grid(True, linestyle=':', alpha=0.3)
+        
+        # Etiquetas y Umbrales
         ax_main.axvline(0.1, color='red', linestyle='--', alpha=0.5)
         ax_main.axhline(0.1, color='red', linestyle='--', alpha=0.5)
         ax_main.set_xlabel('lev_edit_distance transcripts', fontweight='bold')
         ax_main.set_ylabel('lev_edit_distance proteins', fontweight='bold')
 
+        # Colorbar ajustada
         divider = make_axes_locatable(ax_main)
         cax = divider.append_axes("bottom", size="3.5%", pad=0.8)
         fig.colorbar(sc, cax=cax, orientation='horizontal').set_label('Δ lev_edit_distance (Discrepancy)')
-
         # --- 2. PLOT B: CORRELACIÓN ---
         ax_corr = fig.add_subplot(gs[1])
         sns.scatterplot(data=df, x='cds', y='pr', alpha=0.15, s=5, color='#34495e', ax=ax_corr, rasterized=True)
@@ -91,7 +104,7 @@ def generate_quality_panel(gff_path, output_png):
         fig.suptitle(f'VALENCIA Annotation quality analysis (n={len(df)})', fontsize=26, fontweight='bold', y=0.98)
         plt.savefig(output_png, bbox_inches='tight')
         plt.close()
-        print(f"✅ Panel generated: {output_png}")
+        print(f"Panel generated: {output_png}")
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f" Error: {e}")
