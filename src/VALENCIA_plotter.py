@@ -68,32 +68,44 @@ def generate_quality_panel(gff_path, output_png):
         # Ubicamos la colorbar en la última fila (Fila 6)
         cax_a = fig.add_subplot(inner_gs[6, :-1])
         cbar = fig.colorbar(sc, cax=cax_a, orientation='horizontal', aspect=50)
-        cbar.set_label('Δ lev_edit_distance (Discrepancy)', fontweight='bold', fontsize=10)
+        cbar.set_label('Δ Lev_edit_distance', fontweight='bold', fontsize=10)
         cbar.ax.tick_params(labelsize=8)
 
         # Leyenda lateral
-        ax_hist_y.legend(handles=[Patch(facecolor='#45a049', label='AED transcripts'),
-                                 Patch(facecolor='#e91e63', label='AED proteins')],
+        ax_hist_y.legend(handles=[Patch(facecolor='#45a049', label='Lev_edit_distance transcripts'),
+                                 Patch(facecolor='#e91e63', label='Lev_edit_distance proteins')],
                          loc='upper left', bbox_to_anchor=(1.05, 1.0), frameon=True)
 
-        # Leyenda lateral (AED transcripts/proteins)
-        ax_hist_y.legend(handles=[Patch(facecolor='#45a049', label='AED transcripts'),
-                                 Patch(facecolor='#e91e63', label='AED proteins')],
+        # Leyenda lateral (Lev_edit_distance transcripts/proteins)
+        ax_hist_y.legend(handles=[Patch(facecolor='#45a049', label='Lev_edit_distance transcripts'),
+                                 Patch(facecolor='#e91e63', label='Lev_edit_distance proteins')],
                          loc='upper left', bbox_to_anchor=(1.05, 1.0), frameon=True)       
-        # Plot B y C 
+       
+        # --- 2. PLOT B: CORRELACIÓN 
         ax_corr = fig.add_subplot(gs[1])
         sns.scatterplot(data=df, x='cds', y='pr', alpha=0.15, s=6, color='#34495e', ax=ax_corr, rasterized=True)
         ax_corr.plot([0, 1], [0, 1], color='red', linestyle='--', label='Identity (X=Y)')
         ax_corr.fill_between([0, 1], [0, 1], [1, 1], color='red', alpha=0.04, label='Potential frameshift zone')
-        ax_corr.set_title('Correlation: CDS vs proteins', fontsize=18, fontweight='bold')
-        ax_corr.legend(loc='upper left')
+        
+        # Título y Etiquetas de los ejes
+        ax_corr.set_title('Correlation: CDS vs protein', fontsize=18, fontweight='bold', pad=20)
+        ax_corr.set_xlabel('Lev_edit_distance CDS (Nucleotide level)', fontweight='bold', fontsize=12)
+        ax_corr.set_ylabel('Lev_edit_distance Proteins (Amino acid level)', fontweight='bold', fontsize=12)
+        ax_corr.legend(loc='upper left', fontsize=11)
+        ax_corr.grid(True, linestyle=':', alpha=0.4)
 
+        # --- 3. PLOT C: HISTOGRAMA (LEYENDAS COMPLETAS) ---
         ax_dist = fig.add_subplot(gs[2])
         sns.histplot(df['pr'] - df['cds'], bins=60, kde=True, color='#2E86C1', ax=ax_dist, edgecolor='white')
-        ax_dist.set_title('Distribution of editing difference', fontsize=18, fontweight='bold')
+        
+        # Título y Etiquetas de los ejes
+        ax_dist.set_title('Distribution of editing difference', fontsize=18, fontweight='bold', pad=20)
+        ax_dist.set_xlabel('Difference (protein - CDS)', fontweight='bold', fontsize=12)
+        ax_dist.set_ylabel('Number of genes (Frequency)', fontweight='bold', fontsize=12)
+        
         ax_dist.axvline(0, color='red', linestyle=':', label='Zero difference')
-        ax_dist.legend()
-
+        ax_dist.grid(True, linestyle=':', alpha=0.4)
+        ax_dist.legend(loc='upper right', fontsize=11)
         fig.suptitle(f'VALENCIA Annotation Quality Analysis (n={len(df)})', fontsize=28, fontweight='bold', y=0.98)
         
         plt.savefig(output_png, bbox_inches='tight')
