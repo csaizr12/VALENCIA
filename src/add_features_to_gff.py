@@ -18,7 +18,9 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                 cmd_written = True
             fields = line.strip().split('\t')
             attributes = fields[8]
+            print(attributes)
             type = fields[2]
+            print(type)
             # if the line is not an mRNA, write it as is
             if type != "mRNA":
                 gff_output.write(line)
