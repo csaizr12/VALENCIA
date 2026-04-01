@@ -9,7 +9,6 @@ from matplotlib.patches import Patch
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 def generate_quality_panel(gff_path, output_png):
-    print(f"📊 Generando Panel Maestro (Colorbar Fina) desde: {gff_path}")
     data = []
     try:
         with open(gff_path, 'r', encoding='latin-1') as f:
@@ -36,7 +35,7 @@ def generate_quality_panel(gff_path, output_png):
         gs = fig.add_gridspec(1, 3, width_ratios=[1.2, 1, 1], wspace=0.4)
 
        
-      # --- 1. PLOT A: SEPARACIÓN LIMPIA (ESPACIADO MAESTRO) ---
+        # 1. PLOT A:
         # Dividimos en 7 filas para tener un control total:
         # Fila 0: Hist X | Filas 1-4: Principal | Fila 5: AIRE para el label | Fila 6: Colorbar
         inner_gs = gs[0].subgridspec(7, 4, 
@@ -61,11 +60,10 @@ def generate_quality_panel(gff_path, output_png):
         ax_hist_y.set_xlabel('Nb. transcripts', fontsize=10)
         ax_hist_x.tick_params(labelbottom=False, bottom=False)
         ax_hist_y.tick_params(labelleft=False, left=False)
-        
-        # --- EL AJUSTE CLAVE ---
+ 
         # labelpad=25 empuja el texto hacia el hueco que hemos creado en la fila 5
-        ax_main.set_xlabel('lev_edit_distance transcripts', fontweight='bold', fontsize=12, labelpad=25)
-        ax_main.set_ylabel('lev_edit_distance proteins', fontweight='bold', fontsize=12)
+        ax_main.set_xlabel('Lev_edit_distance transcripts', fontweight='bold', fontsize=12, labelpad=25)
+        ax_main.set_ylabel('Lev_edit_distance proteins', fontweight='bold', fontsize=12)
 
         # Ubicamos la colorbar en la última fila (Fila 6)
         cax_a = fig.add_subplot(inner_gs[6, :-1])
@@ -81,25 +79,26 @@ def generate_quality_panel(gff_path, output_png):
         # Leyenda lateral (AED transcripts/proteins)
         ax_hist_y.legend(handles=[Patch(facecolor='#45a049', label='AED transcripts'),
                                  Patch(facecolor='#e91e63', label='AED proteins')],
-                         loc='upper left', bbox_to_anchor=(1.05, 1.0), frameon=True)        # --- PLOTS B y C (Igual que antes) ---
+                         loc='upper left', bbox_to_anchor=(1.05, 1.0), frameon=True)       
+        # Plot B y C 
         ax_corr = fig.add_subplot(gs[1])
         sns.scatterplot(data=df, x='cds', y='pr', alpha=0.15, s=6, color='#34495e', ax=ax_corr, rasterized=True)
         ax_corr.plot([0, 1], [0, 1], color='red', linestyle='--', label='Identity (X=Y)')
         ax_corr.fill_between([0, 1], [0, 1], [1, 1], color='red', alpha=0.04, label='Potential frameshift zone')
-        ax_corr.set_title('B. Correlation: CDS vs Protein', fontsize=18, fontweight='bold')
+        ax_corr.set_title('Correlation: CDS vs proteins', fontsize=18, fontweight='bold')
         ax_corr.legend(loc='upper left')
 
         ax_dist = fig.add_subplot(gs[2])
         sns.histplot(df['pr'] - df['cds'], bins=60, kde=True, color='#2E86C1', ax=ax_dist, edgecolor='white')
-        ax_dist.set_title('C. Distribution of Editing Difference', fontsize=18, fontweight='bold')
-        ax_dist.axvline(0, color='red', linestyle=':', label='Zero Difference')
+        ax_dist.set_title('Distribution of editing difference', fontsize=18, fontweight='bold')
+        ax_dist.axvline(0, color='red', linestyle=':', label='Zero difference')
         ax_dist.legend()
 
         fig.suptitle(f'VALENCIA Annotation Quality Analysis (n={len(df)})', fontsize=28, fontweight='bold', y=0.98)
         
         plt.savefig(output_png, bbox_inches='tight')
         plt.close()
-        print(f"✅ Panel generado con colorbar fina: {output_png}")
+        print(f"Panel generado con colorbar fina: {output_png}")
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
