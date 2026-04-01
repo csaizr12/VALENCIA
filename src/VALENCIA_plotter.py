@@ -80,7 +80,12 @@ def generate_quality_panel(gff_path, output_png):
         ax_hist_y.legend(handles=[Patch(facecolor='#45a049', label='Lev_edit_distance transcripts'),
                                  Patch(facecolor='#e91e63', label='Lev_edit_distance proteins')],
                          loc='upper left', bbox_to_anchor=(1.05, 1.0), frameon=True)       
-       
+        leg_elements = [
+            Patch(facecolor='#45a049', label='Lev_edit_distance transcripts'),
+            Patch(facecolor='#e91e63', label='Lev_edit_distance proteins')]
+        # Estas coordenadas (1, 1.15) lo ponen arriba a la derecha del panel rosa
+        ax_hist_y.legend(handles=leg_elements, loc='upper right',bbox_to_anchor=(1, 1.15),frameon=True, 
+            fontsize=11)
         # --- 2. PLOT B: CORRELACIÓN 
         ax_corr = fig.add_subplot(gs[1])
         sns.scatterplot(data=df, x='cds', y='pr', alpha=0.15, s=6, color='#34495e', ax=ax_corr, rasterized=True)
@@ -100,7 +105,7 @@ def generate_quality_panel(gff_path, output_png):
         
         # Título y Etiquetas de los ejes
         ax_dist.set_title('Distribution of editing difference', fontsize=18, fontweight='bold', pad=20)
-        ax_dist.set_xlabel('Difference (protein - CDS)', fontweight='bold', fontsize=12)
+        ax_dist.set_xlabel('Lev_edit_distance difference  (protein - CDS)', fontweight='bold', fontsize=12)
         ax_dist.set_ylabel('Number of genes (Frequency)', fontweight='bold', fontsize=12)
         
         ax_dist.axvline(0, color='red', linestyle=':', label='Zero difference')
