@@ -35,43 +35,46 @@ def generate_quality_panel(gff_path, output_png):
         
         gs = fig.add_gridspec(1, 3, width_ratios=[1.2, 1, 1], wspace=0.4)
 
-        # --- PLOT A: AJUSTE DE TAMAÑO REAL ---
-        # El ratio de la fila 5 (colorbar) lo bajamos a 0.15 para que sea minúsculo
-        inner_gs = gs[0].subgridspec(6, 4, height_ratios=[1, 1, 1, 1, 1, 0.15], hspace=0.1, wspace=0.1)
+       # --- 1. PLOT A: DESPLAZAMIENTO DE LEYENDA (COLORBAR) ---
+        # Aumentamos ligeramente el hspace final para dar aire
+        inner_gs = gs[0].subgridspec(6, 4, 
+                                     height_ratios=[1.2, 1, 1, 1, 1, 0.2], 
+                                     hspace=0.05, 
+                                     wspace=0.05)
         
         ax_main = fig.add_subplot(inner_gs[1:5, :-1])
         ax_hist_x = fig.add_subplot(inner_gs[0, :-1], sharex=ax_main)
         ax_hist_y = fig.add_subplot(inner_gs[1:5, -1], sharey=ax_main)
 
-        # Degradado Magma
+        # Dibujado con Magma
         sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], 
                             s=5, cmap="magma", vmin=0, vmax=1, alpha=0.7, rasterized=True)
 
         ax_hist_x.hist(df['tx'], bins=80, color='#45a049', edgecolor='black', linewidth=0.1)
         ax_hist_y.hist(df['pr'], bins=80, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
         
-        # Etiquetas recuperadas
+        # Etiquetas de los ejes
         ax_hist_x.set_ylabel('Nb. transcripts', fontsize=10)
         ax_hist_y.set_xlabel('Nb. transcripts', fontsize=10)
-        ax_hist_x.tick_params(labelbottom=False)
-        ax_hist_y.tick_params(labelleft=False)
-
-        ax_main.axvline(0.1, color='red', linestyle='--', alpha=0.5)
-        ax_main.axhline(0.1, color='red', linestyle='--', alpha=0.5)
-        ax_main.set_xlabel('lev_edit_distance transcripts', fontweight='bold', fontsize=12)
+        ax_hist_x.tick_params(labelbottom=False, bottom=False)
+        ax_hist_y.tick_params(labelleft=False, left=False)
+        
+        # --- EL TRUCO ESTÁ AQUÍ ---
+        # Añadimos un padding mayor al label del eje X para que no choque con la barra
+        ax_main.set_xlabel('lev_edit_distance transcripts', fontweight='bold', fontsize=12, labelpad=15)
         ax_main.set_ylabel('lev_edit_distance proteins', fontweight='bold', fontsize=12)
 
-        # COLORBAR ESTILIZADA (Fina y centrada)
+        # Ubicación de la Colorbar con espacio extra
         cax_a = fig.add_subplot(inner_gs[5, :-1])
-        # aspect=40 la hace mucho más delgada
-        cbar = fig.colorbar(sc, cax=cax_a, orientation='horizontal', aspect=40)
-        cbar.set_label('Δ lev_edit_distance (Discrepancy)', fontweight='bold', fontsize=10)
+        # Usamos pad en el label de la colorbar para que respire
+        cbar = fig.colorbar(sc, cax=cax_a, orientation='horizontal', aspect=50)
+        cbar.set_label('Δ lev_edit_distance (Discrepancy)', fontweight='bold', fontsize=10, labelpad=10)
         cbar.ax.tick_params(labelsize=8)
 
-        leg_a = [Patch(facecolor='#45a049', label='AED transcripts'),
-                 Patch(facecolor='#e91e63', label='AED proteins')]
-        ax_hist_y.legend(handles=leg_a, loc='upper left', bbox_to_anchor=(1.05, 1.0), frameon=True)
-
+        # Leyenda lateral (AED transcripts/proteins)
+        ax_hist_y.legend(handles=[Patch(facecolor='#45a049', label='AED transcripts'),
+                                 Patch(facecolor='#e91e63', label='AED proteins')],
+                         loc='upper left', bbox_to_anchor=(1.05, 1.0), frameon=True)
         # --- PLOTS B y C (Igual que antes) ---
         ax_corr = fig.add_subplot(gs[1])
         sns.scatterplot(data=df, x='cds', y='pr', alpha=0.15, s=6, color='#34495e', ax=ax_corr, rasterized=True)
