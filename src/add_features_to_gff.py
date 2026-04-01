@@ -56,6 +56,7 @@ def add_features_to_gff(outbase, gff_file, gene_isoform_dict):
                     new_attributes = attributes + ";evidence_info=NA"
                 # replace the attributes field with the new attributes
                 fields[8] = new_attributes
+                print(new_attributes)
                 gff_output.write("\t".join(fields) + "\n")
            
 
