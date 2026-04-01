@@ -104,6 +104,7 @@ def main():
                                   results['proteins_evidence']["outfile"], 
                                   results["CDS_target"]["outfile"],
                                   results["CDS_evidence"]["outfile"])
+        print(gene_dict)
     # add features to gff
     add_features_to_gff(outbase, args["annotation_target"], gene_dict) 
     # generate quality panel
