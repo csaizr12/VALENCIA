@@ -84,7 +84,7 @@ def generate_quality_panel(gff_path, output_png):
             Patch(facecolor='#45a049', label='Lev_edit_distance transcripts'),
             Patch(facecolor='#e91e63', label='Lev_edit_distance proteins')]
         # Estas coordenadas (1, 1.15) lo ponen arriba a la derecha del panel rosa
-        ax_hist_y.legend(handles=leg_elements, loc='upper right',bbox_to_anchor=(2, 1.15),frameon=True, 
+        ax_hist_y.legend(handles=leg_elements, loc='upper right',bbox_to_anchor=(1,8, 1.15),frameon=True, 
             fontsize=11)
         # --- 2. PLOT B: CORRELACIÓN 
         ax_corr = fig.add_subplot(gs[1])
