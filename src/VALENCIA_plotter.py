@@ -8,12 +8,13 @@ import numpy as np
 from matplotlib.patches import Patch
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
+
 def generate_quality_panel(gff_path, output_png):
     """
     Genera el reporte de calidad VALENCIA con Paneles A y B detallados.
     Incluye detección de frameshifts y marginales de alta resolución.
     """
-    print(f"🧬 Processing GFF for Quality Report: {gff_path}")
+    print(f"Processing GFF for Quality Report: {gff_path}")
     data = []
     
     try:
@@ -33,15 +34,15 @@ def generate_quality_panel(gff_path, output_png):
                     if tx and pr and cds:
                         t_v, p_v, c_v = float(tx.group(1)), float(pr.group(1)), float(cds.group(1))
                         data.append({
-                            'AED_tx': t_v, 'AED_pr': p_v, 'AED_cds': c_v, 
+                            'lev_edit_distanc_tx': t_v, 'lev_edit_distanc_pr': p_v, 'lev_edit_distanc_cds': c_v, 
                             'Delta': abs(p_v - c_v)
                         })
         
         df = pd.DataFrame(data)
         if df.empty:
-            print("⚠️ No valid AED metrics found in GFF.")
+            print("No valid lev_edit_distance metrics found in GFF.")
             return
-
+        
         # --- CONFIGURACIÓN ESTÉTICA ---
         plt.rcParams['savefig.dpi'] = 900 
         sns.set_theme(style="white")
@@ -65,26 +66,26 @@ def generate_quality_panel(gff_path, output_png):
         ax_hist_x.hist(df['AED_tx'], bins=80, color='#45a049', edgecolor='black', linewidth=0.1)
         ax_hist_y.hist(df['AED_pr'], bins=80, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
         
-        ax_hist_x.set_ylabel('Nb. Transcripts', fontsize=10)
-        ax_hist_y.set_xlabel('Nb. Transcripts', fontsize=10)
+        ax_hist_x.set_ylabel('Nb. transcripts', fontsize=10)
+        ax_hist_y.set_xlabel('Nb. transcripts', fontsize=10)
         ax_hist_x.tick_params(labelbottom=False); ax_hist_y.tick_params(labelleft=False)
 
         # Umbrales y Ejes
-        ax_main.axvline(0.3, color='red', linestyle='--', alpha=0.5, linewidth=1.2)
+        ax_main.axvline(0.1, color='red', linestyle='--', alpha=0.5, linewidth=1.2)
         ax_main.axhline(0.1, color='red', linestyle='--', alpha=0.5, linewidth=1.2)
         ax_main.set_xlim(-0.01, 1.01); ax_main.set_ylim(-0.01, 1.01)
-        ax_main.set_xlabel('AED Transcripts (Structure Match)', fontweight='bold', fontsize=14)
-        ax_main.set_ylabel('AED Proteins (Function Match)', fontweight='bold', fontsize=14)
+        ax_main.set_xlabel('lev_edit_distance transcripts (Structure match)', fontweight='bold', fontsize=14)
+        ax_main.set_ylabel('lev_edit_distance proteins (Function match)', fontweight='bold', fontsize=14)
 
         # Colorbar Plot A
         divider = make_axes_locatable(ax_main)
         cax = divider.append_axes("bottom", size="3.5%", pad=0.85)
         cbar = fig.colorbar(sc, cax=cax, orientation='horizontal')
-        cbar.set_label('Δ AED (Max Discrepancy CDS vs Protein | 1.0 = Potential Frameshift)', fontweight='bold', fontsize=11)
+        cbar.set_label('Δ lev_edit_distance (Discrepancy CDS vs Protein)', fontweight='bold', fontsize=11)
 
         # Leyenda Plot A
-        leg_elements = [Patch(facecolor='#45a049', label='AED transcripts'),
-                        Patch(facecolor='#e91e63', label='AED proteins')]
+        leg_elements = [Patch(facecolor='#45a049', label=' lev_edit_distanc transcripts'),
+                        Patch(facecolor='#e91e63', label='lev_edit_distanc proteins')]
         ax_hist_y.legend(handles=leg_elements, loc='upper left', bbox_to_anchor=(1.1, 1.0), frameon=True, fontsize=11)
 
         # --- 2. PLOT B: INTERNAL CONSISTENCY (CORRELATION) ---
@@ -93,11 +94,11 @@ def generate_quality_panel(gff_path, output_png):
                         color='#34495e', ax=ax_corr, edgecolor=None, rasterized=True)
         
         # Línea de Identidad y Zona de Frameshift
-        ax_corr.plot([0, 1], [0, 1], color='red', linestyle='--', linewidth=1.5, label='Internal Consistency (X=Y)')
-        ax_corr.fill_between([0, 1], [0, 1], [1, 1], color='red', alpha=0.04, label='Potential Frameshift Zone')
+        ax_corr.plot([0, 1], [0, 1], color='red', linestyle='--', linewidth=1.5, label='Internal consistency (X=Y)')
+        ax_corr.fill_between([0, 1], [0, 1], [1, 1], color='red', alpha=0.04, label='Potential frameshift zone')
         
-        ax_corr.set_xlabel('AED CDS (Nucleotide level)', fontweight='bold', fontsize=14)
-        ax_corr.set_ylabel('AED Proteins (Amino acid level)', fontweight='bold', fontsize=14)
+        ax_corr.set_xlabel('lev_edit_distance CDS (Nucleotide level)', fontweight='bold', fontsize=14)
+        ax_corr.set_ylabel('lev_edit_distance proteins (Amino acid level)', fontweight='bold', fontsize=14)
         ax_corr.set_title('B. Correlation: CDS vs Protein Distance', fontsize=18, fontweight='bold')
         ax_corr.set_xlim(-0.01, 1.01); ax_corr.set_ylim(-0.01, 1.01)
         ax_corr.legend(loc='upper left', fontsize=12)
@@ -105,12 +106,12 @@ def generate_quality_panel(gff_path, output_png):
 
       
         # TÍTULO GLOBAL
-        fig.suptitle(f'VALENCIA Annotation Quality Analysis (n={len(df)})', fontsize=26, fontweight='bold', y=0.98)
+        fig.suptitle(f'VALENCIA Annotation quality analysis (n={len(df)})', fontsize=26, fontweight='bold', y=0.98)
         
         # GUARDADO
         plt.savefig(output_png, bbox_inches='tight')
         plt.close()
-        print(f"✅ Master Quality Report generated successfully at: {output_png}")
+        print(f" Quality report generated successfully at: {output_png}")
 
     except Exception as e:
-        print(f"❌ Error in Plotter: {e}")
+        print(f"Error in Plotter: {e}")
