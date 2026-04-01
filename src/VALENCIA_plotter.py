@@ -28,7 +28,7 @@ def generate_quality_panel(gff_path, output_png):
         
         df = pd.DataFrame(data)
         if df.empty: 
-            print(f"⚠️ No se encontraron datos en {gff_path}")
+            print(f"No se encontraron datos en {gff_path}")
             return
 
         # --- 2. CONFIGURACIÓN DE FIGURA ---
@@ -113,7 +113,5 @@ def generate_quality_panel(gff_path, output_png):
         
         plt.savefig(output_png)
         plt.close()
-        print(f"✅ Panel generado correctamente: {output_png}")
-
     except Exception as e:
-        print(f"❌ Error crítico en generate_quality_panel: {e}")
+        print(f"Error crítico en generate_quality_panel: {e}")
