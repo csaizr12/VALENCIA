@@ -72,7 +72,7 @@ def generate_quality_panel(gff_path, output_png):
         cbar.set_label('Δ Lev_edit_distance', fontweight='bold', fontsize=10)
         cbar.ax.tick_params(labelsize=8)
 
-        # LEYENDA PANEL A (Corregida y movida arriba a la derecha del panel rosa)
+        # LEYENDA PANEL A 
         leg_elements = [
             Patch(facecolor='#45a049', label='Lev_edit_distance transcripts'),
             Patch(facecolor='#e91e63', label='Lev_edit_distance proteins')
@@ -85,6 +85,10 @@ def generate_quality_panel(gff_path, output_png):
         sns.scatterplot(data=df, x='cds', y='pr', alpha=0.15, s=6, color='#34495e', ax=ax_corr, rasterized=True)
         ax_corr.plot([0, 1], [0, 1], color='red', linestyle='--', label='Identity (X=Y)')
         ax_corr.fill_between([0, 1], [0, 1], [1, 1], color='red', alpha=0.04, label='Potential frameshift zone')
+        
+        # ---> AQUÍ ESTÁN LOS LÍMITES FORZADOS A 1 <---
+        ax_corr.set_xlim(0, 1)
+        ax_corr.set_ylim(0, 1)
         
         ax_corr.set_title('Correlation: CDS vs protein', fontsize=18, fontweight='bold', pad=20)
         ax_corr.set_xlabel('Lev_edit_distance CDS (Nucleotide level)', fontweight='bold', fontsize=12)
@@ -107,8 +111,7 @@ def generate_quality_panel(gff_path, output_png):
         # Título General
         fig.suptitle(f'VALENCIA Annotation Quality Analysis (n={len(df)})', fontsize=28, fontweight='bold', y=0.98)
         
-        # --- 6. GUARDADO ESTABLE (Sin bbox_inches='tight' para evitar el error) ---
-        # Dejamos márgenes manuales para que nada se corte
+        # --- 6. GUARDADO ESTABLE ---
         plt.subplots_adjust(top=0.9, bottom=0.1, left=0.05, right=0.9, hspace=0.3, wspace=0.3)
         
         plt.savefig(output_png)
