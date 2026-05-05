@@ -92,7 +92,6 @@ def generate_quality_panel(gff_path, output_png):
         ax_corr = fig.add_subplot(gs[1])
         sns.scatterplot(data=df, x='cds', y='pr', alpha=0.15, s=6, color='#34495e', ax=ax_corr, rasterized=True)
         ax_corr.plot([0, 1], [0, 1], color='red', linestyle='--', label='Identity (X=Y)')
-        ax_corr.fill_between([0, 1], [0, 1], [1, 1], color='red', alpha=0.04, label='Potential frameshift zone')
         ax_corr.set_title('Correlation: CDS vs protein', fontsize=18, fontweight='bold', pad=20)
         ax_corr.set_xlabel('Lev_edit_distance CDS (Nucleotide level)', fontweight='bold', fontsize=12)
         ax_corr.set_ylabel('Lev_edit_distance Proteins (Amino acid level)', fontweight='bold', fontsize=12)
