@@ -109,7 +109,7 @@ def main():
     # generate quality panel
     file_with_features = add_features_to_gff(outbase, args["annotation_target"], gene_dict)
     if file_with_features.exists():
-        generate_quality_panel(file_with_features, output_png = outbase / "VALENCIA_quality_panel.png")   
+        generate_quality_panel(file_with_features, output_png = outbase / "VALENCIA_quality_panel.svg")   
 # run main function 
 if __name__ == '__main__':
     main()
