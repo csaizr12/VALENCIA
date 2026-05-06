@@ -39,7 +39,7 @@ def generate_quality_panel(gff_path, output_folder):
             return
 
         n_samples = len(df)
-        main_title = f"VALENCIA Annotation Quality Analysis (n={n_samples})"
+        main_title = f"VALENCIA annotation quality analysis (n={n_samples})"
         sns.set_theme(style="whitegrid")
 
         # --- PANEL A: ESTRUCTURA VS FUNCIÓN ---
@@ -68,9 +68,9 @@ def generate_quality_panel(gff_path, output_folder):
         ax_corr = sns.scatterplot(data=df, x='cds', y='pr', alpha=0.2, s=15, color='#34495e')
         ax_corr.plot([0, 1], [0, 1], color='red', linestyle='--', label='Identity (X=Y)')
         
-        plt.title(f"{main_title}\nCorrelation: CDS vs Protein", fontsize=16, fontweight='bold', pad=20)
+        plt.title(f"{main_title}\nCorrelation: CDS vs protein", fontsize=16, fontweight='bold', pad=20)
         plt.xlabel('Lev_edit_distance CDS (Nucleotides)', fontweight='bold')
-        plt.ylabel('Lev_edit_distance Proteins (Amino Acids)', fontweight='bold')
+        plt.ylabel('Lev_edit_distance proteins (Amino acids)', fontweight='bold')
         plt.legend()
         
         plt.savefig(output_dir / "VALENCIA_panel_B_correlation.svg", format='svg', bbox_inches='tight')
@@ -84,9 +84,9 @@ def generate_quality_panel(gff_path, output_folder):
         ax_dist.set_xlim(-0.05, 0.15) 
         ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label='Zero difference')
         
-        plt.title(f"{main_title}\nDistribution of Editing Difference", fontsize=16, fontweight='bold', pad=20)
-        plt.xlabel('Difference (Protein Dist. - CDS Dist.)', fontweight='bold')
-        plt.ylabel('Number of Transcripts', fontweight='bold')
+        plt.title(f"{main_title}\nDistribution of editing difference", fontsize=16, fontweight='bold', pad=20)
+        plt.xlabel('Difference (Protein dist. - CDS dist.)', fontweight='bold')
+        plt.ylabel('Number of transcripts', fontweight='bold')
         plt.legend()
         
         plt.savefig(output_dir / "VALENCIA_panel_C_distribution.svg", format='svg', bbox_inches='tight')
