@@ -51,7 +51,7 @@ def generate_quality_panel(gff_path, output_folder):
         ax_hist_x = fig_a.add_subplot(gs[0, :-1], sharex=ax_main)
         ax_hist_y = fig_a.add_subplot(gs[1:5, -1], sharey=ax_main)
         
-        sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], s=5, cmap="magma", vmin=0, vmax=1, alpha=0.7)
+        sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], s=5, cmap="magma", vmin=0, vmax=1, alpha=0.7, rasterized=True)
         
         ax_hist_x.hist(df['tx'], bins=80, color='#45a049', edgecolor='black', linewidth=0.1)
         ax_hist_x.set_ylabel('Nb. transcripts', fontweight='bold', fontsize=10) 
@@ -79,7 +79,7 @@ def generate_quality_panel(gff_path, output_folder):
 
         # --- PANEL B: CORRELACIÓN ---
         plt.figure(figsize=(10, 10))
-        ax_corr = sns.scatterplot(data=df, x='cds', y='pr', alpha=0.2, s=15, color='#34495e')
+        ax_corr = sns.scatterplot(data=df, x='cds', y='pr', alpha=0.2, s=15, color='#34495e', rasterized=True)
         ax_corr.plot([0, 1], [0, 1], color='red', linestyle='--', label='Identity (X=Y)')
         
         plt.title(f"{main_title}\nCorrelation: CDS vs protein", fontsize=16, fontweight='bold', pad=20)
@@ -92,7 +92,7 @@ def generate_quality_panel(gff_path, output_folder):
 
         # --- PANEL C: DISTRIBUCIÓN ---
         plt.figure(figsize=(10, 10))
-        ax_dist = sns.histplot(df['diff'], bins=100, kde=True, color='#2E86C1', edgecolor='white')
+        ax_dist = sns.histplot(df['diff'], bins=100, kde=True, color='#2E86C1', edgecolor='white', rasterized=True)
         
         # Ajuste de zoom para ver la distribución central
         ax_dist.set_xlim(-0.05, 0.15) 
