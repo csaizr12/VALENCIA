@@ -1,5 +1,16 @@
+import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import seaborn as sns
+import re
+from matplotlib.patches import Patch
+
+from pathlib import Path 
+
 def generate_quality_panel(gff_path, output_folder):
     data = []
+    # Ahora Path ya está definido y no dará error
     output_dir = Path(output_folder)
 
     try:
