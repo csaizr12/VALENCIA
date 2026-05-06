@@ -74,7 +74,7 @@ def generate_quality_panel(gff_path, output_folder):
         leg_elements = [Patch(facecolor='#45a049', label='Transcripts'), Patch(facecolor='#e91e63', label='Proteins')]
         ax_hist_y.legend(handles=leg_elements, loc='upper left', bbox_to_anchor=(1.05, 1.2), frameon=True)
         
-        plt.savefig(output_dir / "VALENCIA_panel_A_structure.svg", format='svg', bbox_inches='tight')
+        plt.savefig(output_dir / "VALENCIA_quality_correlation_scatter.svg", format='svg', bbox_inches='tight')
         plt.close(fig_a)
 
         # --- PANEL B: CORRELACIÓN ---
@@ -87,7 +87,7 @@ def generate_quality_panel(gff_path, output_folder):
         plt.ylabel('Lev_edit_distance proteins (Amino acids)', fontweight='bold')
         plt.legend()
         
-        plt.savefig(output_dir / "VALENCIA_panel_B_correlation.svg", format='svg', bbox_inches='tight')
+        plt.savefig(output_dir / "VALENCIA_CDS_protein_correlation.svg", format='svg', bbox_inches='tight')
         plt.close()
 
         # --- PANEL C: DISTRIBUCIÓN ---
@@ -103,7 +103,7 @@ def generate_quality_panel(gff_path, output_folder):
         plt.ylabel('Number of transcripts', fontweight='bold')
         plt.legend()
         
-        plt.savefig(output_dir / "VALENCIA_panel_C_distribution.svg", format='svg', bbox_inches='tight')
+        plt.savefig(output_dir / "VALENCIA_edit_distance_distribution.svg", format='svg', bbox_inches='tight')
         plt.close()
 
     except Exception as e:
