@@ -43,22 +43,35 @@ def generate_quality_panel(gff_path, output_folder):
         sns.set_theme(style="whitegrid")
 
         # --- PANEL A: ESTRUCTURA VS FUNCIÓN ---
+       # --- PANEL A: ESTRUCTURA VS FUNCIÓN ---
         fig_a = plt.figure(figsize=(14, 12))
-        gs = fig_a.add_gridspec(7, 4, height_ratios=[1.2, 1, 1, 1, 1, 0.6, 0.2], hspace=0.1, wspace=0.1)
+        gs = fig_a.add_gridspec(7, 4, height_ratios=[1.2, 1, 1, 1, 1, 0.6, 0.2], hspace=0.15, wspace=0.15)
+        
         ax_main = fig_a.add_subplot(gs[1:5, :-1])
         ax_hist_x = fig_a.add_subplot(gs[0, :-1], sharex=ax_main)
         ax_hist_y = fig_a.add_subplot(gs[1:5, -1], sharey=ax_main)
         
         sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], s=5, cmap="magma", vmin=0, vmax=1, alpha=0.7)
-        ax_hist_x.hist(df['tx'], bins=80, color='#45a049', edgecolor='black', linewidth=0.1)
-        ax_hist_y.hist(df['pr'], bins=80, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
         
-        fig_a.suptitle(main_title, fontsize=20, fontweight='bold')
+        ax_hist_x.hist(df['tx'], bins=80, color='#45a049', edgecolor='black', linewidth=0.1)
+        ax_hist_x.set_ylabel('Nb. transcripts', fontweight='bold', fontsize=10) 
+        
+        ax_hist_y.hist(df['pr'], bins=80, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
+        ax_hist_y.set_xlabel('Nb. proteins', fontweight='bold', fontsize=10) # Eje X del histograma lateral
+        
+        # Títulos y etiquetas de los ejes principales
+        fig_a.suptitle(main_title, fontsize=20, fontweight='bold', y=0.95)
         ax_main.set_xlabel('Lev_edit_distance transcripts', fontweight='bold', fontsize=12)
         ax_main.set_ylabel('Lev_edit_distance proteins', fontweight='bold', fontsize=12)
         
+        ax_hist_x.tick_params(labelbottom=False, bottom=False)
+        ax_hist_y.tick_params(labelleft=False, left=False)
+        
         cax = fig_a.add_subplot(gs[6, :-1])
         fig_a.colorbar(sc, cax=cax, orientation='horizontal', label='Δ Lev_edit_distance')
+        
+        leg_elements = [Patch(facecolor='#45a049', label='Transcripts'), Patch(facecolor='#e91e63', label='Proteins')]
+        ax_hist_y.legend(handles=leg_elements, loc='upper left', bbox_to_anchor=(1.05, 1.2), frameon=True)
         
         plt.savefig(output_dir / "VALENCIA_panel_A_structure.svg", format='svg', bbox_inches='tight')
         plt.close(fig_a)
