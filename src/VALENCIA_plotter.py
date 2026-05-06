@@ -60,7 +60,8 @@ def generate_quality_panel(gff_path, output_folder):
         ax_hist_y.set_xlabel('Nb. proteins', fontweight='bold', fontsize=10) # Eje X del histograma lateral
         
         # Títulos y etiquetas de los ejes principales
-        fig_a.suptitle(main_title, fontsize=20, fontweight='bold', y=0.95)
+        fig_a.suptitle(f"VALENCIA annotation quality analysis (n={n_samples})\nTranscript-protein edit distance correlation", 
+                       fontsize=18, fontweight='bold', y=0.96)
         ax_main.set_xlabel('Lev_edit_distance transcripts', fontweight='bold', fontsize=12)
         ax_main.set_ylabel('Lev_edit_distance proteins', fontweight='bold', fontsize=12)
         
