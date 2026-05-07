@@ -90,20 +90,27 @@ def generate_quality_panel(gff_path, output_folder):
         plt.savefig(output_dir / "VALENCIA_CDS_protein_correlation.svg", format='svg', bbox_inches='tight')
         plt.close()
 
-        # --- PANEL C: DISTRIBUCIÓN ---
+        # --- PANEL C: DISTRIBUCIÓN (VALOR ABSOLUTO) ---
         plt.figure(figsize=(10, 10))
-        ax_dist = sns.histplot(df['diff'], bins=100, kde=True, color='#2E86C1', edgecolor='white', rasterized=True)
         
-        # Ajuste de zoom para ver la distribución central
-        ax_dist.set_xlim(-0.05, 0.15) 
-        ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label='Zero difference')
+        absolute_diff = df['diff'].abs()
         
-        plt.title(f"{main_title}\nDistribution of editing difference", fontsize=16, fontweight='bold', pad=20)
-        plt.xlabel('Difference (Protein dist. - CDS dist.)', fontweight='bold')
+        ax_dist = sns.histplot(absolute_diff, bins=100, kde=True, color='#2E86C1', 
+                               edgecolor='white', rasterized=True)
+        
+        ax_dist.set_xlim(0, 0.15) 
+        
+        # La línea roja ahora marca el "Cero absoluto" (Concordancia perfecta)
+        ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label='Perfect consistency (Abs. Diff = 0)')
+        
+        plt.title(f"{main_title}\nDistribution of Absolute Editing Difference", fontsize=16, fontweight='bold', pad=20)
+        
+        # Actualizamos etiquetas para reflejar el valor absoluto | |
+        plt.xlabel('|Protein dist. - CDS dist.| (Absolute difference)', fontweight='bold')
         plt.ylabel('Number of transcripts', fontweight='bold')
         plt.legend()
         
-        plt.savefig(output_dir / "VALENCIA_edit_distance_distribution.svg", format='svg', bbox_inches='tight')
+        plt.savefig(output_dir / "VALENCIA_edit_distance_distribution.svg", format='svg', bbox_inches='tight', dpi=300)
         plt.close()
 
     except Exception as e:
