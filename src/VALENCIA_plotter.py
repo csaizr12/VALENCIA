@@ -101,9 +101,9 @@ def generate_quality_panel(gff_path, output_folder):
         ax_dist.set_xlim(0, 0.15) 
         
         # La línea roja ahora marca el "Cero absoluto" (Concordancia perfecta)
-        ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label=' (Abs. difference = 0)')
+        ax_dist.axvline(0, color='red', linestyle='--', linewidth=2)
         
-        plt.title(f"{main_title}\nDistribution of Absolute Editing Difference", fontsize=16, fontweight='bold', pad=20)
+        plt.title(f"{main_title}\nDistribution of absolute editing difference", fontsize=16, fontweight='bold', pad=20)
         
         # Actualizamos etiquetas para reflejar el valor absoluto | |
         plt.xlabel('|Protein dist. - CDS dist.| (Absolute difference)', fontweight='bold')
