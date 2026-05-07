@@ -101,7 +101,7 @@ def generate_quality_panel(gff_path, output_folder):
         ax_dist.set_xlim(0, 0.15) 
         
         # La línea roja ahora marca el "Cero absoluto" (Concordancia perfecta)
-        ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label='Perfect consistency (Abs. Diff = 0)')
+        ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label=' (Abs. difference = 0)')
         
         plt.title(f"{main_title}\nDistribution of Absolute Editing Difference", fontsize=16, fontweight='bold', pad=20)
         
