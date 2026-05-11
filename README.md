@@ -11,17 +11,16 @@ The main objective of this work is the design, development, and implementation o
 
 ## Requirements
 ### Python dependencies
-- Python == 3.13.12
-- pandas, matplotlib, seaborn, numpy, biopython, python-levenshtein
-
-
+- Python == 3.14.x
+- pandas, matplotlib, seaborn, numpy, biopython, python-levenshtein, rapidfuzz
 
 ### Software dependencies
 
 - conda == 26.6.1
-- Bioconda: agat == 1.6.1
+- AGAT == 1.7.0
 - GFFread == 0.12.7 (https://github.com/gpertea/gffread)
 - GFFcompare == 0.12.10 (https://github.com/gpertea/gffcompare)
+- samtools == 1.23.1
 
 [Back to Table of contents](#table-of-contents)
 
@@ -168,10 +167,10 @@ The final stage of VALENCIA synthesizes the structural and sequence-level data i
 
 The output of the pipeline. This GFF3 file retains the original genomic coordinates but is enriched with attribute tags from results of VALENCIA in the 9th column for every transcript.
 
-Tags: 
+Tags (for each type of evidence): 
      
- ```class_code```, ```match_id```, ```transcripts_edit_distance```, ```cds_edit_distance``` and ```proteins_edit_distance```.
-
+ ```evidence_ID```, ```class_code```, ```edit_distance```
+ 
 Plots:
 
 ```VALENCIA_quality_correlation_scatter.svg```
