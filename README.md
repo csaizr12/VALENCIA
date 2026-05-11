@@ -202,8 +202,8 @@ This bivariate analysis evaluates the synergy between the structural model (tran
 
 - Marginal plots:
         
-- Transcripts (green, top): Represent the global distribution of structural accuracy.
-- Proteins (pink, right): Represent the global distribution of functional accuracy.
+    - Transcripts (green, top): Represent the global distribution of structural accuracy.
+    - Proteins (pink, right): Represent the global distribution of functional accuracy.
 
 ---
 
