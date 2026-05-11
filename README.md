@@ -165,7 +165,11 @@ Plots:
 
 The visualization module in VALENCIA provides a multi-level diagnostic to assess the structural and functional fidelity of genome annotations. By integrating Levenshtein distance ($D_L$) across different biological layers, the tool quantifies the congruence between predicted models and experimental evidence.
 
-### 1. VALENCIA_quality_correlation_scatter.svg
+### **Figure 1. VALENCIA_quality_correlation_scatter.svg**
+
+<p align="center">
+  <img src="VALENCIA_quality_correlation_scatter.svg" width="600">
+</p>
 
 This bivariate analysis evaluates the synergy between the structural model (transcript) and its functional result (protein).
  
@@ -178,8 +182,12 @@ This bivariate analysis evaluates the synergy between the structural model (tran
 - Transcripts (green, top): Represent the global distribution of structural accuracy.
 - Proteins (pink, right): Represent the global distribution of functional accuracy.
 
-    
-### 2. VALENCIA_CDS_protein_correlation.svg
+ ### **Figure 2. VALENCIA_CDS_protein_correlation.svg**
+   
+
+<p align="center">
+  <img src="VALENCIA_CDS_protein_correlation.svg" width="600">
+</p>
 
 This correlation analysis between CDS and protein edit distances for identifying errors in the translation process.
 
@@ -187,7 +195,11 @@ This correlation analysis between CDS and protein edit distances for identifying
 
 - Above the identity line: Data points positioned above the identity line indicate a significant discrepancy where a minimal edit distance in the CDS leads to a disproportionate distance in the protein.
 
-### 3. VALENCIA_edit_distance_distribution.svg
+### **Figure 3. VALENCIA_edit_distance_distribution.svg**
+
+<p align="center">
+  <img src="VALENCIA_edit_distance_distribution.svg" width="600">
+</p>
 
 
 This plot provides a global metric calculating the absolute discrepancy  
