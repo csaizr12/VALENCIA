@@ -102,6 +102,17 @@ VALENCIA runs **GffCompare** to perform a spatial comparison between the exon-in
     
  - **Classification via Class Codes:** Categorizing each transcript based on its structural relationship with the reference 
 
+    **Class Code** | **Description** |
+    | --- | --- |
+    | **=** | complete |
+    | **c** | Subsequence of Target *(SubsequencesTarget)* |
+    | **k** | Subsequence of Reference *(SubsequencesReferences)* |
+    | **m** | Total Introns Retention |
+    | **n** | Partial Intron Retention |
+    | **j** | Potential Isoform |
+    | **o** | Partial Exon Overlap |
+    | **e** | Retained Intron (Single Exon) |
+
 - **Accuracy estimation:** Calculating sensitivity and precision at the base, exon, and locus levels.
 
 ```
@@ -138,7 +149,7 @@ In this module, VALENCIA implements an advanced sequence validation algorithm in
      
      
     $$Distance = 1 - \left( \frac{Sn + Sp}{2} \right)$$
-    
+
 - Indexing: VALENCIA uses ```SeqIO.index``` for retrieval of sequences from transcripts, CDS, and protein FASTA files, ensuring an exact 1:1 comparison via the IDs mapped in the ```.tmap``` file.
 
 
