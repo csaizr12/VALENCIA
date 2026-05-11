@@ -127,17 +127,18 @@ In this module, VALENCIA implements an advanced sequence validation algorithm in
 
 - Shared bases calculation: The number of matching bases is derived from the Levenshtein distance ($D_L$) relative to the longest sequence. 
 
-$Shared = \max(L_{target}, L_{evidence}) - D_L$.
+    $Shared = \max(L_{target}, L_{evidence}) - D_L$.
     
 
-Metric:
+    Metric:
 
-$$Sn = \frac{Shared}{L_{evidence}}$$
+    $$Sn = \frac{Shared}{L_{evidence}}$$
 
- $$Sp = \frac{Shared}{L_{target}}$$
+     $$Sp = \frac{Shared}{L_{target}}$$
      
      
-$$Distance = 1 - \left( \frac{Sn + Sp}{2} \right)$$
+    $$Distance = 1 - \left( \frac{Sn + Sp}{2} \right)$$
+    
 - Indexing: VALENCIA uses ```SeqIO.index``` for retrieval of sequences from transcripts, CDS, and protein FASTA files, ensuring an exact 1:1 comparison via the IDs mapped in the ```.tmap``` file.
 
 
@@ -165,6 +166,8 @@ Plots:
 
 The visualization module in VALENCIA provides a multi-level diagnostic to assess the structural and functional fidelity of genome annotations. By integrating Levenshtein distance ($D_L$) across different biological layers, the tool quantifies the congruence between predicted models and experimental evidence.
 
+---
+
 ### **Figure 1. VALENCIA_quality_correlation_scatter.svg**
 
 <p align="center">
@@ -182,6 +185,8 @@ This bivariate analysis evaluates the synergy between the structural model (tran
 - Transcripts (green, top): Represent the global distribution of structural accuracy.
 - Proteins (pink, right): Represent the global distribution of functional accuracy.
 
+---
+
  ### **Figure 2. VALENCIA_CDS_protein_correlation.svg**
    
 
@@ -194,6 +199,8 @@ This correlation analysis between CDS and protein edit distances for identifying
 - Line (X = Y): The edit distance at the nucleotide level (CDS) should be proportional to the distance at the amino acid level.
 
 - Above the identity line: Data points positioned above the identity line indicate a significant discrepancy where a minimal edit distance in the CDS leads to a disproportionate distance in the protein.
+
+---
 
 ### **Figure 3. VALENCIA_edit_distance_distribution.svg**
 
