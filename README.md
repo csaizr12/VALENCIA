@@ -141,14 +141,23 @@ In this module, VALENCIA implements an advanced sequence validation algorithm in
     $Shared = \max(L_{target}, L_{evidence}) - D_L$.
     
 
-    Metric:
+    - Metric:
 
-    $$Sn = \frac{Shared}{L_{evidence}}$$
+        $$Sn = \frac{Shared}{L_{evidence}}$$
 
-     $$Sp = \frac{Shared}{L_{target}}$$
+         $$Sp = \frac{Shared}{L_{target}}$$
      
      
-    $$Distance = 1 - \left( \frac{Sn + Sp}{2} \right)$$
+        $$Distance = 1 - \left( \frac{Sn + Sp}{2} \right)$$
+
+    - Normalization: 
+
+        Both 𝑆𝑛 and 𝑆𝑝 are normalized ratios within the range [0, 1], representing the proportion of shared bases relative to each sequence.
+        Consequently, the resulting distance metric is also normalized between 0 and 1, ensuring comparability across sequences of different lengths:
+
+         Distance = 0 → perfect match
+
+         Distance = 1 → complete divergence
 
 - Indexing: VALENCIA uses ```SeqIO.index``` for retrieval of sequences from transcripts, CDS, and protein FASTA files, ensuring an exact 1:1 comparison via the IDs mapped in the ```.tmap``` file.
 
