@@ -99,7 +99,7 @@ Files generated in both directories:
     
 VALENCIA runs **GffCompare** to perform a spatial comparison between the exon-intron architectures of the target and the evidence. This step is crucial for:
     
- - **Classification via Class Codes:** Categorizing each transcript based on its structural relationship with the reference 
+ - **Classification via Class Codes:** Categorizing each transcript based on its structural relationship with the reference. 
 
     **Class Code** | **Description** |
     | --- | --- |
