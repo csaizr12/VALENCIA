@@ -22,6 +22,10 @@ def edit_distance(parsed_evidence_gene_isoform_dict, transcript_target_fasta, tr
             evidence_types = list(features.keys())
             for evidence_type in evidence_types:
                 matching_evidence_id = features[evidence_type]['match_sequence']
+                if matching_evidence_id == "-":
+                    parsed_evidence_gene_isoform_dict[target_gene_id][target_isoform_id][evidence_type]["edit_distance"] = 1.0
+                    continue
+
                  # if target_isoform_id and match_in in records, charge sequences
                 if evidence_type == "transcripts":
                     seq_target = str(records_transcript_target[target_isoform_id].seq)
