@@ -6,7 +6,7 @@ def filter_pseudogenes(gff_file, outbase):
     clean_gff = os.path.join(outbase, "annotation_target_no_pseudogenes.gff")
     log_file = os.path.join(outbase, "filter_pseudogenes.log")
 
-    os.mkdir(outbase, exist_ok=True)
+    os.makedirs(outbase, exist_ok=True)
 
     count_pseudogenes = 0
     # open gff file, clean gff file, and log file
