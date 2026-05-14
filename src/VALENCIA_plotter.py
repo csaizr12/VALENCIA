@@ -62,10 +62,11 @@ def generate_quality_panel(gff_path, output_folder, description=None, species="U
         ax_hist_y.set_xlabel('Nb. proteins', fontweight='bold', fontsize=10)
         
         # --- DYNAMIC TITLES FOR PANEL A ---
-        fig_a.suptitle(f"VALENCIA Quality Analysis: {species} (n={n_samples})", 
+        fig_a.suptitle(f"VALENCIA Quality Analysis: (n={n_samples})", 
                        fontsize=18, fontweight='bold', y=0.98)
-        
-        plt.figtext(0.5, 0.94, description, ha='center', fontsize=14, style='italic', color='#2c3e50')
+        combined_info = f"{species} | {description}"
+        plt.figtext(0.5, 0.94, combined_info, 
+                    ha='center', fontsize=14, style='italic', color='#2c3e50')
         plt.figtext(0.5, 0.91, "Transcript-protein edit distance correlation", ha='center', fontsize=12, color='gray')
 
         ax_main.set_xlabel('Lev_edit_distance transcripts', fontweight='bold', fontsize=12)
@@ -88,11 +89,15 @@ def generate_quality_panel(gff_path, output_folder, description=None, species="U
         ax_corr.plot([0, 1], [0, 1], color='red', linestyle='--', label='Identity (X=Y)')
         
         # dynamic titles for Panel B
-        plt.suptitle(f"VALENCIA Quality Analysis: {species} (n={n_samples})", 
-                     fontweight='bold', fontsize=15, y=0.98)
-        plt.title(f"{description}\nCorrelation: CDS vs Protein", 
-                  fontsize=12, pad=15, style='italic', color='#2c3e50')
+        plt.suptitle(f"VALENCIA annotation quality analysis (n={n_samples})", 
+                     fontsize=16, fontweight='bold', y=0.98)
         
+        plt.figtext(0.5, 0.94, f"{species} | {description}", 
+                    ha='center', fontsize=13, style='italic', color='#2c3e50')
+        
+        plt.figtext(0.5, 0.91, "Correlation: CDS vs Protein", 
+                    ha='center', fontsize=11, color='gray')
+        plt.subplots_adjust(top=0.88)
         plt.xlabel('Lev_edit_distance CDS (Nucleotides)', fontweight='bold')
         plt.ylabel('Lev_edit_distance proteins (Amino acids)', fontweight='bold')
         plt.legend()
@@ -113,10 +118,15 @@ def generate_quality_panel(gff_path, output_folder, description=None, species="U
         ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label='Match (Diff = 0)')
         
         # dynamic titles for Panel C
-        plt.suptitle(f"VALENCIA Quality Analysis: {species} (n={n_samples})", 
-                     fontweight='bold', fontsize=15, y=0.98)
-        plt.title(f"{description}\nDistribution of absolute editing difference", 
-                  fontsize=12, pad=15, style='italic', color='#2c3e50')
+        plt.suptitle(f"VALENCIA annotation quality analysis (n={n_samples})", 
+                     fontsize=16, fontweight='bold', y=0.98)
+        
+        plt.figtext(0.5, 0.94, f"{species} | {description}", 
+                    ha='center', fontsize=13, style='italic', color='#2c3e50')
+        
+        plt.figtext(0.5, 0.91, "Distribution of absolute editing difference", 
+                    ha='center', fontsize=11, color='gray')
+        plt.subplots_adjust(top=0.88)
         
         plt.xlabel('|Protein dist. - CDS dist.| (Absolute difference)', fontweight='bold')
         plt.ylabel('Number of transcripts', fontweight='bold')
