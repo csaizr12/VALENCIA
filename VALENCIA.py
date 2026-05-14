@@ -35,6 +35,10 @@ def parse_arguments():
     help_outbase = '(Required) Outbase'
     parser.add_argument('--outbase','-o', 
                         type=str, help=help_outbase, required=True)
+    parser.add_argument('--desc', type=str, default=None,
+                        help='Pipeline description for the plot (e.g., "ANEVO annotation")')
+    parser.add_argument('--species', type=str, default="Unknown species",
+                        help='Species name for the plot title (e.g., "A. thaliana")')
     return parser.parse_args()
 
 # function to get arguments and return dictionary
@@ -44,7 +48,9 @@ def get_arguments():
             'proteins_evidence': Path(parser.protein_evidence).absolute(), 
             'genome_assembly': Path(parser.genome_assembly).absolute(), 
             'annotation_target': Path(parser.annotation_target).absolute(), 
-            'outbase': Path(parser.outbase).absolute()}
+            'outbase': Path(parser.outbase).absolute(),
+            'desc': parser.desc,
+            'species': parser.species}
 
 # main function
 def main():

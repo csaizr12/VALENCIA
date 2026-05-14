@@ -110,7 +110,7 @@ def generate_quality_panel(gff_path, output_folder, description=None, species="U
                                edgecolor='white', rasterized=True)
         
         ax_dist.set_xlim(0, 0.15) 
-        ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label='Perfect Match (Diff = 0)')
+        ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label='Match (Diff = 0)')
         
         # dynamic titles for Panel C
         plt.suptitle(f"VALENCIA Quality Analysis: {species} (n={n_samples})", 
