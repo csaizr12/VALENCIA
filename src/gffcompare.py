@@ -1,6 +1,6 @@
 import os
 import shutil
-
+from pathlib import Path
 from subprocess import run
 
 # this function runs gffcompare using protein or transcript evidence, 
@@ -10,6 +10,7 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
     # define the command template and create a dedicated 'gffcompare_results' directory
     cmd = "gffcompare -r {} -o {} {}"
     outpath = outbase / "gffcompare_results"
+
     if not outpath.exists():
             outpath.mkdir(parents=True, exist_ok=True)
     # processing evidence
@@ -45,9 +46,16 @@ def run_gffcompare(outbase, protein_path, transcripts_path,
                                 "cmd": cmd_run}
                 # file relocation
                 for suffix in suffixes:
-                     ref_fpath = evidence_path.parent / out_prefix.format(kind, anotation_path.name, suffix)
-                     new_fpath = outpath/ "{}.{}.{}".format(kind, anotation_path.name, suffix)
-                     shutil.move(ref_fpath, new_fpath)
+                    tmap_name = out_prefix.format(kind, anotation_path.name, suffix)
+                    new_fpath = outpath / tmap_name
+            
+                    search_paths = [anotation_path.parent / tmap_name,Path.cwd() / tmap_name]
+                    
+                    for ref_fpath in search_paths:
+                        if ref_fpath.exists():
+                            if ref_fpath.absolute() != new_fpath.absolute():
+                                shutil.move(str(ref_fpath), str(new_fpath))
+                            break
             # on failure, capture and log the specific error details
             else:
                 log_msg = "Gffcompare error: {}".format(cmd_results.stderr.decode())
