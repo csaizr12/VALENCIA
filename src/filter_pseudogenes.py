@@ -32,4 +32,9 @@ def filter_pseudogenes(gff_file, outbase):
     
     print(f"Filtering complete. {count_pseudogenes} pseudogenes removed. Clean GFF saved to {clean_gff}. Log saved to {log_file}.")
     
-    return clean_gff
+    if count_pseudogenes > 0:
+        return clean_gff
+    else:
+        if os.path.exists(clean_gff):
+            os.remove(clean_gff)
+        return gff_file
