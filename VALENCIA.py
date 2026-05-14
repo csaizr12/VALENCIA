@@ -11,7 +11,7 @@ from src.parsers import add_tmap_info, get_gene_isoform_dict_from_target_annotat
 from src.distance import edit_distance
 from src.add_features_to_gff import add_features_to_gff
 from src.VALENCIA_plotter import generate_quality_panel
-from src.filter_pseudogenes import filter_pseudogenes
+
 
 
 
@@ -55,14 +55,9 @@ def main():
     results = {}
     if not outbase.exists():
         outbase.mkdir(parents=True, exist_ok=True)
-    # clean gff from pseudogenes
-    target_without_pseudogenes = Path(filter_pseudogenes(args["annotation_target"], outbase))
     #generate_sequences for evidence
     for option, path in args.items():
        if "evidence" in option or "target" in option:
-            current_path = path
-            if option == "annotation_target":
-                    current_path = target_without_pseudogenes
             # determine categories to run based on the option
             if option == "transcripts_evidence":
                 kinds_to_run = ["transcripts_evidence"]
@@ -71,7 +66,7 @@ def main():
             elif option == "annotation_target":
                 kinds_to_run = ["annotation_target"]
             run_gffread(outbase, args["genome_assembly"],
-                        current_path, results, kinds=kinds_to_run)
+                        path, results, kinds=kinds_to_run)
     for kind, result in results.items():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
@@ -87,13 +82,13 @@ def main():
         #run compare(evidence, target)
                  run_gffcompare(outbase,args["proteins_evidence"], 
                                 args["transcripts_evidence"],
-                                target_without_pseudogenes, 
+                                args["annotation_target"], 
                                 results, kinds=[category]) 
     for kind, result in results.items():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
     # dictionary with gene and isoforms from target annotation 
-    with open(target_without_pseudogenes, "r") as target_annotation:
+    with open(args["annotation_target"], "r") as target_annotation:
         gene_dict = get_gene_isoform_dict_from_target_annotation(target_annotation)
         
     # search tmap files obteined to gffcompare and edit_distance
@@ -112,7 +107,7 @@ def main():
     # add features to gff
     add_features_to_gff(outbase, args["annotation_target"], gene_dict) 
     # generate quality panel
-    file_with_features = add_features_to_gff(outbase, target_without_pseudogenes, gene_dict)
+    file_with_features = add_features_to_gff(outbase, args["annotation_target"], gene_dict)
     if file_with_features.exists():
          generate_quality_panel(file_with_features, outbase)  
 # run main function 
