@@ -58,11 +58,11 @@ def main():
 
     # filter pseudogenes and save the clean gff and log file, and update the target annotation
     # path to the new one without pseudogenes
-    target_without_pseudogenes = Path(filter_pseudogenes(args["annotation_target"], outbase))
+    target_to_eval = Path(filter_pseudogenes(args["annotation_target"], outbase))
     #generate_sequences for evidence
     for option, path in args.items():
        if "evidence" in option or "target" in option:
-            current_path = target_without_pseudogenes if option == "annotation_target" else path
+            current_path = target_to_eval if option == "annotation_target" else path
             # determine categories to run based on the option
             if option == "transcripts_evidence":
                 kinds_to_run = ["transcripts_evidence"]
@@ -87,12 +87,12 @@ def main():
         #run compare(evidence, target)
                  run_gffcompare(outbase,args["proteins_evidence"], 
                                 args["transcripts_evidence"],
-                    target_without_pseudogenes,results, kinds=[category]) 
+                    target_to_eval,results, kinds=[category]) 
     for kind, result in results.items():
         if result["returncode"] != 0:
             print("Error in {}: {}".format(kind, result["log_msg"]))
     # dictionary with gene and isoforms from target annotation 
-    with open(target_without_pseudogenes, "r") as target_annotation:
+    with open(target_to_eval, "r") as target_annotation:
         gene_dict = get_gene_isoform_dict_from_target_annotation(target_annotation)
         
     # search tmap files obteined to gffcompare and edit_distance
@@ -109,7 +109,7 @@ def main():
                                   results["CDS_target"]["outfile"],
                                   results["CDS_evidence"]["outfile"])
     # generate quality panel
-    file_with_features = add_features_to_gff(outbase, target_without_pseudogenes, gene_dict)
+    file_with_features = add_features_to_gff(outbase, target_to_eval, gene_dict)
     if file_with_features.exists():
          generate_quality_panel(file_with_features, outbase)  
 # run main function 
