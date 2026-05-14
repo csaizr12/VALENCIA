@@ -7,13 +7,17 @@ import re
 from matplotlib.patches import Patch
 from pathlib import Path
 
-def generate_quality_panel(gff_path, output_folder):
+# Updated signature to accept description and species
+def generate_quality_panel(gff_path, output_folder, description=None, species="Unknown species"):
     data = []
     output_dir = Path(output_folder)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    try:
-        # --- 1. EXTRACCIÓN DE DATOS ---
+    # Set default description if none is provided via terminal
+    if not description:
+        description = Path(gff_path).stem
+
+        # --- 1. DATA EXTRACTION ---
         fp_pattern = r'([-+]?\d*\.?\d+(?:[eE][-+]?\d+)?)'
         with open(gff_path, 'r', encoding='latin-1') as f:
             for line in f:
@@ -35,15 +39,13 @@ def generate_quality_panel(gff_path, output_folder):
                         })
         df = pd.DataFrame(data)
         if df.empty:
-            print(f"No se encontraron datos en {gff_path}")
+            print(f"No data found in {gff_path}")
             return
 
         n_samples = len(df)
-        main_title = f"VALENCIA annotation quality analysis (n={n_samples})"
         sns.set_theme(style="whitegrid")
 
-        # --- PANEL A: ESTRUCTURA VS FUNCIÓN ---
-       # --- PANEL A: ESTRUCTURA VS FUNCIÓN ---
+        # --- PANEL A: STRUCTURE VS FUNCTION ---
         fig_a = plt.figure(figsize=(14, 12))
         gs = fig_a.add_gridspec(7, 4, height_ratios=[1.2, 1, 1, 1, 1, 0.6, 0.2], hspace=0.15, wspace=0.15)
         
@@ -57,11 +59,15 @@ def generate_quality_panel(gff_path, output_folder):
         ax_hist_x.set_ylabel('Nb. transcripts', fontweight='bold', fontsize=10) 
         
         ax_hist_y.hist(df['pr'], bins=80, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
-        ax_hist_y.set_xlabel('Nb. proteins', fontweight='bold', fontsize=10) # Eje X del histograma lateral
+        ax_hist_y.set_xlabel('Nb. proteins', fontweight='bold', fontsize=10)
         
-        # Títulos y etiquetas de los ejes principales
-        fig_a.suptitle(f"VALENCIA annotation quality analysis (n={n_samples})\nTranscript-protein edit distance correlation", 
-                       fontsize=18, fontweight='bold', y=0.96)
+        # --- DYNAMIC TITLES FOR PANEL A ---
+        fig_a.suptitle(f"VALENCIA Quality Analysis: {species} (n={n_samples})", 
+                       fontsize=18, fontweight='bold', y=0.98)
+        
+        plt.figtext(0.5, 0.94, description, ha='center', fontsize=14, style='italic', color='#2c3e50')
+        plt.figtext(0.5, 0.91, "Transcript-protein edit distance correlation", ha='center', fontsize=12, color='gray')
+
         ax_main.set_xlabel('Lev_edit_distance transcripts', fontweight='bold', fontsize=12)
         ax_main.set_ylabel('Lev_edit_distance proteins', fontweight='bold', fontsize=12)
         
@@ -74,44 +80,49 @@ def generate_quality_panel(gff_path, output_folder):
         leg_elements = [Patch(facecolor='#45a049', label='Transcripts'), Patch(facecolor='#e91e63', label='Proteins')]
         ax_hist_y.legend(handles=leg_elements, loc='upper left', bbox_to_anchor=(1.05, 1.2), frameon=True)
         
-        plt.savefig(output_dir / "VALENCIA_quality_correlation_scatter.svg", format='svg', bbox_inches='tight')
+        plt.savefig(output_dir / f"VALENCIA_quality_correlation_{description.replace(' ', '_')}.svg", format='svg', bbox_inches='tight')
         plt.close(fig_a)
-
-        # --- PANEL B: CORRELACIÓN ---
+       # --- PANEL B: CORRELATION (CDS vs Protein) ---
         plt.figure(figsize=(10, 10))
         ax_corr = sns.scatterplot(data=df, x='cds', y='pr', alpha=0.2, s=15, color='#34495e', rasterized=True)
         ax_corr.plot([0, 1], [0, 1], color='red', linestyle='--', label='Identity (X=Y)')
         
-        plt.title(f"{main_title}\nCorrelation: CDS vs protein", fontsize=16, fontweight='bold', pad=20)
+        # dynamic titles for Panel B
+        plt.suptitle(f"VALENCIA Quality Analysis: {species} (n={n_samples})", 
+                     fontweight='bold', fontsize=15, y=0.98)
+        plt.title(f"{description}\nCorrelation: CDS vs Protein", 
+                  fontsize=12, pad=15, style='italic', color='#2c3e50')
+        
         plt.xlabel('Lev_edit_distance CDS (Nucleotides)', fontweight='bold')
         plt.ylabel('Lev_edit_distance proteins (Amino acids)', fontweight='bold')
         plt.legend()
         
-        plt.savefig(output_dir / "VALENCIA_CDS_protein_correlation.svg", format='svg', bbox_inches='tight')
+        # Save B with dynamic name
+        plt.savefig(output_dir / f"VALENCIA_CDS_protein_correlation_{description.replace(' ', '_')}.svg", 
+                    format='svg', bbox_inches='tight')
         plt.close()
 
-        # --- PANEL C: DISTRIBUCIÓN (VALOR ABSOLUTO) ---
+        # --- PANEL C: DISTRIBUTION (Absolute difference) ---
         plt.figure(figsize=(10, 10))
-        
         absolute_diff = df['diff'].abs()
         
         ax_dist = sns.histplot(absolute_diff, bins=100, kde=True, color='#2E86C1', 
                                edgecolor='white', rasterized=True)
         
         ax_dist.set_xlim(0, 0.15) 
+        ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label='Perfect Match (Diff = 0)')
         
-        # La línea roja ahora marca el "Cero absoluto" (Concordancia perfecta)
-        ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label=' (Difference = 0)')
+        # dynamic titles for Panel C
+        plt.suptitle(f"VALENCIA Quality Analysis: {species} (n={n_samples})", 
+                     fontweight='bold', fontsize=15, y=0.98)
+        plt.title(f"{description}\nDistribution of absolute editing difference", 
+                  fontsize=12, pad=15, style='italic', color='#2c3e50')
         
-        plt.title(f"{main_title}\nDistribution of absolute editing difference", fontsize=16, fontweight='bold', pad=20)
-        
-        # Actualizamos etiquetas para reflejar el valor absoluto | |
         plt.xlabel('|Protein dist. - CDS dist.| (Absolute difference)', fontweight='bold')
         plt.ylabel('Number of transcripts', fontweight='bold')
         plt.legend()
         
-        plt.savefig(output_dir / "VALENCIA_edit_distance_distribution.svg", format='svg', bbox_inches='tight', dpi=300)
+        # Save C with dynamic name
+        plt.savefig(output_dir / f"VALENCIA_edit_distance_distribution_{description.replace(' ', '_')}.svg", 
+                    format='svg', bbox_inches='tight', dpi=300)
         plt.close()
-
-    except Exception as e:
-        print(f"Error crítico: {e}")
