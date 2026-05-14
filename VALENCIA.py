@@ -117,7 +117,7 @@ def main():
     # generate quality panel
     file_with_features = add_features_to_gff(outbase, target_to_eval, gene_dict)
     if file_with_features.exists():
-         generate_quality_panel(file_with_features, outbase)  
+         generate_quality_panel(file_with_features, outbase, description=args["desc"], species=args["species"])  
 # run main function 
 if __name__ == '__main__':
     main()
