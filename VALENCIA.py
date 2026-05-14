@@ -56,7 +56,7 @@ def main():
     if not outbase.exists():
         outbase.mkdir(parents=True, exist_ok=True)
     # clean gff from pseudogenes
-    target_without_pseudogenes = filter_pseudogenes(args["annotation_target"], outbase)
+    target_without_pseudogenes = Path(filter_pseudogenes(args["annotation_target"], outbase))
     #generate_sequences for evidence
     for option, path in args.items():
        if "evidence" in option or "target" in option:
