@@ -1,10 +1,12 @@
 import os
 import re
+from pathlib import Path
 
 # Function to filter pseudogenes from a gff file and write the clean gff and a log file with the filtered pseudogenes
 def filter_pseudogenes(gff_file, outbase):
-    clean_gff = os.path.join(outbase, "annotation_target_no_pseudogenes.gff")
-    log_file = os.path.join(outbase, "filter_pseudogenes.log")
+    gff_name = Path(gff_file).stem
+    clean_gff = os.path.join(outbase, f"{gff_name}_no_pseudogenes.gff")
+    log_file = os.path.join(outbase, f"filter_pseudogenes_{gff_name}.log")
 
     os.makedirs(outbase, exist_ok=True)
 
