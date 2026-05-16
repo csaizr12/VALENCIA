@@ -93,6 +93,8 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
 
     ax_main.set_xlabel('Lev_edit_distance transcripts', fontweight='bold', fontsize=12)
     ax_main.set_ylabel('Lev_edit_distance proteins', fontweight='bold', fontsize=12)
+    ax_main.set_xlim(0, 1)
+    ax_main.set_ylim(0, 1)
     ax_hist_x.tick_params(labelbottom=False, bottom=False)
     ax_hist_y.tick_params(labelleft=False, left=False)
     
