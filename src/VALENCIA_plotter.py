@@ -120,15 +120,21 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
     plt.close()
 
     # --- PANEL C: DISTRIBUTION ---
+   # --- PANEL C: DISTRIBUTION ---
     plt.figure(figsize=(10, 10))
     absolute_diff = df['diff'].abs()
-    ax_dist = sns.histplot(absolute_diff, bins=100, kde=True, color='#2E86C1', edgecolor='white', rasterized=True)
+
+    # Create explicit bin edges to bypass the uniform-bin bug in Python 3.14t for Panel C
+    min_diff, max_diff = absolute_diff.min(), absolute_diff.max()
+    bins_c = np.linspace(min_diff, max_diff, 101) if min_diff != max_diff else 100
+
+    ax_dist = sns.histplot(absolute_diff, bins=bins_c, kde=True, color='#2E86C1', edgecolor='white', rasterized=True)
     ax_dist.set_xlim(0, 0.15) 
     ax_dist.axvline(0, color='red', linestyle='--', linewidth=2, label='Match (Diff = 0)')
-    
+
     set_dynamic_titles(plt, n_samples, species, description, "Distribution of absolute editing difference")
     plt.subplots_adjust(top=0.88)
-    
+
     plt.xlabel('|Protein dist. - CDS dist.| (Absolute difference)', fontweight='bold')
     plt.ylabel('Number of transcripts', fontweight='bold')
     plt.legend()
