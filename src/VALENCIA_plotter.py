@@ -4,6 +4,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 import re
+import numpy as np  # Added to handle mathematical infinities/nans
 from matplotlib.patches import Patch
 from pathlib import Path
 
@@ -36,6 +37,12 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
     df = pd.DataFrame(data)
     if df.empty:
         print(f"No data found in {gff_path}")
+        return
+
+    # Clean infinite and null values that cause matplotlib broadcasting errors
+    df = df.replace([np.inf, -np.inf], np.nan).dropna(subset=['tx', 'pr', 'cds'])
+    if df.empty:
+        print(f"No valid data left in {gff_path} after removing NaNs/Infs")
         return
 
     n_samples = len(df)
