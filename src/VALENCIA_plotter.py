@@ -4,7 +4,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 import re
-import numpy as np  # Added to handle mathematical infinities/nans
+import numpy as np  
 from matplotlib.patches import Patch
 from pathlib import Path
 
@@ -81,9 +81,13 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
     ax_hist_x = fig_a.add_subplot(gs[0, :-1], sharex=ax_main)
     ax_hist_y = fig_a.add_subplot(gs[1:5, -1], sharey=ax_main)
     
+    # Create explicit bin edges to bypass the uniform-bin bug in Python 3.14t
+    bins_x = np.linspace(df['tx'].min(), df['tx'].max(), 81) if df['tx'].min() != df['tx'].max() else 80
+    bins_y = np.linspace(df['pr'].min(), df['pr'].max(), 81) if df['pr'].min() != df['pr'].max() else 80
+
     sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], s=5, cmap="magma", vmin=0, vmax=1, alpha=0.7, rasterized=True)
-    ax_hist_x.hist(df['tx'], bins=80, color='#45a049', edgecolor='black', linewidth=0.1)
-    ax_hist_y.hist(df['pr'], bins=80, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
+    ax_hist_x.hist(df['tx'], bins=bins_x, color='#45a049', edgecolor='black', linewidth=0.1)
+    ax_hist_y.hist(df['pr'], bins=bins_y, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
 
     set_dynamic_titles(fig_a, n_samples, species, description, "Transcript-protein edit distance correlation")
 
