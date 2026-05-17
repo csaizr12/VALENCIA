@@ -15,8 +15,6 @@ The main objective of this work is the design, development, and implementation o
 - pandas, matplotlib, seaborn, numpy, biopython, python-levenshtein, rapidfuzz
 
 ### Software dependencies
-
-- conda == 26.6.1
 - AGAT == 1.7.0
 - GFFread == 0.12.7 (https://github.com/gpertea/gffread)
 - GFFcompare == 0.12.10 (https://github.com/gpertea/gffcompare)
@@ -25,7 +23,7 @@ The main objective of this work is the design, development, and implementation o
 [Back to Table of contents](#table-of-contents)
 
 ## Installation
-Follow the steps below to set up the environment required to run VALENCIA.
+Follow the steps below to set up the environment required to run VALENCIA. There is an example with conda.
 
 
 ```bash
@@ -111,6 +109,9 @@ VALENCIA runs **GffCompare** to perform a spatial comparison between the exon-in
     | **j** | Potential Isoform |
     | **o** | Partial Exon Overlap |
     | **e** | Retained Intron (Single Exon) |
+    | **u** | Unknown Intergenic|
+
+     
 
 - **Accuracy estimation:** Calculating sensitivity and precision at the base, exon, and locus levels.
 
@@ -142,13 +143,14 @@ In this module, VALENCIA implements an advanced sequence validation algorithm in
 
     - Metric:
 
-        $$Sn = \frac{Shared}{L_{evidence}}$$
+        $$Sn (sensibility) = \frac{Shared}{L_{evidence}}$$
 
-         $$Sp = \frac{Shared}{L_{target}}$$
+         $$Sp (specificity) = \frac{Shared}{L_{target}}$$
      
      
         $$Distance = 1 - \left( \frac{Sn + Sp}{2} \right)$$
 
+      
     - Normalization: 
 
         Both 𝑆𝑛 and 𝑆𝑝 are normalized ratios within the range [0, 1], representing the proportion of shared bases relative to each sequence.
