@@ -192,7 +192,7 @@ The visualization module in VALENCIA provides a multi-level diagnostic to assess
 ### **Figure 1. VALENCIA_quality_correlation_scatter.svg**
 
 <p align="center">
-  <img src="VALENCIA_quality_correlation_scatter.svg" width="600">
+  <img plots = "VALENCIA_quality_correlation_scatter.svg" width="600">
 </p>
 
 This bivariate analysis evaluates the synergy between the structural model (transcript) and its functional result (protein).
@@ -212,7 +212,7 @@ This bivariate analysis evaluates the synergy between the structural model (tran
    
 
 <p align="center">
-  <img src="VALENCIA_CDS_protein_correlation.svg" width="600">
+  <img plots ="VALENCIA_CDS_protein_correlation.svg" width="600">
 </p>
 
 This correlation analysis between CDS and protein edit distances for identifying errors in the translation process.
@@ -226,7 +226,7 @@ This correlation analysis between CDS and protein edit distances for identifying
 ### **Figure 3. VALENCIA_edit_distance_distribution.svg**
 
 <p align="center">
-  <img src="VALENCIA_edit_distance_distribution.svg" width="600">
+  <img plots ="VALENCIA_edit_distance_distribution.svg" width="600">
 </p>
 
 
