@@ -60,16 +60,16 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     # DYNAMIC METADATA AND LEGEND CONFIGURATION BASED ON EVALUATION TYPE
     if evaluation_type == 'protein':
         legend_mapping = {
-            'complete': 'Full Match / Canonical Homology (=)',
-            'SubsequencesTarget': 'Fragmented Protein Target (c)',
-            'PotentialIsoform': 'Alternative Protein Isoform (j)',
-            'PartialExonOverlap': 'Partial Coding Homology (o)',
-            'TotalIntronsRetention': 'Intron Retention in Frame (m)',
-            'RetainedIntronSingleExon': 'Coding Frame Infiltration (e)',
-            'Unknown': 'Uncharacterized Open Reading Frame (u)',
-            'ExonicOverlapOppStran': 'Antisense Coding Homology (x)',
-            'SubsequencesReferences': 'Truncated Reference Alignment (k)',
-            'NA': 'No Protein Homology Supported (NA)'
+            'complete': 'Complete Structural Match (=)',
+            'SubsequencesTarget': 'Subsequences target (c)',
+            'PotentialIsoform': 'Potential isoform (j)',
+            'PartialExonOverlap': 'Partial exon overlap (o)',
+            'TotalIntronsRetention': 'Total introns retention (m)',
+            'RetainedIntronSingleExon': 'Retained intron single exon (e)',
+            'Unknown': 'Unknown intergenic (u)',
+            'ExonicOverlapOppStran': 'Exonic overlap Opp. (x)',
+            'SubsequencesReferences': 'Subsequences references (k)',
+            'NA': 'Not structurally annotated (NA)'
         }
         title_text = f"Distribution of Protein Homology Class Codes ({species_name})"
         x_label_text = "Total protein model count"
