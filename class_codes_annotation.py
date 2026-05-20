@@ -7,20 +7,23 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     """
     Scans the subfolders of a specific dataset, parses the GFF3 files,
     and generates a horizontal stacked bar plot using a single unified logic.
-    
-    Parameters:
-      - folder_name: Name of the folder containing pipeline outputs.
-      - species_name: Name of the plant organism.
-      - output_filename: Target path for the output SVG.
-      - evaluation_type: 'transcript' (structural analysis) or 'protein' (homology analysis).
     """
-    # PATH AUTO-CHECK: Searches locally or one level up
-    if os.path.exists(folder_name):
-        base_path = folder_name
-    elif os.path.exists(f"results_dataset_test{folder_name}"):
-        base_path = f"results_dataset_test{folder_name}"
-    else:
-        print(f"Error: Base path '{folder_name}' not found locally or in '../'. Skipping {species_name} [{evaluation_type}].")
+    # PATH AUTO-CHECK: Configured to find inputs inside 'results_dataset_test' from TFG root
+    possible_paths = [
+        folder_name,
+        os.path.join("results_dataset_test", folder_name),
+        os.path.join("VALENCIA", folder_name),
+        os.path.join("VALENCIA", "results_dataset_test", folder_name)
+    ]
+    
+    base_path = None
+    for path in possible_paths:
+        if os.path.exists(path):
+            base_path = path
+            break
+
+    if not base_path:
+        print(f"Error: Base path for '{folder_name}' could not be resolved. Skipping {species_name} [{evaluation_type}].")
         return
 
     # Species-specific reference mapping dictionary
@@ -71,7 +74,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'SubsequencesReferences': 'Subsequences references (k)',
         }
         title_text = f"Distribution of protein class codes ({species_name})"
-        x_label_text = "Total protein  count"
+        x_label_text = "Total protein count"
         legend_title_text = "VALENCIA protein class codes"
     else:
         legend_mapping = {
@@ -184,45 +187,50 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
 
 if __name__ == "__main__":
     
-  
+    # Target directory for the generated SVG figures
+    output_dir = "results_plots"
+    os.makedirs(output_dir, exist_ok=True)
+
+    # 1. TRANSCRIPT EVALUATION
     plot_valencia_class_codes(
         folder_name="Arabidopsis_thaliana_dataset_test",
         species_name="Arabidopsis thaliana",
-        output_filename="athaliana_transcript_class_codes_comparison.svg",
+        output_filename=f"{output_dir}/athaliana_transcript_class_codes_comparison.svg",
         evaluation_type='transcript'
     )
 
     plot_valencia_class_codes(
         folder_name="Nicotiana_benthamiana_dataset_test",
         species_name="Nicotiana benthamiana",
-        output_filename="nbenthamiana_transcript_class_codes_comparison.svg",
+        output_filename=f"{output_dir}/nbenthamiana_transcript_class_codes_comparison.svg",
         evaluation_type='transcript'
     )
 
     plot_valencia_class_codes(
         folder_name="Oryza_sativa_dataset_test",
         species_name="Oryza sativa",
-        output_filename="osativa_class_codes_comparison.svg",
+        output_filename=f"{output_dir}/osativa_class_codes_comparison.svg",
         evaluation_type='transcript'
     )
 
+    # 2. PROTEIN EVALUATION
     plot_valencia_class_codes(
         folder_name="Arabidopsis_thaliana_dataset_test",
         species_name="Arabidopsis thaliana",
-        output_filename="athaliana_protein_class_codes_comparison.svg",
+        output_filename=f"{output_dir}/athaliana_protein_class_codes_comparison.svg",
         evaluation_type='protein'
     )
 
     plot_valencia_class_codes(
         folder_name="Nicotiana_benthamiana_dataset_test",
         species_name="Nicotiana benthamiana",
-        output_filename="nbenthamiana_protein_class_codes_comparison.svg",
+        output_filename=f"{output_dir}/nbenthamiana_protein_class_codes_comparison.svg",
         evaluation_type='protein'
     )
 
     plot_valencia_class_codes(
         folder_name="Oryza_sativa_dataset_test",
         species_name="Oryza sativa",
-        output_filename="osativa_protein_class_codes_comparison.svg",
+        output_filename=f"{output_dir}/osativa_protein_class_codes_comparison.svg",
         evaluation_type='protein'
     )
