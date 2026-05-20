@@ -93,13 +93,13 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
         clean_name = species_name.lower().replace(' ', '_')
         
         if mode == 'protein':
-            cbar_label = '% of Proteins with Distance = 1 (Relative to Chromosome Total)'
-            plot_title = f"Chromosomal Distribution of Distance=1 Proteins (%)\n({species_name})"
+            cbar_label = '% of Proteins with distance = 1 (Relative to chromosome total)'
+            plot_title = f"Chromosomal Distribution of distance=1 Proteins (%)\n({species_name})"
             output_csv = f"{output_dir}/{clean_name}_chrom_protein_distance1_summary.csv"
             output_svg = f"{output_dir}/{clean_name}_chrom_protein_distance1_percentage_distribution.svg"
         else:
-            cbar_label = '% of Transcripts with Distance = 1 (Relative to Chromosome Total)'
-            plot_title = f"Chromosomal Distribution of Distance=1 Transcripts (%)\n({species_name})"
+            cbar_label = '% of Transcripts with distance = 1 (Relative to chromosome total)'
+            plot_title = f"Chromosomal Distribution of distance=1 Transcripts (%)\n({species_name})"
             output_csv = f"{output_dir}/{clean_name}_chrom_transcript_distance1_summary.csv"
             output_svg = f"{output_dir}/{clean_name}_chrom_transcript_distance1_percentage_distribution.svg"
 
@@ -122,10 +122,12 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             fig, ax = plt.subplots(figsize=(13, 9))
             
             # PALETTE CHANGE: Using 'viridis' (high-contrast academic standard)
-            cax = ax.matshow(df_plot, cmap='viridis', aspect='auto')
-            
+            cax = ax.matshow(df_plot, cmap='twilight_shifted', aspect='auto',
+                 edgecolors='#b0b0b0', linewidths=0.4)
+
             cbar = fig.colorbar(cax, pad=0.02)
             cbar.set_label(cbar_label, fontsize=11, labelpad=10)
+            cbar.ax.tick_params(labelsize=9)
             
             ax.set_xticks(range(len(df_plot.columns)))
             ax.set_xticklabels(df_plot.columns, rotation=45, ha='left', fontsize=10)
@@ -142,7 +144,7 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             plt.tight_layout()
             plt.savefig(output_svg, format='svg', dpi=300)
             plt.close()
-            print(f"SVG Percentage Plot successfully saved to: {output_svg}")
+            print(f"SVG percentage plot successfully saved to: {output_svg}")
             
         except Exception as graph_err:
             print(f"Error plotting SVG: {graph_err}")
@@ -174,10 +176,9 @@ if __name__ == "__main__":
             'test_BRAP': 'BRAKER2', 'test_UTR_BRAP': 'BRAKER2 + UTR',
             'test_BRATP': 'BRAKER3', 'test_UTR_BRATP': 'BRAKER3 + UTR',
             'test_EGX': 'Eukaryotic Genome Annotation Pipeline', 'test_UTR_EGX': 'Eukaryotic Genome Annotation Pipeline + UTR',
-            'test_EVI': 'Evidence-based', 'test_UTR_EVI': 'Evidence-based + UTR',
+            'test_EVI': 'EviAnn', 'test_UTR_EVI': 'EviAnn + UTR',
             'test_EVO': 'ANNEVO', 'test_UTR_EVO': 'ANNEVO + UTR',
-            'test_GEM': 'Genome-scale Metabolic Model', 'test_GS': 'Genome-scale Metabolic Model',
-            'test_UTR_GEM': 'Genome-scale Metabolic Model + UTR', 'test_UTR_GS': 'Genome-scale Metabolic Model + UTR',
+            'test_GEM': 'GEMOMA', 'test_UTR_GEM': 'GEMOMA',
             'test_HEL': 'HELIXER', 'test_UTR_HEL': 'HELIXER + UTR',
             'test_MAK': 'MAKER', 'test_UTR_MAK': 'MAKER + UTR',
             'test_REF': f'{species["ref"]}', 'test_UTR_REF': f'{species["ref"]} + UTR'
