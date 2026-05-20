@@ -69,10 +69,9 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'Unknown': 'Unknown intergenic (u)',
             'ExonicOverlapOppStran': 'Exonic overlap Opp. (x)',
             'SubsequencesReferences': 'Subsequences references (k)',
-            'NA': 'Not structurally annotated (NA)'
         }
-        title_text = f"Distribution of Protein Homology Class Codes ({species_name})"
-        x_label_text = "Total protein model count"
+        title_text = f"Distribution of protein class codes ({species_name})"
+        x_label_text = "Total protein  count"
         legend_title_text = "VALENCIA protein class codes"
     else:
         legend_mapping = {
@@ -85,9 +84,8 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'Unknown': 'Unknown intergenic (u)',
             'ExonicOverlapOppStran': 'Exonic overlap Opp. (x)',
             'SubsequencesReferences': 'Subsequences references (k)',
-            'NA': 'Not structurally annotated (NA)'
         }
-        title_text = f"Distribution of Structural Class Codes ({species_name})"
+        title_text = f"Distribution of transcript class codes ({species_name})"
         x_label_text = "Total transcript count"
         legend_title_text = "GFF3 transcript class codes"
 
@@ -186,20 +184,18 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
 
 if __name__ == "__main__":
     
-    # =========================================================================
-    # BLOCK 1: STRUCTURAL ANALYSIS GRAPH GENERATION (TRANSCRIPTS)
-    # =========================================================================
+  
     plot_valencia_class_codes(
         folder_name="Arabidopsis_thaliana_dataset_test",
         species_name="Arabidopsis thaliana",
-        output_filename="athaliana_class_codes_comparison.svg",
+        output_filename="athaliana_transcript_class_codes_comparison.svg",
         evaluation_type='transcript'
     )
 
     plot_valencia_class_codes(
         folder_name="Nicotiana_benthamiana_dataset_test",
         species_name="Nicotiana benthamiana",
-        output_filename="nbenthamiana_class_codes_comparison.svg",
+        output_filename="nbenthamiana_transcript_class_codes_comparison.svg",
         evaluation_type='transcript'
     )
 
@@ -210,9 +206,6 @@ if __name__ == "__main__":
         evaluation_type='transcript'
     )
 
-    # =========================================================================
-    # BLOCK 2: FUNCTIONAL ANALYSIS GRAPH GENERATION (PROTEINS)
-    # =========================================================================
     plot_valencia_class_codes(
         folder_name="Arabidopsis_thaliana_dataset_test",
         species_name="Arabidopsis thaliana",
