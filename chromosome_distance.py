@@ -138,7 +138,7 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             ax.xaxis.set_ticks_position('bottom')
             
             ax.set_title(plot_title, fontsize=13, fontweight='bold', pad=20)
-            ax.set_xlabel('Chromosomes / Scaffolds', fontsize=11, labelpad=10)
+            ax.set_xlabel('Chromosomes', fontsize=11, labelpad=10)
             ax.set_ylabel('Annotation pipeline', fontsize=11, labelpad=10)
             
             plt.tight_layout()
