@@ -142,4 +142,49 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             plt.tight_layout()
             plt.savefig(output_svg, format='svg', dpi=300)
             plt.close()
-            print(f"SVG
+            print(f"SVG Percentage Plot successfully saved to: {output_svg}")
+            
+        except Exception as graph_err:
+            print(f"Error plotting SVG: {graph_err}")
+    else:
+        print(f" No records found for {species_name} in {mode} mode.")
+
+if __name__ == "__main__":
+    
+    output_dir = "results_plots"
+    os.makedirs(output_dir, exist_ok=True)
+    input_base_dir = "results_dataset_test"
+
+    species_list = [
+        {"folder": "Arabidopsis_thaliana_dataset_test", "name": "Arabidopsis thaliana", "ref": "ARAPORT11"},
+        {"folder": "Nicotiana_benthamiana_dataset_test", "name": "Nicotiana benthamiana", "ref": "GuoTTv1"},
+        {"folder": "Oryza_sativa_dataset_test", "name": "Oryza sativa", "ref": "AGIS1v1"},
+        {"folder": "Solanum_lycopersicum_datset_test", "name": "Solanum lycopersicum", "ref": "ITAG5.0"}
+    ]
+
+    for species in species_list:
+        path = os.path.join(input_base_dir, species["folder"])
+        
+        if not os.path.exists(path):
+            print(f"Warning: Data path '{path}' does not exist. Skipping {species['name']}.")
+            continue
+            
+        mapping = {
+            'test_BRAT': 'BRAKER1', 'test_UTR_BRAT': 'BRAKER1 + UTR',
+            'test_BRAP': 'BRAKER2', 'test_UTR_BRAP': 'BRAKER2 + UTR',
+            'test_BRATP': 'BRAKER3', 'test_UTR_BRATP': 'BRAKER3 + UTR',
+            'test_EGX': 'Eukaryotic Genome Annotation Pipeline', 'test_UTR_EGX': 'Eukaryotic Genome Annotation Pipeline + UTR',
+            'test_EVI': 'Evidence-based', 'test_UTR_EVI': 'Evidence-based + UTR',
+            'test_EVO': 'ANNEVO', 'test_UTR_EVO': 'ANNEVO + UTR',
+            'test_GEM': 'Genome-scale Metabolic Model', 'test_GS': 'Genome-scale Metabolic Model',
+            'test_UTR_GEM': 'Genome-scale Metabolic Model + UTR', 'test_UTR_GS': 'Genome-scale Metabolic Model + UTR',
+            'test_HEL': 'HELIXER', 'test_UTR_HEL': 'HELIXER + UTR',
+            'test_MAK': 'MAKER', 'test_UTR_MAK': 'MAKER + UTR',
+            'test_REF': f'{species["ref"]}', 'test_UTR_REF': f'{species["ref"]} + UTR'
+        }
+        
+        # 1. Run Analysis for Structural Transcripts
+        extract_chrom_stats_for_distance_1(path, mapping, species["name"], output_dir, mode='transcript')
+        
+        # 2. Run Analysis for Functional Proteins
+        extract_chrom_stats_for_distance_1(path, mapping, species["name"], output_dir, mode='protein')
