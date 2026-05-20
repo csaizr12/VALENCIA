@@ -69,7 +69,6 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'PartialExonOverlap': 'Partial exon overlap (o)',
             'TotalIntronsRetention': 'Total introns retention (m)',
             'RetainedIntronSingleExon': 'Retained intron single exon (e)',
-            'Unknown': 'Unknown intergenic (u)',
             'PartialIntronRetention': 'Partial intron retention (n)',
             'SubsequencesReferences': 'Subsequences references (k)',
         }
@@ -84,7 +83,6 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'PartialExonOverlap': 'Partial exon overlap (o)',
             'TotalIntronsRetention': 'Total introns retention (m)',
             'RetainedIntronSingleExon': 'Retained intron single exon (e)',
-            'Unknown': 'Unknown intergenic (u)',
             'PartialIntronRetention': 'Partial intron retention (n)',
             'SubsequencesReferences': 'Subsequences references (k)',
         }
@@ -213,6 +211,15 @@ if __name__ == "__main__":
         evaluation_type='transcript'
     )
 
+    plot_valencia_class_codes(
+        folder_name="Solanum_lycopersicum_datset_test",
+        species_name="Solanum lycopersicum",
+        output_filename=f"{output_dir}/slycopersicum_transcript_class_codes_comparison.svg",
+        evaluation_type='transcript'
+    )
+
+
+
     # 2. PROTEIN EVALUATION
     plot_valencia_class_codes(
         folder_name="Arabidopsis_thaliana_dataset_test",
@@ -232,5 +239,12 @@ if __name__ == "__main__":
         folder_name="Oryza_sativa_dataset_test",
         species_name="Oryza sativa",
         output_filename=f"{output_dir}/osativa_protein_class_codes_comparison.svg",
+        evaluation_type='protein'
+    )
+
+    plot_valencia_class_codes(
+        folder_name="Solanum_lycopersicum_datset_test",
+        species_name="Solanum lycopersicum",
+        output_filename=f"{output_dir}/slycopersicum_protein_class_codes_comparison.svg",
         evaluation_type='protein'
     )
