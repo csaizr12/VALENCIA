@@ -3,21 +3,27 @@ import re
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def plot_species_class_codes(folder_name, species_name, output_filename):
+def plot_valencia_class_codes(folder_name, species_name, output_filename, evaluation_type='transcript'):
     """
     Scans the subfolders of a specific dataset, parses the GFF3 files,
-    and generates a single horizontal stacked bar plot for that species.
+    and generates a horizontal stacked bar plot using a single unified logic.
+    
+    Parameters:
+      - folder_name: Name of the folder containing pipeline outputs.
+      - species_name: Name of the plant organism.
+      - output_filename: Target path for the output SVG.
+      - evaluation_type: 'transcript' (structural analysis) or 'protein' (homology analysis).
     """
-    # COMPROBACIÓN AUTOMÁTICA DE RUTAS: Busca de forma local o un nivel arriba
+    # PATH AUTO-CHECK: Searches locally or one level up
     if os.path.exists(folder_name):
         base_path = folder_name
     elif os.path.exists(f"../{folder_name}"):
         base_path = f"../{folder_name}"
     else:
-        print(f"Error: The base path '{folder_name}' could not be found locally or in '../'. Skipping {species_name}.")
+        print(f"Error: Base path '{folder_name}' not found locally or in '../'. Skipping {species_name} [{evaluation_type}].")
         return
 
-    # Diccionario de referencias específicas por especie
+    # Species-specific reference mapping dictionary
     species_references = {
         "Arabidopsis thaliana": "ARAPORT11",
         "Nicotiana benthamiana": "GuoTTv1",
@@ -25,10 +31,9 @@ def plot_species_class_codes(folder_name, species_name, output_filename):
         "Solanum lycopersicum": "ITAG5.0"
     }
     
-    # Obtenemos la referencia correspondiente o dejamos "REFERENCE" por defecto
     ref_name = species_references.get(species_name, "REFERENCE")
 
-    # Mapeo estricto de las filas del gráfico con placeholders dinámicos para la referencia
+    # Strict row mapping with dynamic reference name placeholders
     annotation_mapping = {
         'test_BRAT': 'BRAKER1', 
         'test_UTR_BRAT': 'BRAKER1 + UTR',
@@ -52,30 +57,51 @@ def plot_species_class_codes(folder_name, species_name, output_filename):
         'test_UTR_REF': f'{ref_name} + UTR' 
     }
 
-    legend_mapping = {
-        'complete': 'Complete (=)',
-        'SubsequencesTarget': 'Subsequences target (c)',
-        'PotentialIsoform': 'Potential isoform (j)',
-        'PartialExonOverlap': 'Partial exon overlap (o)',
-        'TotalIntronsRetention': 'Total introns retention (m)',
-        'RetainedIntronSingleExon': 'Retained intron single exon (e)',
-        'Unknown': 'Unknown intergenic (u)',
-        'ExonicOverlapOppStran': 'Exonic overlap Opp. (x)',
-        'SubsequencesReferences': 'Subsequences references (k)',
-        'NA': 'Not annotated (NA)'
-    }
+    # DYNAMIC METADATA AND LEGEND CONFIGURATION BASED ON EVALUATION TYPE
+    if evaluation_type == 'protein':
+        legend_mapping = {
+            'complete': 'Full Match / Canonical Homology (=)',
+            'SubsequencesTarget': 'Fragmented Protein Target (c)',
+            'PotentialIsoform': 'Alternative Protein Isoform (j)',
+            'PartialExonOverlap': 'Partial Coding Homology (o)',
+            'TotalIntronsRetention': 'Intron Retention in Frame (m)',
+            'RetainedIntronSingleExon': 'Coding Frame Infiltration (e)',
+            'Unknown': 'Uncharacterized Open Reading Frame (u)',
+            'ExonicOverlapOppStran': 'Antisense Coding Homology (x)',
+            'SubsequencesReferences': 'Truncated Reference Alignment (k)',
+            'NA': 'No Protein Homology Supported (NA)'
+        }
+        title_text = f"Distribution of Protein Homology Class Codes ({species_name})"
+        x_label_text = "Total protein model count"
+        legend_title_text = "VALENCIA protein class codes"
+    else:
+        legend_mapping = {
+            'complete': 'Complete Structural Match (=)',
+            'SubsequencesTarget': 'Subsequences target (c)',
+            'PotentialIsoform': 'Potential isoform (j)',
+            'PartialExonOverlap': 'Partial exon overlap (o)',
+            'TotalIntronsRetention': 'Total introns retention (m)',
+            'RetainedIntronSingleExon': 'Retained intron single exon (e)',
+            'Unknown': 'Unknown intergenic (u)',
+            'ExonicOverlapOppStran': 'Exonic overlap Opp. (x)',
+            'SubsequencesReferences': 'Subsequences references (k)',
+            'NA': 'Not structurally annotated (NA)'
+        }
+        title_text = f"Distribution of Structural Class Codes ({species_name})"
+        x_label_text = "Total transcript count"
+        legend_title_text = "GFF3 transcript class codes"
 
     class_code_pattern = re.compile(r'class_code[ =]"?([^";\s]+)"?')
     all_data = []
 
-    print(f"\nProcessing dataset for: {species_name} (Reference: {ref_name})...")
+    print(f"Running VALENCIA [{evaluation_type.upper()}] pipeline for: {species_name}...")
 
-    # Process each technical folder in the defined order
+    # Core GFF3 file parsing algorithm
     for technical_folder, official_name in annotation_mapping.items():
         folder_path = os.path.join(base_path, technical_folder)
         
         if not os.path.exists(folder_path):
-            continue # Silently skip missing folders (handled automatically per species)
+            continue 
             
         gff_files = [f for f in os.listdir(folder_path) if f.endswith('.gff3')]
         counts = {}
@@ -109,7 +135,7 @@ def plot_species_class_codes(folder_name, species_name, output_filename):
                             if match:
                                 code = match.group(1).strip()
                                 counts[code] = counts.get(code, 0) + 1
-                    break # Valid file found, stop scanning this subfolder
+                    break 
                     
             except Exception as e:
                 print(f"Error reading {file_name}: {e}")
@@ -125,19 +151,18 @@ def plot_species_class_codes(folder_name, species_name, output_filename):
 
     df = pd.DataFrame(all_data)
     if df.empty:
-        print(f"No valid data collected for {species_name}.")
+        print(f"No valid data collected for {species_name} [{evaluation_type}].")
         return
 
-    # Data structuring and sorting
+    # Data pivoting and reverse indexing (identical sorting for both modes)
     df_pivot = df.pivot(index='Annotation', columns='Class Code', values='Count').fillna(0)
     ordered_names = [name for name in annotation_mapping.values() if name in df_pivot.index]
     
-    # Remove duplicates from ordered_names while preserving order
     seen = set()
     unique_ordered_names = [x for x in ordered_names if not (x in seen or seen.add(x))]
     df_pivot = df_pivot.reindex(unique_ordered_names[::-1])
     
-    # High-contrast color palette
+    # High-contrast color palette configuration
     distinct_colors = [
         '#0f4c81', '#ffb347', '#1d8348', '#f1948a', '#6c3483', 
         '#bb8fce', '#117a65', '#73c6b6', '#9a7d0a', '#f7dc6f',
@@ -147,44 +172,64 @@ def plot_species_class_codes(folder_name, species_name, output_filename):
     fig, ax = plt.subplots(figsize=(14, 12))
     df_pivot.plot(kind='barh', stacked=True, color=distinct_colors, ax=ax)
     
-    # Dynamic title application
-    ax.set_title(f"Distribution of Class Codes by Annotation Type ({species_name})", fontsize=14, fontweight='bold', pad=15)
-    ax.set_xlabel('Total transcript count', fontsize=12, labelpad=10)
+    # Plot formatting and styling execution
+    ax.set_title(title_text, fontsize=14, fontweight='bold', pad=15)
+    ax.set_xlabel(x_label_text, fontsize=12, labelpad=10)
     ax.set_ylabel('Annotation pipeline', fontsize=12, labelpad=10)
-    ax.legend(title='GFF3 class codes', bbox_to_anchor=(1.02, 1), loc='upper left')
+    ax.legend(title=legend_title_text, bbox_to_anchor=(1.02, 1), loc='upper left')
     ax.grid(axis='x', linestyle='--', alpha=0.5)
     
     plt.tight_layout()
     plt.savefig(output_filename, format='svg', dpi=300)
-    plt.close() # Close plot to free memory
+    plt.close()
 
 
 if __name__ == "__main__":
     
-    # 1. ARABIDOPSIS THALIANA (Usa ARAPORT11)
-    plot_species_class_codes(
+    # =========================================================================
+    # BLOCK 1: STRUCTURAL ANALYSIS GRAPH GENERATION (TRANSCRIPTS)
+    # =========================================================================
+    plot_valencia_class_codes(
         folder_name="Arabidopsis_thaliana_dataset_test",
         species_name="Arabidopsis thaliana",
-        output_filename="athaliana_class_codes_comparison.svg"
+        output_filename="athaliana_class_codes_comparison.svg",
+        evaluation_type='transcript'
     )
 
-    # 2. NICOTIANA BENTHAMIANA (Usa GuoTTv1)
-    plot_species_class_codes(
+    plot_valencia_class_codes(
         folder_name="Nicotiana_benthamiana_dataset_test",
         species_name="Nicotiana benthamiana",
-        output_filename="nbenthamiana_class_codes_comparison.svg"
+        output_filename="nbenthamiana_class_codes_comparison.svg",
+        evaluation_type='transcript'
     )
 
-    # 3. ORYZA SATIVA (Usa AGIS1v1)
-    plot_species_class_codes(
+    plot_valencia_class_codes(
         folder_name="Oryza_sativa_dataset_test",
         species_name="Oryza sativa",
-        output_filename="osativa_class_codes_comparison.svg"
+        output_filename="osativa_class_codes_comparison.svg",
+        evaluation_type='transcript'
     )
 
-    # 4. SOLANUM LYCOPERSICUM (Usa ITAG5.0)
-    plot_species_class_codes(
-        folder_name="Solanum_lycopersicum_datset_test",
-        species_name="Solanum lycopersicum",
-        output_filename="slycopersicum_class_codes_comparison.svg"
+    # =========================================================================
+    # BLOCK 2: FUNCTIONAL ANALYSIS GRAPH GENERATION (PROTEINS)
+    # =========================================================================
+    plot_valencia_class_codes(
+        folder_name="Arabidopsis_thaliana_dataset_test",
+        species_name="Arabidopsis thaliana",
+        output_filename="athaliana_protein_class_codes_comparison.svg",
+        evaluation_type='protein'
+    )
+
+    plot_valencia_class_codes(
+        folder_name="Nicotiana_benthamiana_dataset_test",
+        species_name="Nicotiana benthamiana",
+        output_filename="nbenthamiana_protein_class_codes_comparison.svg",
+        evaluation_type='protein'
+    )
+
+    plot_valencia_class_codes(
+        folder_name="Oryza_sativa_dataset_test",
+        species_name="Oryza sativa",
+        output_filename="osativa_protein_class_codes_comparison.svg",
+        evaluation_type='protein'
     )
