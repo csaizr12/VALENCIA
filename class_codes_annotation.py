@@ -17,8 +17,8 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     # PATH AUTO-CHECK: Searches locally or one level up
     if os.path.exists(folder_name):
         base_path = folder_name
-    elif os.path.exists(f"../{folder_name}"):
-        base_path = f"../{folder_name}"
+    elif os.path.exists(f"../results_dataset_test{folder_name}"):
+        base_path = f"../results_dataset_test{folder_name}"
     else:
         print(f"Error: Base path '{folder_name}' not found locally or in '../'. Skipping {species_name} [{evaluation_type}].")
         return
