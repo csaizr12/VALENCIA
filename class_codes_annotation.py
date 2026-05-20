@@ -67,7 +67,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'TotalIntronsRetention': 'Total introns retention (m)',
             'RetainedIntronSingleExon': 'Retained intron single exon (e)',
             'Unknown': 'Unknown intergenic (u)',
-            'ExonicOverlapOppStran': 'Exonic overlap Opp. (x)',
+            'PartialIntronRetention': 'Partial intron retention (n)',
             'SubsequencesReferences': 'Subsequences references (k)',
         }
         title_text = f"Distribution of protein class codes ({species_name})"
@@ -82,7 +82,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'TotalIntronsRetention': 'Total introns retention (m)',
             'RetainedIntronSingleExon': 'Retained intron single exon (e)',
             'Unknown': 'Unknown intergenic (u)',
-            'ExonicOverlapOppStran': 'Exonic overlap Opp. (x)',
+            'PartialIntronRetention': 'Partial intron retention (n)',
             'SubsequencesReferences': 'Subsequences references (k)',
         }
         title_text = f"Distribution of transcript class codes ({species_name})"
