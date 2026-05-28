@@ -11,9 +11,9 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     # PATH AUTO-CHECK: Configured to find inputs inside 'results_dataset_test' from TFG root
     possible_paths = [
         folder_name,
-        os.path.join("results_dataset_test", folder_name),
+        os.path.join("dataset_test", folder_name),
         os.path.join("VALENCIA", folder_name),
-        os.path.join("VALENCIA", "results_dataset_test", folder_name)
+        os.path.join("VALENCIA", "dataset_test", folder_name)
     ]
     
     base_path = None
