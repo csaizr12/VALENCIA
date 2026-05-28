@@ -85,7 +85,10 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
     bins_x = np.linspace(df['tx'].min(), df['tx'].max(), 81) if df['tx'].min() != df['tx'].max() else 80
     bins_y = np.linspace(df['pr'].min(), df['pr'].max(), 81) if df['pr'].min() != df['pr'].max() else 80
 
-    sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], s=5, cmap="coolwarm", vmin=0, vmax=1, alpha=0.7, rasterized=True)
+    # Crear mapa de color discreto con exactamente 10 bloques de la paleta Spectral
+    discrete_cmap = matplotlib.colormaps.get_cmap('Spectral_r').resampled(10)
+
+    sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], s=5, cmap=discrete_cmap, vmin=0, vmax=1, alpha=0.7, rasterized=True)
     ax_hist_x.hist(df['tx'], bins=bins_x, color='#45a049', edgecolor='black', linewidth=0.1)
     ax_hist_y.hist(df['pr'], bins=bins_y, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
 
