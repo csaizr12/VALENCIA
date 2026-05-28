@@ -92,13 +92,13 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
         clean_name = species_name.lower().replace(' ', '_')
         
         if mode == 'protein':
-            cbar_label = '% of Proteins with distance = 1 (Relative to chromosome total)'
-            plot_title = f"Chromosomal Distribution of distance=1 Proteins (%)\n({species_name})"
+            cbar_label = '% of Proteins with distance = 1 (relative to chromosome total)'
+            plot_title = f"Chromosomal distribution of  edit distance = 1 | Proteins (%)\n({species_name})"
             output_csv = f"{output_dir}/{clean_name}_chrom_protein_distance1_summary.csv"
             output_svg = f"{output_dir}/{clean_name}_chrom_protein_distance1_percentage_distribution.svg"
         else:
-            cbar_label = '% of Transcripts with distance = 1 (Relative to chromosome total)'
-            plot_title = f"Chromosomal Distribution of distance=1 Transcripts (%)\n({species_name})"
+            cbar_label = '% of Transcripts with distance = 1 (relative to chromosome total)'
+            plot_title = f"Chromosomal distribution of edit distance = 1 | Transcripts (%)\n({species_name})"
             output_csv = f"{output_dir}/{clean_name}_chrom_transcript_distance1_summary.csv"
             output_svg = f"{output_dir}/{clean_name}_chrom_transcript_distance1_percentage_distribution.svg"
 
