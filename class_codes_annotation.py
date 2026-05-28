@@ -67,7 +67,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'NA': 'Unclassified (NA)'
         }
         title_text = f"Distribution of protein class codes ({species_name})"
-        x_label_text = "Percentage (%)"
+        x_label_text = "Proportion of total proteins (%)"
         legend_title_text = "VALENCIA protein class codes"
     else:
         legend_mapping = {
@@ -83,7 +83,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'NA': 'Unclassified (NA)'
         }
         title_text = f"Distribution of transcript class codes ({species_name})"
-        x_label_text = "Percentage (%)"
+        x_label_text = "Proportion of total transcripts (%)"
         legend_title_text = "GFF3 transcript class codes"
 
     class_code_pattern = re.compile(r'class_code[ =]"?([^";\s]+)"?')
