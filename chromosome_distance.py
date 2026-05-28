@@ -103,7 +103,7 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             df_plot = df_plot.reindex(unique_pipelines[::-1])
             new_labels = [f"{idx} (N={pipeline_totals.get(idx, 0)})" for idx in df_plot.index]
             
-            fig, ax = plt.subplots(figsize=(13, 9))
+            fig, ax = plt.subplots(figsize=(14, 10))
             discrete_heatmap_cmap = plt.get_cmap('Spectral_r', 10)            
             cax = ax.matshow(df_plot, cmap=discrete_heatmap_cmap, aspect='auto', vmin=0, vmax=100)
 
@@ -116,7 +116,9 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             cbar.ax.tick_params(labelsize=9)
             
             ax.set_xticks(range(len(df_plot.columns)))
-            ax.set_xticklabels(df_plot.columns, rotation=45, ha='left', fontsize=10)
+            
+            # CAMBIO AQUÍ: Rotación a 90 grados y alineación 'right' para etiquetas extra largas
+            ax.set_xticklabels(df_plot.columns, rotation=90, ha='right', fontsize=9)
             
             ax.set_yticks(range(len(df_plot.index)))
             ax.set_yticklabels(new_labels, fontsize=10)
@@ -126,7 +128,10 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             ax.set_xlabel('Chromosomes', fontsize=11, labelpad=10)
             ax.set_ylabel('Annotation pipeline', fontsize=11, labelpad=10)
             
+            # CAMBIO AQUÍ: Forzamos un subajuste para que los textos verticales tengan espacio libre abajo
+            plt.subplots_adjust(bottom=0.25)
             plt.tight_layout()
+            
             plt.savefig(output_svg, format='svg', dpi=300)
             plt.close()
             
