@@ -2,6 +2,7 @@ import os
 import re
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 def plot_valencia_class_codes(folder_name, species_name, output_filename, evaluation_type='transcript'):
     possible_paths = [
@@ -94,42 +95,43 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
         if not os.path.exists(folder_path):
             continue 
             
-        gff_files = [f for f in os.listdir(folder_path) if f.endswith('.gff3')]
+        gff_files = sorted([f for f in os.listdir(folder_path) if f.endswith('.gff3')])
+        if not gff_files:
+            continue
+            
+        file_name = gff_files[0]
+        full_path = os.path.join(folder_path, file_name)
         counts = {}
         file_detected = False
+        contains_class_code = False
         
-        for file_name in gff_files:
-            full_path = os.path.join(folder_path, file_name)
-            contains_class_code = False
+        try:
+            with open(full_path, 'r', errors='ignore') as f:
+                for _ in range(100):
+                    line = f.readline()
+                    if not line:
+                        break
+                    if 'class_code' in line:
+                        contains_class_code = True
+                        break
             
-            try:
+            if contains_class_code:
+                file_detected = True
                 with open(full_path, 'r', errors='ignore') as f:
-                    for _ in range(100):
-                        line = f.readline()
-                        if not line:
-                            break
-                        if 'class_code' in line:
-                            contains_class_code = True
-                            break
+                    for line in f:
+                        if line.startswith('#') or not line.strip():
+                            continue
+                        parts = line.split('\t')
+                        if len(parts) < 9:
+                            continue
+                        
+                        match = class_code_pattern.search(parts[8])
+                        if match:
+                            code = match.group(1).strip()
+                            counts[code] = counts.get(code, 0) + 1
                 
-                if contains_class_code:
-                    file_detected = True
-                    with open(full_path, 'r', errors='ignore') as f:
-                        for line in f:
-                            if line.startswith('#') or not line.strip():
-                                continue
-                            parts = line.split('\t')
-                            if len(parts) < 9:
-                                continue
-                            
-                            match = class_code_pattern.search(parts[8])
-                            if match:
-                                code = match.group(1).strip()
-                                counts[code] = counts.get(code, 0) + 1
-                    break 
-                    
-            except Exception as e:
-                pass
+        except Exception as e:
+            pass
         
         if file_detected and counts:
             for code, count in counts.items():
@@ -165,9 +167,13 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     ax.set_title(title_text, fontsize=14, fontweight='bold', pad=15)
     ax.set_xlabel(x_label_text, fontsize=12, labelpad=10)
     ax.set_ylabel('Annotation pipeline', fontsize=12, labelpad=10)
+    
     ax.set_xlim(0, 100)
+    ax.set_xticks(np.arange(0, 101, 5))
+    ax.set_xticklabels([str(x) for x in np.arange(0, 101, 5)], fontsize=9)
+    ax.grid(axis='x', linestyle='--', alpha=0.6)
+    
     ax.legend(title=legend_title_text, bbox_to_anchor=(1.02, 1), loc='upper left')
-    ax.grid(axis='x', linestyle='--', alpha=0.5)
     
     plt.tight_layout()
     plt.savefig(output_filename, format='svg', dpi=300)
