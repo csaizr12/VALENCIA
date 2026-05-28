@@ -85,7 +85,7 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
     bins_x = np.linspace(df['tx'].min(), df['tx'].max(), 81) if df['tx'].min() != df['tx'].max() else 80
     bins_y = np.linspace(df['pr'].min(), df['pr'].max(), 81) if df['pr'].min() != df['pr'].max() else 80
 
-    sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], s=5, cmap="magma", vmin=0, vmax=1, alpha=0.7, rasterized=True)
+    sc = ax_main.scatter(df['tx'], df['pr'], c=df['Delta'], s=5, cmap="Tealrose", vmin=0, vmax=1, alpha=0.7, rasterized=True)
     ax_hist_x.hist(df['tx'], bins=bins_x, color='#45a049', edgecolor='black', linewidth=0.1)
     ax_hist_y.hist(df['pr'], bins=bins_y, color='#e91e63', orientation='horizontal', edgecolor='black', linewidth=0.1)
 
@@ -99,7 +99,7 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
     ax_hist_y.tick_params(labelleft=False, left=False)
     
     cax = fig_a.add_subplot(gs[6, :-1])
-    fig_a.colorbar(sc, cax=cax, orientation='horizontal', label='Δ Lev_edit_distance')
+    fig_a.colorbar(sc, cax=cax, orientation='horizontal', label='Δ Lev_edit_distance', ticks=np.arange(0, 1.1, 0.1))
     
     leg_elements = [Patch(facecolor='#45a049', label='Transcripts'), Patch(facecolor='#e91e63', label='Proteins')]
     ax_hist_y.legend(handles=leg_elements, loc='upper left', bbox_to_anchor=(1.05, 1.2), frameon=True)
@@ -122,7 +122,6 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
     plt.close()
 
     # --- PANEL C: DISTRIBUTION ---
-   # --- PANEL C: DISTRIBUTION ---
     plt.figure(figsize=(10, 10))
     absolute_diff = df['diff'].abs()
 
