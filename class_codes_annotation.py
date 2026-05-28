@@ -169,8 +169,8 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     ax.set_ylabel('Annotation pipeline', fontsize=12, labelpad=10)
     
     ax.set_xlim(0, 100)
-    ax.set_xticks(np.arange(0, 101, 5))
-    ax.set_xticklabels([str(x) for x in np.arange(0, 101, 5)], fontsize=9)
+    ax.set_xticks(np.arange(0, 101, 10))
+    ax.set_xticklabels([str(x) for x in np.arange(0, 101, 10)], fontsize=9)
     ax.grid(axis='x', linestyle='--', alpha=0.6)
     
     ax.legend(title=legend_title_text, bbox_to_anchor=(1.02, 1), loc='upper left')
