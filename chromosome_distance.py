@@ -3,6 +3,7 @@ import re
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.colormaps as cmaps # Necesario para manejar las paletas modernas
 
 def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_name, output_dir, mode='transcript'):
     """
@@ -121,15 +122,20 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             
             fig, ax = plt.subplots(figsize=(13, 9))
             
-            # SOLUCIÓN ERROR 2: Eliminados los argumentos inválidos 'edgecolors' y 'linewidths' de matshow
-            cax = ax.matshow(df_plot, cmap='twilight_shifted', aspect='auto')
+            # CAMBIO VISUAL AQUÍ: Forzamos una paleta 'Spectral_r' escalonada en 10 bloques nítidos.
+            # Puedes cambiar 'Spectral_r' por 'RdYlBu_r' si prefieres otra paleta pastel muy distinguible.
+            discrete_heatmap_cmap = plt.cm.get_cmap('Spectral_r', 10)
+            
+            # Dibujamos la matriz limitando explícitamente el rango de porcentajes de 0 a 100
+            cax = ax.matshow(df_plot, cmap=discrete_heatmap_cmap, aspect='auto', vmin=0, vmax=100)
 
             # Dibujar las líneas de rejilla de forma nativa y compatible con matshow
             ax.set_xticks(np.arange(-0.5, len(df_plot.columns), 1), minor=True)
             ax.set_yticks(np.arange(-0.5, len(df_plot.index), 1), minor=True)
             ax.grid(which='minor', color='#b0b0b0', linestyle='-', linewidth=0.4)
 
-            cbar = fig.colorbar(cax, pad=0.02)
+            # Configuración de la barra de color escalonada con marcas cada 10%
+            cbar = fig.colorbar(cax, pad=0.02, ticks=np.arange(0, 101, 10))
             cbar.set_label(cbar_label, fontsize=11, labelpad=10)
             cbar.ax.tick_params(labelsize=9)
             
