@@ -72,7 +72,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'PartialExonOverlap': 'Partial exon overlap (o)',
             'RetainedIntronSingleExon': 'Retained intron single exon (e)',
             'Unknown': 'Unknown intergenic (u)',
-            'NA': 'NA (unclassified)'
+            'NA': 'Unclassified (NA)'
         }
         title_text = f"Distribution of protein class codes ({species_name})"
         x_label_text = "Total protein count"
@@ -88,7 +88,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'PartialExonOverlap': 'Partial exon overlap (o)',
             'RetainedIntronSingleExon': 'Retained intron single exon (e)',
             'Unknown': 'Unknown intergenic (u)',
-            'NA': 'NA (unclassified)'
+            'NA': 'Unclassified (NA)'
         }
         title_text = f"Distribution of transcript class codes ({species_name})"
         x_label_text = "Total transcript count"
