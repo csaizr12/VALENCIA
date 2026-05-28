@@ -107,7 +107,8 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
         print(f"Table saved to: {output_csv}")
         
         try:
-            df_plot = df.pivot(index='Pipeline', columns='Chromosome', values='Percentage (Dist 1 %)').fillna(0)
+            # SOLUCIÓN ERROR 1: Se usa pivot_table con aggfunc='mean' para evitar colapsos por claves duplicadas (como GEMOMA)
+            df_plot = df.pivot_table(index='Pipeline', columns='Chromosome', values='Percentage (Dist 1 %)', aggfunc='mean').fillna(0)
             
             ordered_pipelines = [name for name in annotation_mapping.values() if name in df_plot.index]
             seen = set()
@@ -121,9 +122,13 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             
             fig, ax = plt.subplots(figsize=(13, 9))
             
-            # PALETTE CHANGE: Using 'viridis' (high-contrast academic standard)
-            cax = ax.matshow(df_plot, cmap='twilight_shifted', aspect='auto',
-                 edgecolors='#b0b0b0', linewidths=0.4)
+            # SOLUCIÓN ERROR 2: Eliminados los argumentos inválidos 'edgecolors' y 'linewidths' de matshow
+            cax = ax.matshow(df_plot, cmap='twilight_shifted', aspect='auto')
+
+            # Dibujar las líneas de rejilla de forma nativa y compatible con matshow
+            ax.set_xticks(np.arange(-0.5, len(df_plot.columns), 1), minor=True)
+            ax.set_yticks(np.arange(-0.5, len(df_plot.index), 1), minor=True)
+            ax.grid(which='minor', color='#b0b0b0', linestyle='-', linewidth=0.4)
 
             cbar = fig.colorbar(cax, pad=0.02)
             cbar.set_label(cbar_label, fontsize=11, labelpad=10)
