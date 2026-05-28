@@ -3,6 +3,7 @@ import re
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import MultipleLocator
 
 def plot_valencia_class_codes(folder_name, species_name, output_filename, evaluation_type='transcript'):
     possible_paths = [
@@ -171,7 +172,12 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     ax.set_xlim(0, 100)
     ax.set_xticks(np.arange(0, 101, 10))
     ax.set_xticklabels([str(x) for x in np.arange(0, 101, 10)], fontsize=9)
-    ax.grid(axis='x', linestyle='--', alpha=0.6)
+    
+    ax.xaxis.set_minor_locator(MultipleLocator(1))
+    ax.tick_params(which='minor', length=4, color='#7f8c8d')
+    ax.tick_params(which='major', length=7, color='#2c3e50')
+    
+    ax.grid(axis='x', which='major', linestyle='--', alpha=0.6)
     
     ax.legend(title=legend_title_text, bbox_to_anchor=(1.02, 1), loc='upper left')
     
@@ -223,19 +229,5 @@ if __name__ == "__main__":
         folder_name="Nicotiana_benthamiana_dataset_test",
         species_name="Nicotiana benthamiana",
         output_filename=f"{output_dir}/nbenthamiana_protein_class_codes_comparison.svg",
-        evaluation_type='protein'
-    )
-
-    plot_valencia_class_codes(
-        folder_name="Oryza_sativa_dataset_test",
-        species_name="Oryza sativa",
-        output_filename=f"{output_dir}/osativa_protein_class_codes_comparison.svg",
-        evaluation_type='protein'
-    )
-
-    plot_valencia_class_codes(
-        folder_name="Solanum_lycopersicum_datset_test",
-        species_name="Solanum lycopersicum",
-        output_filename=f"{output_dir}/slycopersicum_protein_class_codes_comparison.svg",
         evaluation_type='protein'
     )
