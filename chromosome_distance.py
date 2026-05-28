@@ -13,8 +13,6 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
     if not os.path.exists(base_path):
         print(f"Error: Path '{base_path}' not found.")
         return
-
-    print(f"\n Analyzing Chromosomes for {species_name} ({mode.upper()} - Distance = 1 Analysis)...")
     
     distance_pattern = re.compile(r'distance[ =]"?1"?')
     gene_id_pattern = re.compile(r'gene_id[ =]"?([^";\s]+)"?')
