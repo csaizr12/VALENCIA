@@ -155,7 +155,7 @@ if __name__ == "__main__":
     
     output_dir = "results_plots"
     os.makedirs(output_dir, exist_ok=True)
-    input_base_dir = "results_dataset_test"
+    input_base_dir = "dataset_test"
 
     species_list = [
         {"folder": "Arabidopsis_thaliana_dataset_test", "name": "Arabidopsis thaliana", "ref": "ARAPORT11"},
