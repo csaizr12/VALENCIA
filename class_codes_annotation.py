@@ -63,7 +63,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     # DYNAMIC METADATA AND LEGEND CONFIGURATION BASED ON EVALUATION TYPE
     if evaluation_type == 'protein':
         legend_mapping = {
-            'complete': 'complete (=)',
+            'complete': 'Complete (=)',
             'SubsequencesTarget': 'Subsequences target (c)',
             'SubsequencesReferences': 'Subsequences references (k)',
             'TotalIntronsRetention': 'Total introns retention (m)',
@@ -71,7 +71,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'PotentialIsoform': 'Potential isoform (j)',
             'PartialExonOverlap': 'Partial exon overlap (o)',
             'RetainedIntronSingleExon': 'Retained intron single exon (e)',
-            'Unknown intergenic': 'Unknown intergenic (u)',
+            'Unknown': 'Unknown intergenic (u)',
             'NA': 'NA (unclassified)'
         }
         title_text = f"Distribution of protein class codes ({species_name})"
@@ -79,7 +79,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
         legend_title_text = "VALENCIA protein class codes"
     else:
         legend_mapping = {
-            'complete': 'complete (=)',
+            'complete': 'Complete (=)',
             'SubsequencesTarget': 'Subsequences target (c)',
             'SubsequencesReferences': 'Subsequences references (k)',
             'TotalIntronsRetention': 'Total introns retention (m)',
@@ -87,7 +87,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'PotentialIsoform': 'Potential isoform (j)',
             'PartialExonOverlap': 'Partial exon overlap (o)',
             'RetainedIntronSingleExon': 'Retained intron single exon (e)',
-            'Unknown intergenic': 'Unknown intergenic (u)',
+            'Unknown': 'Unknown intergenic (u)',
             'NA': 'NA (unclassified)'
         }
         title_text = f"Distribution of transcript class codes ({species_name})"
