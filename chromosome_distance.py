@@ -2,6 +2,7 @@ import os
 import re
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_name, output_dir, mode='transcript'):
     """
