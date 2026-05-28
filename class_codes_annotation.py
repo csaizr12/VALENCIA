@@ -4,11 +4,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def plot_valencia_class_codes(folder_name, species_name, output_filename, evaluation_type='transcript'):
-    """
-    Scans the subfolders of a specific dataset, parses the GFF3 files,
-    and generates a horizontal stacked bar plot using a single unified logic.
-    """
-    # PATH AUTO-CHECK: Configured to find inputs inside 'results_dataset_test' from TFG root
     possible_paths = [
         folder_name,
         os.path.join("dataset_test", folder_name),
@@ -23,10 +18,8 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             break
 
     if not base_path:
-        print(f"Error: Base path for '{folder_name}' could not be resolved. Skipping {species_name} [{evaluation_type}].")
         return
 
-    # Species-specific reference mapping dictionary
     species_references = {
         "Arabidopsis thaliana": "ARAPORT11",
         "Nicotiana benthamiana": "GuoTTv1",
@@ -36,7 +29,6 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     
     ref_name = species_references.get(species_name, "REFERENCE")
 
-    # Strict row mapping with dynamic reference name placeholders
     annotation_mapping = {
         'test_BRAT': 'BRAKER1', 
         'test_UTR_BRAT': 'BRAKER1 + UTR',
@@ -60,7 +52,6 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
         'test_UTR_REF': f'{ref_name} + UTR' 
     }
 
-    # DYNAMIC METADATA AND LEGEND CONFIGURATION BASED ON EVALUATION TYPE
     if evaluation_type == 'protein':
         legend_mapping = {
             'complete': 'Complete (=)',
@@ -75,7 +66,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'NA': 'Unclassified (NA)'
         }
         title_text = f"Distribution of protein class codes ({species_name})"
-        x_label_text = "Total protein count"
+        x_label_text = "Percentage (%)"
         legend_title_text = "VALENCIA protein class codes"
     else:
         legend_mapping = {
@@ -91,15 +82,12 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
             'NA': 'Unclassified (NA)'
         }
         title_text = f"Distribution of transcript class codes ({species_name})"
-        x_label_text = "Total transcript count"
+        x_label_text = "Percentage (%)"
         legend_title_text = "GFF3 transcript class codes"
 
     class_code_pattern = re.compile(r'class_code[ =]"?([^";\s]+)"?')
     all_data = []
 
-    print(f"Running VALENCIA [{evaluation_type.upper()}] pipeline for: {species_name}...")
-
-    # Core GFF3 file parsing algorithm
     for technical_folder, official_name in annotation_mapping.items():
         folder_path = os.path.join(base_path, technical_folder)
         
@@ -141,7 +129,7 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
                     break 
                     
             except Exception as e:
-                print(f"Error reading {file_name}: {e}")
+                pass
         
         if file_detected and counts:
             for code, count in counts.items():
@@ -154,10 +142,8 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
 
     df = pd.DataFrame(all_data)
     if df.empty:
-        print(f"No valid data collected for {species_name} [{evaluation_type}].")
         return
 
-    # Data pivoting and reverse indexing (identical sorting for both modes)
     df_pivot = df.pivot(index='Annotation', columns='Class Code', values='Count').fillna(0)
     ordered_names = [name for name in annotation_mapping.values() if name in df_pivot.index]
     
@@ -165,7 +151,8 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     unique_ordered_names = [x for x in ordered_names if not (x in seen or seen.add(x))]
     df_pivot = df_pivot.reindex(unique_ordered_names[::-1])
     
-    # High-contrast color palette configuration
+    df_pivot = df_pivot.div(df_pivot.sum(axis=1), axis=0) * 100
+
     distinct_colors = [
         '#0f4c81', '#ffb347', '#1d8348', '#f1948a', '#6c3483', 
         '#bb8fce', '#117a65', '#73c6b6', '#9a7d0a', '#f7dc6f',
@@ -175,10 +162,10 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     fig, ax = plt.subplots(figsize=(14, 12))
     df_pivot.plot(kind='barh', stacked=True, color=distinct_colors, ax=ax)
     
-    # Plot formatting and styling execution
     ax.set_title(title_text, fontsize=14, fontweight='bold', pad=15)
     ax.set_xlabel(x_label_text, fontsize=12, labelpad=10)
     ax.set_ylabel('Annotation pipeline', fontsize=12, labelpad=10)
+    ax.set_xlim(0, 100)
     ax.legend(title=legend_title_text, bbox_to_anchor=(1.02, 1), loc='upper left')
     ax.grid(axis='x', linestyle='--', alpha=0.5)
     
@@ -188,12 +175,9 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
 
 
 if __name__ == "__main__":
-    
-    # Target directory for the generated SVG figures
     output_dir = "results_plots"
     os.makedirs(output_dir, exist_ok=True)
 
-    # 1. TRANSCRIPT EVALUATION
     plot_valencia_class_codes(
         folder_name="Arabidopsis_thaliana_dataset_test",
         species_name="Arabidopsis thaliana",
@@ -222,9 +206,6 @@ if __name__ == "__main__":
         evaluation_type='transcript'
     )
 
-
-
-    # 2. PROTEIN EVALUATION
     plot_valencia_class_codes(
         folder_name="Arabidopsis_thaliana_dataset_test",
         species_name="Arabidopsis thaliana",

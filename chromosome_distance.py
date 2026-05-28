@@ -5,13 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_name, output_dir, mode='transcript'):
-    """
-    Parses GFF3 files to compute absolute counts and relative percentages 
-    of distance="1" elements per chromosome, exporting a CSV and an SVG heatmap.
-    Appends the total element count to the pipeline names on the Y-axis.
-    """
     if not os.path.exists(base_path):
-        print(f"Error: Path '{base_path}' not found.")
         return
     
     distance_pattern = re.compile(r'distance[ =]"?1"?')
@@ -64,7 +58,6 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
                                 chrom_genes[chrom].add(gene_id)
                 
                 if has_distance_data:
-                    # Calculate genome-wide absolute total for this specific pipeline
                     pipeline_totals[official_name] = sum(chrom_total_elements.values())
                     
                     for chrom in sorted(chrom_total_elements.keys()):
@@ -85,7 +78,7 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
                     break
                     
             except Exception as e:
-                print(f"Error processing {file_name}: {e}")
+                pass
 
     if species_results:
         df = pd.DataFrame(species_results)
@@ -103,36 +96,25 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             output_svg = f"{output_dir}/{clean_name}_chrom_transcript_distance1_percentage_distribution.svg"
 
         df.to_csv(output_csv, index=False)
-        print(f"Table saved to: {output_csv}")
         
         try:
-            # SOLUCIÓN ERROR 1: Se usa pivot_table con aggfunc='mean' para evitar colapsos por claves duplicadas (como GEMOMA)
             df_plot = df.pivot_table(index='Pipeline', columns='Chromosome', values='Percentage (Dist 1 %)', aggfunc='mean').fillna(0)
             
             ordered_pipelines = [name for name in annotation_mapping.values() if name in df_plot.index]
             seen = set()
             unique_pipelines = [x for x in ordered_pipelines if not (x in seen or seen.add(x))]
             
-            # Reindex utilizing the predefined strict pipeline order
             df_plot = df_plot.reindex(unique_pipelines[::-1])
-            
-            # Map new dynamic labels containing the absolute total counts: Pipeline (N=X)
             new_labels = [f"{idx} (N={pipeline_totals.get(idx, 0)})" for idx in df_plot.index]
             
             fig, ax = plt.subplots(figsize=(13, 9))
-            
-            # CAMBIO VISUAL AQUÍ: Forzamos una paleta 'Spectral_r' escalonada en 10 bloques nítidos.
-            # Puedes cambiar 'Spectral_r' por 'RdYlBu_r' si prefieres otra paleta pastel muy distinguible.
             discrete_heatmap_cmap = plt.get_cmap('Spectral_r', 10)            
-            # Dibujamos la matriz limitando explícitamente el rango de porcentajes de 0 a 100
             cax = ax.matshow(df_plot, cmap=discrete_heatmap_cmap, aspect='auto', vmin=0, vmax=100)
 
-            # Dibujar las líneas de rejilla de forma nativa y compatible con matshow
             ax.set_xticks(np.arange(-0.5, len(df_plot.columns), 1), minor=True)
             ax.set_yticks(np.arange(-0.5, len(df_plot.index), 1), minor=True)
             ax.grid(which='minor', color='#b0b0b0', linestyle='-', linewidth=0.4)
 
-            # Configuración de la barra de color escalonada con marcas cada 10%
             cbar = fig.colorbar(cax, pad=0.02, ticks=np.arange(0, 101, 10))
             cbar.set_label(cbar_label, fontsize=11, labelpad=10)
             cbar.ax.tick_params(labelsize=9)
@@ -140,7 +122,6 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             ax.set_xticks(range(len(df_plot.columns)))
             ax.set_xticklabels(df_plot.columns, rotation=45, ha='left', fontsize=10)
             
-            # Apply the new dynamically computed labels to the Y axis
             ax.set_yticks(range(len(df_plot.index)))
             ax.set_yticklabels(new_labels, fontsize=10)
             ax.xaxis.set_ticks_position('bottom')
@@ -152,15 +133,11 @@ def extract_chrom_stats_for_distance_1(base_path, annotation_mapping, species_na
             plt.tight_layout()
             plt.savefig(output_svg, format='svg', dpi=300)
             plt.close()
-            print(f"SVG percentage plot successfully saved to: {output_svg}")
             
         except Exception as graph_err:
-            print(f"Error plotting SVG: {graph_err}")
-    else:
-        print(f" No records found for {species_name} in {mode} mode.")
+            pass
 
 if __name__ == "__main__":
-    
     output_dir = "results_plots"
     os.makedirs(output_dir, exist_ok=True)
     input_base_dir = "dataset_test"
@@ -176,7 +153,6 @@ if __name__ == "__main__":
         path = os.path.join(input_base_dir, species["folder"])
         
         if not os.path.exists(path):
-            print(f"Warning: Data path '{path}' does not exist. Skipping {species['name']}.")
             continue
             
         mapping = {
@@ -192,8 +168,5 @@ if __name__ == "__main__":
             'test_REF': f'{species["ref"]}', 'test_UTR_REF': f'{species["ref"]} + UTR'
         }
         
-        # 1. Run Analysis for Structural Transcripts
         extract_chrom_stats_for_distance_1(path, mapping, species["name"], output_dir, mode='transcript')
-        
-        # 2. Run Analysis for Functional Proteins
         extract_chrom_stats_for_distance_1(path, mapping, species["name"], output_dir, mode='protein')
