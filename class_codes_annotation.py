@@ -207,7 +207,7 @@ if __name__ == "__main__":
     plot_valencia_class_codes(
         folder_name="Oryza_sativa_dataset_test",
         species_name="Oryza sativa",
-        output_filename=f"{output_dir}/osativa_class_codes_comparison.svg",
+        output_filename=f"{output_dir}/osativa_transcript_class_codes_comparison.svg",
         evaluation_type='transcript'
     )
 
@@ -229,5 +229,19 @@ if __name__ == "__main__":
         folder_name="Nicotiana_benthamiana_dataset_test",
         species_name="Nicotiana benthamiana",
         output_filename=f"{output_dir}/nbenthamiana_protein_class_codes_comparison.svg",
+        evaluation_type='protein'
+    )
+
+    plot_valencia_class_codes(
+        folder_name="Oryza_sativa_dataset_test",
+        species_name="Oryza sativa",
+        output_filename=f"{output_dir}/osativa_protein_class_codes_comparison.svg", 
+        evaluation_type='protein'
+    )
+
+    plot_valencia_class_codes(
+        folder_name="Solanum_lycopersicum_datset_test",
+        species_name="Solanum lycopersicum",
+        output_filename=f"{output_dir}/slycopersicum_protein_class_codes_comparison.svg", 
         evaluation_type='protein'
     )
