@@ -63,28 +63,32 @@ def plot_valencia_class_codes(folder_name, species_name, output_filename, evalua
     # DYNAMIC METADATA AND LEGEND CONFIGURATION BASED ON EVALUATION TYPE
     if evaluation_type == 'protein':
         legend_mapping = {
-            'complete': 'Complete Structural Match (=)',
+            'complete': 'complete (=)',
             'SubsequencesTarget': 'Subsequences target (c)',
+            'SubsequencesReferences': 'Subsequences references (k)',
+            'TotalIntronsRetention': 'Total introns retention (m)',
+            'PartialIntronRetention': 'Partial intron retention (n)',
             'PotentialIsoform': 'Potential isoform (j)',
             'PartialExonOverlap': 'Partial exon overlap (o)',
-            'TotalIntronsRetention': 'Total introns retention (m)',
             'RetainedIntronSingleExon': 'Retained intron single exon (e)',
-            'PartialIntronRetention': 'Partial intron retention (n)',
-            'SubsequencesReferences': 'Subsequences references (k)',
+            'Unknown intergenic': 'Unknown intergenic (u)',
+            'NA': 'NA (unclassified)'
         }
         title_text = f"Distribution of protein class codes ({species_name})"
         x_label_text = "Total protein count"
         legend_title_text = "VALENCIA protein class codes"
     else:
         legend_mapping = {
-            'complete': 'Complete Structural Match (=)',
+            'complete': 'complete (=)',
             'SubsequencesTarget': 'Subsequences target (c)',
+            'SubsequencesReferences': 'Subsequences references (k)',
+            'TotalIntronsRetention': 'Total introns retention (m)',
+            'PartialIntronRetention': 'Partial intron retention (n)',
             'PotentialIsoform': 'Potential isoform (j)',
             'PartialExonOverlap': 'Partial exon overlap (o)',
-            'TotalIntronsRetention': 'Total introns retention (m)',
             'RetainedIntronSingleExon': 'Retained intron single exon (e)',
-            'PartialIntronRetention': 'Partial intron retention (n)',
-            'SubsequencesReferences': 'Subsequences references (k)',
+            'Unknown intergenic': 'Unknown intergenic (u)',
+            'NA': 'NA (unclassified)'
         }
         title_text = f"Distribution of transcript class codes ({species_name})"
         x_label_text = "Total transcript count"
