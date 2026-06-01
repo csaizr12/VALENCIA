@@ -5,27 +5,25 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-def generate_plots_from_files(archivos_gff):
+def generate_plots_from_files(gff_files):
     output_dir = "results_plots"
     os.makedirs(output_dir, exist_ok=True)
 
     distance_pattern = re.compile(r'distance[ =]"?1"?')
     gene_id_pattern = re.compile(r'gene_id[ =]"?([^";\s]+)"?')
 
-    # Process each evidence transcript and protein separately
     for mode in ['transcript', 'protein']:
+        print(f"\nProcessing mode: {mode}...")
         results = []
         pipeline_totals = {}
 
-        for full_path in archivos_gff:
+        for full_path in gff_files:
             if not os.path.exists(full_path):
                 continue
                 
-            # Obtein pipeline and species names from the file path
             pipeline_name = os.path.basename(os.path.dirname(full_path))
             species_raw = os.path.basename(os.path.dirname(os.path.dirname(full_path)))
             
-            # Clean species name for display and keys
             species_name = species_raw.replace('_dataset_test', '').replace('_datset_test', '').replace('_', ' ')
             if not species_name:
                 species_name = "Unknown_Species"
@@ -65,12 +63,10 @@ def generate_plots_from_files(archivos_gff):
                                     chrom_genes[chrom] = set()
                                 chrom_genes[chrom].add(gene_id)
             except Exception as e:
-                print(f"  Processing error {full_path}: {e}")
+                print(f"  [Error] Processing {full_path}: {e}")
                 continue
 
-            # Keep results only if we found distance=1 data for this file
             if has_distance_data:
-                # Use species_name and pipeline_name as keys for totals
                 key = (species_name, pipeline_name)
                 pipeline_totals[key] = sum(chrom_total_elements.values())
                 
@@ -91,7 +87,6 @@ def generate_plots_from_files(archivos_gff):
 
         df = pd.DataFrame(results)
 
-        # Generating plots for each species
         for species in df['Species'].unique():
             df_species = df[df['Species'] == species]
             clean_name = species.lower().replace(' ', '_')
@@ -108,8 +103,12 @@ def generate_plots_from_files(archivos_gff):
             try:
                 df_plot = df_species.pivot_table(index='Pipeline', columns='Chromosome', values='Percentage (Dist 1 %)', aggfunc='mean').fillna(0)
                 
-                # Reorder pipelines to have a consistent order across species
-                ordered_pipelines = sorted(df_plot.index, reverse=True)
+                def custom_sort(pipe_name):
+                    base = pipe_name.replace('test_UTR_', 'test_').replace(' + UTR', '')
+                    is_utr = 1 if 'UTR' in pipe_name else 0
+                    return (base, is_utr)
+
+                ordered_pipelines = sorted(df_plot.index, key=custom_sort)
                 df_plot = df_plot.reindex(ordered_pipelines)
                 
                 new_labels = [f"{idx} (N={pipeline_totals.get((species, idx), 0)})" for idx in df_plot.index]
@@ -142,15 +141,15 @@ def generate_plots_from_files(archivos_gff):
                 
                 plt.savefig(output_svg, format='svg', dpi=300)
                 plt.close()
-                print(f" Success: {output_svg}")
+                print(f"  [Success] Plot generated: {output_svg}")
                 
             except Exception as graph_err:
-                print(f" Generation error {species}: {graph_err}")
+                print(f"  [Error] Generating plot for {species}: {graph_err}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Uso: python3 script.py <archivo1.gff3> <archivo2.gff3> ...")
+        print("Usage: python3 script.py <file1.gff3> <file2.gff3> ...")
         sys.exit(1)
 
-    archivos_gff = sys.argv[1:]
-    generate_plots_from_files(archivos_gff)
+    input_files = sys.argv[1:]
+    generate_plots_from_files(input_files)
