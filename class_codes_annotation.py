@@ -7,7 +7,7 @@ import numpy as np
 from matplotlib.ticker import MultipleLocator
 
 def generate_class_code_plots(gff_files):
-    output_dir = "results_plots"
+    output_dir = "dataset_test/results_plots"
     os.makedirs(output_dir, exist_ok=True)
 
     tc_pattern = re.compile(r'transcripts_class_code[ =]"?([^";\s]+)"?', re.IGNORECASE)
@@ -107,7 +107,7 @@ def generate_class_code_plots(gff_files):
             df_pivot = df_pivot.reindex(ordered_pipelines)
             
             pipeline_totals = df_pivot.sum(axis=1).astype(int)
-            df_pivot.index = [f"{pipe} ({pipeline_totals[pipe]})" for pipe in df_pivot.index]
+            df_pivot.index = [f"{pipe} (N={pipeline_totals[pipe]})" for pipe in df_pivot.index]
             
             df_pivot = df_pivot.div(df_pivot.sum(axis=1), axis=0) * 100
 
