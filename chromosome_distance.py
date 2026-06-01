@@ -12,7 +12,7 @@ def generate_plots_from_files(archivos_gff):
     distance_pattern = re.compile(r'distance[ =]"?1"?')
     gene_id_pattern = re.compile(r'gene_id[ =]"?([^";\s]+)"?')
 
-    # Procesar ambos modos (transcriptos y proteínas)
+    # Process each evidence transcript and protein separately
     for mode in ['transcript', 'protein']:
         print(f"\nProcesando modo: {mode}...")
         results = []
@@ -22,11 +22,11 @@ def generate_plots_from_files(archivos_gff):
             if not os.path.exists(full_path):
                 continue
                 
-            # 1. Extraer Especie y Pipeline dinámicamente desde la ruta
+            # Obtein pipeline and species names from the file path
             pipeline_name = os.path.basename(os.path.dirname(full_path))
             species_raw = os.path.basename(os.path.dirname(os.path.dirname(full_path)))
             
-            # Limpiar nombre de la especie (ej: "Arabidopsis_thaliana_dataset_test" -> "Arabidopsis thaliana")
+            # Clean species name for display and keys
             species_name = species_raw.replace('_dataset_test', '').replace('_datset_test', '').replace('_', ' ')
             if not species_name:
                 species_name = "Unknown_Species"
@@ -66,12 +66,12 @@ def generate_plots_from_files(archivos_gff):
                                     chrom_genes[chrom] = set()
                                 chrom_genes[chrom].add(gene_id)
             except Exception as e:
-                print(f"  ❌ Error procesando {full_path}: {e}")
+                print(f"  Processing error {full_path}: {e}")
                 continue
 
-            # 2. Almacenar resultados
+            # Keep results only if we found distance=1 data for this file
             if has_distance_data:
-                # Usar tupla (especie, pipeline) como clave para evitar mezclar Ns
+                # Use species_name and pipeline_name as keys for totals
                 key = (species_name, pipeline_name)
                 pipeline_totals[key] = sum(chrom_total_elements.values())
                 
@@ -96,7 +96,7 @@ def generate_plots_from_files(archivos_gff):
 
         df = pd.DataFrame(results)
 
-        # 3. Generar gráficos agrupando por Especie encontrada
+        # Generating plots for each species
         for species in df['Species'].unique():
             df_species = df[df['Species'] == species]
             clean_name = species.lower().replace(' ', '_')
@@ -113,7 +113,7 @@ def generate_plots_from_files(archivos_gff):
             try:
                 df_plot = df_species.pivot_table(index='Pipeline', columns='Chromosome', values='Percentage (Dist 1 %)', aggfunc='mean').fillna(0)
                 
-                # Como ya no hay diccionario, los ordenamos alfabéticamente
+                # Reorder pipelines to have a consistent order across species
                 ordered_pipelines = sorted(df_plot.index, reverse=True)
                 df_plot = df_plot.reindex(ordered_pipelines)
                 
@@ -147,10 +147,10 @@ def generate_plots_from_files(archivos_gff):
                 
                 plt.savefig(output_svg, format='svg', dpi=300)
                 plt.close()
-                print(f"  ✅ Gráfico generado: {output_svg}")
+                print(f" Success: {output_svg}")
                 
             except Exception as graph_err:
-                print(f"  ❌ Error generando gráfico para {species}: {graph_err}")
+                print(f" Generation error {species}: {graph_err}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
