@@ -4,6 +4,7 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import MultipleLocator
 
 def generate_plots_from_files(gff_files):
     output_dir = "results_plots"
@@ -110,6 +111,13 @@ def generate_plots_from_files(gff_files):
 
                 ordered_pipelines = sorted(df_plot.index, key=custom_sort)
                 df_plot = df_plot.reindex(ordered_pipelines)
+                
+                chrom_rename_map = {
+                    'SL5C00': 'SL5C00 (unplaced)',
+                    'ChrC': 'ChrC (cloroplasto)',
+                    'ChrM': 'ChrM (mitocondrial)'
+                }
+                df_plot = df_plot.rename(columns=chrom_rename_map)
                 
                 new_labels = [f"{idx} (N={pipeline_totals.get((species, idx), 0)})" for idx in df_plot.index]
                 
