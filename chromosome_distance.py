@@ -14,7 +14,6 @@ def generate_plots_from_files(archivos_gff):
 
     # Process each evidence transcript and protein separately
     for mode in ['transcript', 'protein']:
-        print(f"\nProcesando modo: {mode}...")
         results = []
         pipeline_totals = {}
 
@@ -89,10 +88,6 @@ def generate_plots_from_files(archivos_gff):
                         'Percentage (Dist 1 %)': round(percentage_dist1, 2),
                         'Total Unique Genes': total_genes
                     })
-
-        if not results:
-            print(f"No se encontraron datos con distancia 1 para {mode}.")
-            continue
 
         df = pd.DataFrame(results)
 
