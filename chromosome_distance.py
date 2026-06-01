@@ -14,7 +14,6 @@ def generate_plots_from_files(gff_files):
     gene_id_pattern = re.compile(r'gene_id[ =]"?([^";\s]+)"?')
 
     for mode in ['transcript', 'protein']:
-        print(f"\nProcessing mode: {mode}...")
         results = []
         pipeline_totals = {}
 
@@ -149,7 +148,6 @@ def generate_plots_from_files(gff_files):
                 
                 plt.savefig(output_svg, format='svg', dpi=300)
                 plt.close()
-                print(f"  [Success] Plot generated: {output_svg}")
                 
             except Exception as graph_err:
                 print(f"  [Error] Generating plot for {species}: {graph_err}")
