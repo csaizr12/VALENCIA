@@ -1,247 +1,147 @@
 import os
 import re
+import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import MultipleLocator
 
-def plot_valencia_class_codes(folder_name, species_name, output_filename, evaluation_type='transcript'):
-    possible_paths = [
-        folder_name,
-        os.path.join("dataset_test", folder_name),
-        os.path.join("VALENCIA", folder_name),
-        os.path.join("VALENCIA", "dataset_test", folder_name)
-    ]
-    
-    base_path = None
-    for path in possible_paths:
-        if os.path.exists(path):
-            base_path = path
-            break
+def generate_class_code_plots(gff_files):
+    output_dir = "results_plots"
+    os.makedirs(output_dir, exist_ok=True)
 
-    if not base_path:
-        return
+    tc_pattern = re.compile(r'transcripts_class_code[ =]"?([^";\s]+)"?', re.IGNORECASE)
+    pc_pattern = re.compile(r'proteins_class_code[ =]"?([^";\s]+)"?', re.IGNORECASE)
+    fallback_pattern = re.compile(r'class_code[ =]"?([^";\s]+)"?', re.IGNORECASE)
 
-    species_references = {
-        "Arabidopsis thaliana": "ARAPORT11",
-        "Nicotiana benthamiana": "GuoTTv1",
-        "Oryza sativa": "AGIS1v1",
-        "Solanum lycopersicum": "ITAG5.0"
-    }
-    
-    ref_name = species_references.get(species_name, "REFERENCE")
-
-    annotation_mapping = {
-        'test_BRAT': 'BRAKER1', 
-        'test_UTR_BRAT': 'BRAKER1 + UTR',
-        'test_BRAP': 'BRAKER2',
-        'test_UTR_BRAP': 'BRAKER2 + UTR',
-        'test_BRATP': 'BRAKER3',
-        'test_UTR_BRATP': 'BRAKER3 + UTR',
-        'test_EGX': 'Eukaryotic Genome Annotation Pipeline',
-        'test_UTR_EGX': 'Eukaryotic Genome Annotation Pipeline + UTR',
-        'test_EVI': 'EviAnn',
-        'test_UTR_EVI': 'EviAnn + UTR',
-        'test_EVO': 'ANNEVO',
-        'test_UTR_EVO': 'ANNEVO + UTR',
-        'test_GEM': 'GEMOMA',
-        'test_UTR_GEM': 'GEMOMA + UTR',
-        'test_HEL': 'HELIXER',
-        'test_UTR_HEL': 'HELIXER + UTR',
-        'test_MAK': 'MAKER',
-        'test_UTR_MAK': 'MAKER + UTR',
-        'test_REF': f'{ref_name}',          
-        'test_UTR_REF': f'{ref_name} + UTR' 
+    legend_mapping = {
+        'complete': 'Complete (=)',
+        'SubsequencesTarget': 'Subsequences target (c)',
+        'SubsequencesReferences': 'Subsequences references (k)',
+        'TotalIntronsRetention': 'Total introns retention (m)',
+        'PartialIntronRetention': 'Partial intron retention (n)',
+        'PotentialIsoform': 'Potential isoform (j)',
+        'PartialExonOverlap': 'Partial exon overlap (o)',
+        'RetainedIntronSingleExon': 'Retained intron single exon (e)',
+        'Unknown': 'Unknown intergenic (u)',
+        'NA': 'Unclassified (NA)'
     }
 
-    if evaluation_type == 'protein':
-        legend_mapping = {
-            'complete': 'Complete (=)',
-            'SubsequencesTarget': 'Subsequences target (c)',
-            'SubsequencesReferences': 'Subsequences references (k)',
-            'TotalIntronsRetention': 'Total introns retention (m)',
-            'PartialIntronRetention': 'Partial intron retention (n)',
-            'PotentialIsoform': 'Potential isoform (j)',
-            'PartialExonOverlap': 'Partial exon overlap (o)',
-            'RetainedIntronSingleExon': 'Retained intron single exon (e)',
-            'Unknown': 'Unknown intergenic (u)',
-            'NA': 'Unclassified (NA)'
-        }
-        title_text = f"Distribution of protein class codes ({species_name})"
-        x_label_text = "Proportion of total proteins (%)"
-        legend_title_text = "VALENCIA protein class codes"
-    else:
-        legend_mapping = {
-            'complete': 'Complete (=)',
-            'SubsequencesTarget': 'Subsequences target (c)',
-            'SubsequencesReferences': 'Subsequences references (k)',
-            'TotalIntronsRetention': 'Total introns retention (m)',
-            'PartialIntronRetention': 'Partial intron retention (n)',
-            'PotentialIsoform': 'Potential isoform (j)',
-            'PartialExonOverlap': 'Partial exon overlap (o)',
-            'RetainedIntronSingleExon': 'Retained intron single exon (e)',
-            'Unknown': 'Unknown intergenic (u)',
-            'NA': 'Unclassified (NA)'
-        }
-        title_text = f"Distribution of transcript class codes ({species_name})"
-        x_label_text = "Proportion of total transcripts (%)"
-        legend_title_text = "GFF3 transcript class codes"
+    data = {
+        'transcript': {},
+        'protein': {}
+    }
 
-    class_code_pattern = re.compile(r'class_code[ =]"?([^";\s]+)"?')
-    all_data = []
-
-    for technical_folder, official_name in annotation_mapping.items():
-        folder_path = os.path.join(base_path, technical_folder)
-        
-        if not os.path.exists(folder_path):
-            continue 
-            
-        gff_files = sorted([f for f in os.listdir(folder_path) if f.endswith('.gff3')])
-        if not gff_files:
+    for full_path in gff_files:
+        if not os.path.exists(full_path):
             continue
-            
-        file_name = gff_files[0]
-        full_path = os.path.join(folder_path, file_name)
-        counts = {}
-        file_detected = False
-        contains_class_code = False
+
+        pipeline_name = os.path.basename(os.path.dirname(full_path))
+        species_raw = os.path.basename(os.path.dirname(os.path.dirname(full_path)))
         
+        species_name = species_raw.replace('_dataset_test', '').replace('_datset_test', '').replace('_', ' ')
+        if not species_name:
+            species_name = "Unknown_Species"
+
+        for mode in ['transcript', 'protein']:
+            if species_name not in data[mode]:
+                data[mode][species_name] = {}
+            if pipeline_name not in data[mode][species_name]:
+                data[mode][species_name][pipeline_name] = {}
+
         try:
             with open(full_path, 'r', errors='ignore') as f:
-                for _ in range(100):
-                    line = f.readline()
-                    if not line:
-                        break
-                    if 'class_code' in line:
-                        contains_class_code = True
-                        break
-            
-            if contains_class_code:
-                file_detected = True
-                with open(full_path, 'r', errors='ignore') as f:
-                    for line in f:
-                        if line.startswith('#') or not line.strip():
-                            continue
-                        parts = line.split('\t')
-                        if len(parts) < 9:
-                            continue
-                        
-                        match = class_code_pattern.search(parts[8])
-                        if match:
-                            code = match.group(1).strip()
-                            counts[code] = counts.get(code, 0) + 1
-                
+                for line in f:
+                    if line.startswith('#') or not line.strip():
+                        continue
+                    parts = line.split('\t')
+                    if len(parts) < 9:
+                        continue
+
+                    attr = parts[8]
+
+                    tc_match = tc_pattern.search(attr)
+                    if tc_match:
+                        c = tc_match.group(1).strip()
+                        data['transcript'][species_name][pipeline_name][c] = data['transcript'][species_name][pipeline_name].get(c, 0) + 1
+                    else:
+                        fb_match = fallback_pattern.search(attr)
+                        if fb_match and '\tmRNA\t' in line:
+                            c = fb_match.group(1).strip()
+                            data['transcript'][species_name][pipeline_name][c] = data['transcript'][species_name][pipeline_name].get(c, 0) + 1
+
+                    pc_match = pc_pattern.search(attr)
+                    if pc_match:
+                        c = pc_match.group(1).strip()
+                        data['protein'][species_name][pipeline_name][c] = data['protein'][species_name][pipeline_name].get(c, 0) + 1
+
         except Exception as e:
-            pass
-        
-        if file_detected and counts:
-            for code, count in counts.items():
-                clean_code_name = legend_mapping.get(code, code)
-                all_data.append({
-                    'Annotation': official_name, 
-                    'Class Code': clean_code_name, 
-                    'Count': count
-                })
-
-    df = pd.DataFrame(all_data)
-    if df.empty:
-        return
-
-    df_pivot = df.pivot(index='Annotation', columns='Class Code', values='Count').fillna(0)
-    ordered_names = [name for name in annotation_mapping.values() if name in df_pivot.index]
-    
-    seen = set()
-    unique_ordered_names = [x for x in ordered_names if not (x in seen or seen.add(x))]
-    df_pivot = df_pivot.reindex(unique_ordered_names[::-1])
-    
-    df_pivot = df_pivot.div(df_pivot.sum(axis=1), axis=0) * 100
+            print(f"  [Error] Processing {full_path}: {e}")
 
     distinct_colors = [
         '#0f4c81', '#ffb347', '#1d8348', '#f1948a', '#6c3483', 
         '#bb8fce', '#117a65', '#73c6b6', '#9a7d0a', '#f7dc6f',
         '#5dade2', '#2e4053', '#aeb6bf', '#edbb99', '#f5b041'
     ]
-    
-    fig, ax = plt.subplots(figsize=(14, 12))
-    df_pivot.plot(kind='barh', stacked=True, color=distinct_colors, ax=ax)
-    
-    ax.set_title(title_text, fontsize=14, fontweight='bold', pad=15)
-    ax.set_xlabel(x_label_text, fontsize=12, labelpad=10)
-    ax.set_ylabel('Annotation pipeline', fontsize=12, labelpad=10)
-    
-    ax.set_xlim(0, 100)
-    ax.set_xticks(np.arange(0, 101, 10))
-    ax.set_xticklabels([str(x) for x in np.arange(0, 101, 10)], fontsize=9)
-    
-    ax.xaxis.set_minor_locator(MultipleLocator(1))
-    ax.tick_params(which='minor', length=4, color='#7f8c8d')
-    ax.tick_params(which='major', length=7, color='#2c3e50')
-    
-    ax.grid(axis='x', which='major', linestyle='--', alpha=0.6)
-    
-    ax.legend(title=legend_title_text, bbox_to_anchor=(1.02, 1), loc='upper left')
-    
-    plt.tight_layout()
-    plt.savefig(output_filename, format='svg', dpi=300)
-    plt.close()
 
+    for mode in ['transcript', 'protein']:
+        for species_name, pipelines_data in data[mode].items():
+            flat_data = []
+            for pipe, counts in pipelines_data.items():
+                for code, count in counts.items():
+                    clean_code = legend_mapping.get(code, code)
+                    flat_data.append({'Pipeline': pipe, 'Class Code': clean_code, 'Count': count})
+
+            if not flat_data:
+                continue
+
+            df = pd.DataFrame(flat_data)
+            df_pivot = df.pivot(index='Pipeline', columns='Class Code', values='Count').fillna(0)
+            
+            def custom_sort(pipe_name):
+                base = pipe_name.replace('test_UTR_', 'test_')
+                is_utr = 1 if 'UTR' in pipe_name else 0
+                return (base, is_utr)
+
+            ordered_pipelines = sorted(df_pivot.index, key=custom_sort)
+            df_pivot = df_pivot.reindex(ordered_pipelines)
+            
+            df_pivot = df_pivot.div(df_pivot.sum(axis=1), axis=0) * 100
+
+            fig, ax = plt.subplots(figsize=(14, 12))
+            df_pivot.plot(kind='barh', stacked=True, color=distinct_colors, ax=ax)
+            
+            title_text = f"Distribution of {mode} class codes ({species_name})"
+            x_label_text = f"Proportion of total {mode}s (%)"
+            legend_title_text = f"VALENCIA {mode} class codes"
+
+            ax.set_title(title_text, fontsize=14, fontweight='bold', pad=15)
+            ax.set_xlabel(x_label_text, fontsize=12, labelpad=10)
+            ax.set_ylabel('Annotation pipeline', fontsize=12, labelpad=10)
+            
+            ax.set_xlim(0, 100)
+            ax.set_xticks(np.arange(0, 101, 10))
+            ax.set_xticklabels([str(x) for x in np.arange(0, 101, 10)], fontsize=9)
+            
+            ax.xaxis.set_minor_locator(MultipleLocator(1))
+            ax.tick_params(which='minor', length=4, color='#7f8c8d')
+            ax.tick_params(which='major', length=7, color='#2c3e50')
+            
+            ax.grid(axis='x', which='major', linestyle='--', alpha=0.6)
+            ax.legend(title=legend_title_text, bbox_to_anchor=(1.02, 1), loc='upper left')
+            
+            plt.tight_layout()
+            
+            clean_name = species_name.lower().replace(' ', '_')
+            output_filename = f"{output_dir}/{clean_name}_{mode}_class_codes_comparison.svg"
+            plt.savefig(output_filename, format='svg', dpi=300)
+            plt.close()
+            print(f"  [Success] Plot generated: {output_filename}")
 
 if __name__ == "__main__":
-    output_dir = "results_plots"
-    os.makedirs(output_dir, exist_ok=True)
+    if len(sys.argv) < 2:
+        print("Usage: python3 script.py <file1.gff3> <file2.gff3> ...")
+        sys.exit(1)
 
-    plot_valencia_class_codes(
-        folder_name="Arabidopsis_thaliana_dataset_test",
-        species_name="Arabidopsis thaliana",
-        output_filename=f"{output_dir}/athaliana_transcript_class_codes_comparison.svg",
-        evaluation_type='transcript'
-    )
-
-    plot_valencia_class_codes(
-        folder_name="Nicotiana_benthamiana_dataset_test",
-        species_name="Nicotiana benthamiana",
-        output_filename=f"{output_dir}/nbenthamiana_transcript_class_codes_comparison.svg",
-        evaluation_type='transcript'
-    )
-
-    plot_valencia_class_codes(
-        folder_name="Oryza_sativa_dataset_test",
-        species_name="Oryza sativa",
-        output_filename=f"{output_dir}/osativa_transcript_class_codes_comparison.svg",
-        evaluation_type='transcript'
-    )
-
-    plot_valencia_class_codes(
-        folder_name="Solanum_lycopersicum_datset_test",
-        species_name="Solanum lycopersicum",
-        output_filename=f"{output_dir}/slycopersicum_transcript_class_codes_comparison.svg",
-        evaluation_type='transcript'
-    )
-
-    plot_valencia_class_codes(
-        folder_name="Arabidopsis_thaliana_dataset_test",
-        species_name="Arabidopsis thaliana",
-        output_filename=f"{output_dir}/athaliana_protein_class_codes_comparison.svg",
-        evaluation_type='protein'
-    )
-
-    plot_valencia_class_codes(
-        folder_name="Nicotiana_benthamiana_dataset_test",
-        species_name="Nicotiana benthamiana",
-        output_filename=f"{output_dir}/nbenthamiana_protein_class_codes_comparison.svg",
-        evaluation_type='protein'
-    )
-
-    plot_valencia_class_codes(
-        folder_name="Oryza_sativa_dataset_test",
-        species_name="Oryza sativa",
-        output_filename=f"{output_dir}/osativa_protein_class_codes_comparison.svg", 
-        evaluation_type='protein'
-    )
-
-    plot_valencia_class_codes(
-        folder_name="Solanum_lycopersicum_datset_test",
-        species_name="Solanum lycopersicum",
-        output_filename=f"{output_dir}/slycopersicum_protein_class_codes_comparison.svg", 
-        evaluation_type='protein'
-    )
+    input_files = sys.argv[1:]
+    generate_class_code_plots(input_files)
