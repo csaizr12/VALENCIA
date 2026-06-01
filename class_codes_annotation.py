@@ -106,6 +106,9 @@ def generate_class_code_plots(gff_files):
             ordered_pipelines = sorted(df_pivot.index, key=custom_sort)
             df_pivot = df_pivot.reindex(ordered_pipelines)
             
+            pipeline_totals = df_pivot.sum(axis=1).astype(int)
+            df_pivot.index = [f"{pipe} ({pipeline_totals[pipe]})" for pipe in df_pivot.index]
+            
             df_pivot = df_pivot.div(df_pivot.sum(axis=1), axis=0) * 100
 
             fig, ax = plt.subplots(figsize=(14, 12))
@@ -136,7 +139,6 @@ def generate_class_code_plots(gff_files):
             output_filename = f"{output_dir}/{clean_name}_{mode}_class_codes_comparison.svg"
             plt.savefig(output_filename, format='svg', dpi=300)
             plt.close()
-            print(f"  [Success] Plot generated: {output_filename}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
