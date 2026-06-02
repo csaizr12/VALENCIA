@@ -112,9 +112,9 @@ def generate_plots_from_files(gff_files):
                 df_plot = df_plot.reindex(ordered_pipelines)
                 
                 chrom_rename_map = {
-                    'SL5C00': 'SL5C00 (unplaced)',
-                    'ChrC': 'ChrC (cloroplasto)',
-                    'ChrM': 'ChrM (mitocondrial)'
+                    'SL5C00': 'SL5C00 (Unplaced)',
+                    'ChrC':  'ChrC (Chloroplast)',
+                    'ChrM': 'ChrM (Mitochondrial)'
                 }
                 df_plot = df_plot.rename(columns=chrom_rename_map)
                 
