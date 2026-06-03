@@ -35,9 +35,9 @@ def parse_arguments():
     help_outbase = '(Required) Outbase'
     parser.add_argument('--outbase','-o', 
                         type=str, help=help_outbase, required=True)
-    parser.add_argument('--desc', type=str, default=None,
+    parser.add_argument('--description', '-d', type=str, default=None,
                         help='Pipeline description for the plot (e.g., "ANEVO annotation")')
-    parser.add_argument('--species', type=str, default=None,
+    parser.add_argument('--specie', '-s', type=str, default=None,
                         help='Species name for the plot title (e.g., "A. thaliana")')
     return parser.parse_args()
 
