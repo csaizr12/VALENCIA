@@ -20,8 +20,7 @@ def filter_pseudogenes(gff_file, outbase):
                 gff_output.write(line)
                 continue
             
-            line_lower = line.lower()
-            if "pseudogene" in line_lower or "pseudo=true" in line_lower:
+            if "pseudogene" in line or "pseudo=true" in line:
                 match = re.search(r'ID=([^;]+)', line)
                 feature_id = match.group(1) if match else "NA"
                 
