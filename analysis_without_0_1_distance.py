@@ -28,6 +28,7 @@ def generate_filtered_class_code_plots(gff_files):
         'PartialExonOverlap': 'Partial exon overlap (o)',
         'RetainedIntronSingleExon': 'Retained intron single exon (e)',
         'Unknown': 'Unknown intergenic (u)',
+        'NA': 'Without evidence (NA)'
     }
 
     data = {}

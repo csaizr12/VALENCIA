@@ -13,7 +13,6 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
     output_dir = Path(output_folder)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # --- 1. DATA EXTRACTION (Now safely outside the IF) ---
     fp_pattern = r'([-+]?\d*\.?\d+(?:[eE][-+]?\d+)?)'
     with open(gff_path, 'r', encoding='latin-1') as f:
         for line in f:
