@@ -23,7 +23,7 @@ def generate_class_code_plots(gff_files):
         'PotentialIsoform': 'Potential isoform (j)',
         'PartialExonOverlap': 'Partial exon overlap (o)',
         'RetainedIntronSingleExon': 'Retained intron single exon (e)',
-        'UnknownIntergenic': 'Unknown intergenic (u)',
+        'Unknown': 'Unknown intergenic (u)',
         'NA': 'Without evidence (NA)'
     }
 
