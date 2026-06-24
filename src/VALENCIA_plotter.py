@@ -50,7 +50,7 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
     # Determine internal description for filenames if None
     file_desc = description if description else Path(gff_path).stem
 
-    # --- HELPER: DYNAMIC TITLE LOGIC ---
+    # HELPER: DYNAMIC TITLE LOGIC
     def set_dynamic_titles(fig_or_plt, n, spec, desc, metric_text):
         # Line 1: Main Title
         main_t = f"VALENCIA annotation quality analysis (n={n})"
@@ -59,7 +59,7 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
         else:
             plt.suptitle(main_t, fontsize=16, fontweight='bold', y=0.98)
 
-        # Line 2: Combined Info (Species | Description)
+        # Combined Info (Species | Description)
         info_parts = [i for i in [spec, desc] if i]
         if info_parts:
             combined = " | ".join(info_parts)
@@ -72,7 +72,7 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
         # Line 3: Metric
         plt.figtext(0.5, y_metric, metric_text, ha='center', fontsize=11, color='gray')
 
-    # --- PANEL A: STRUCTURE VS FUNCTION ---
+    # PANEL A: STRUCTURE VS FUNCTION ---
     fig_a = plt.figure(figsize=(14, 12))
     gs = fig_a.add_gridspec(7, 4, height_ratios=[1.2, 1, 1, 1, 1, 0.6, 0.2], hspace=0.15, wspace=0.15)
     
@@ -109,7 +109,7 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
     plt.savefig(output_dir / f"VALENCIA_quality_correlation_{file_desc.replace(' ', '_')}.svg", format='svg', bbox_inches='tight')
     plt.close(fig_a)
 
-    # --- PANEL B: CORRELATION ---
+    # PANEL B: CORRELATION
     plt.figure(figsize=(10, 10))
     ax_corr = sns.scatterplot(data=df, x='cds', y='pr', alpha=0.2, s=15, color='#34495e', rasterized=True)
     ax_corr.plot([0, 1], [0, 1], color='red', linestyle='--', label='Identity (X=Y)')
@@ -123,7 +123,7 @@ def generate_quality_panel(gff_path, output_folder, description=None, species=No
     plt.savefig(output_dir / f"VALENCIA_CDS_protein_correlation_{file_desc.replace(' ', '_')}.svg", format='svg', bbox_inches='tight')
     plt.close()
 
-    # --- PANEL C: DISTRIBUTION ---
+    # PANEL C: DISTRIBUTION
     plt.figure(figsize=(10, 10))
     absolute_diff = df['diff'].abs()
 
